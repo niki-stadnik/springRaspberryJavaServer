@@ -15,7 +15,6 @@ public class LightSwitch {
     int rInt = CentralCommand.getRepeatInterval();
     double spamDelay = 2 / ((double)rInt / 1000 );
     int counterSpamDelay = 0;
-   // int test = CentralCommand.;
 
     JSONObject jo;
     JSONObject ja;
@@ -23,37 +22,25 @@ public class LightSwitch {
     public static boolean fuseBoxFan = false;
     public static Double fuseBoxTemp = null;
     public static Double fuseBoxHum = null;
-    public static Double light0 = null;
-    public static Double light1 = null;
-    public static Double light2 = null;
-    public static Double light3 = null;
-    public static Double light4 = null;
-    public static Double light5 = null;
-    public static Double light6 = null;
-    public static Double light7 = null;
+    public static Double[] lightAmps = new Double[9];
+
+    boolean[] lightStatus = new boolean[9];
 
 
 
     @Autowired
     LightSwitch(Clients clt) {
         this.clt = clt;
+        for (int i = 0; i < 9; i++){
+            lightAmps[i] = null;
+        }
     }
 
 
     public synchronized void Auto() {
-        /*todo
-        да се спами максимално бързо
-        да се проверява за подадена команда?? или отделно?
-        да се сложи закъснение от последната команда но не и от първата
-         */
-
         takeData(); //every 10ms = repeatInterval
         fanControl();
         //lightsControl();
-
-
-
-
         if (counterSpamDelay > 0) {
             counterSpamDelay--;
         }
@@ -65,6 +52,20 @@ public class LightSwitch {
 
     void fanControl(){
         if (fuseBoxTemp != null && fuseBoxHum != null){
+            if (fuseBoxTemp > 80 || fuseBoxTemp < 0){
+                //high alert
+                //send notifications to app
+                if (counterSpamDelay == 0) {
+                    boolean[] alloff = {false, false, false, false, false, false, false, false, false};
+                    for (int i = 1; i < 9; i++){
+                        if (lightStatus[i]){
+                            alloff[i] = true;
+                        }
+                    }
+                    ChangeState(alloff);
+                    counterSpamDelay = (int) spamDelay;
+                }
+            }
             if ((fuseBoxTemp > 30 || fuseBoxHum > 60) && !fuseBoxFan){
                 if (counterSpamDelay == 0) {
                     boolean[] fanon = {true, false, false, false, false, false, false, false, false};
@@ -92,28 +93,34 @@ public class LightSwitch {
             fuseBoxHum = Double.valueOf(TempStorage.mapStorage.get("fuseBoxHum").toString());
         }
         if (TempStorage.mapStorage.get("light0") != null) {
-            light0 = Double.valueOf(TempStorage.mapStorage.get("light0").toString());
+            lightAmps[1] = Double.valueOf(TempStorage.mapStorage.get("light0").toString());
         }
         if (TempStorage.mapStorage.get("light1") != null) {
-            light1 = Double.valueOf(TempStorage.mapStorage.get("light1").toString());
+            lightAmps[2] = Double.valueOf(TempStorage.mapStorage.get("light1").toString());
         }
         if (TempStorage.mapStorage.get("light2") != null) {
-            light2 = Double.valueOf(TempStorage.mapStorage.get("light2").toString());
+            lightAmps[3] = Double.valueOf(TempStorage.mapStorage.get("light2").toString());
         }
         if (TempStorage.mapStorage.get("light3") != null) {
-            light3 = Double.valueOf(TempStorage.mapStorage.get("light3").toString());
+            lightAmps[4] = Double.valueOf(TempStorage.mapStorage.get("light3").toString());
         }
         if (TempStorage.mapStorage.get("light4") != null) {
-            light4 = Double.valueOf(TempStorage.mapStorage.get("light4").toString());
+            lightAmps[5] = Double.valueOf(TempStorage.mapStorage.get("light4").toString());
         }
         if (TempStorage.mapStorage.get("light5") != null) {
-            light5 = Double.valueOf(TempStorage.mapStorage.get("light5").toString());
+            lightAmps[6] = Double.valueOf(TempStorage.mapStorage.get("light5").toString());
         }
         if (TempStorage.mapStorage.get("light6") != null) {
-            light6 = Double.valueOf(TempStorage.mapStorage.get("light6").toString());
+            lightAmps[7] = Double.valueOf(TempStorage.mapStorage.get("light6").toString());
         }
         if (TempStorage.mapStorage.get("light7") != null) {
-            light7 = Double.valueOf(TempStorage.mapStorage.get("light7").toString());
+            lightAmps[8] = Double.valueOf(TempStorage.mapStorage.get("light7").toString());
+        }
+
+        for (int i = 1; i < 9; i++){
+            if (lightAmps[i] != null) {
+                lightStatus[i] = lightAmps[i] >= 1.0;
+            }
         }
     }
 
@@ -149,7 +156,7 @@ public class LightSwitch {
 }
 
 /*todo
-with the fan on at x temp - protection for fire should be added by stopping the fans at temp higher than 80? and notification sent
-
+fire notification
+adjust mamps in takedata for the light status
 ако съобщенията пращани от тук са бродкаст да кажа на микроконтролерите да четат само тези за тяхното си id
  */

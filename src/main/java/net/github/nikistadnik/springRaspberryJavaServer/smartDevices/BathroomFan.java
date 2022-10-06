@@ -37,8 +37,10 @@ public class BathroomFan {
         TempStorage.mapStorage.put("bathroomFanDelay", 30);
     }
 
-    public synchronized void Auto(int repeatInterval) {
+    public synchronized void Auto() {
         BathroomFanDelay = Double.parseDouble(TempStorage.mapStorage.get("bathroomFanDelay").toString()) / ((double) rInt / 1000);
+
+        //todo does the 30 sek delay work with the changes (not calculated in auto but in class)
 
         if (TempStorage.mapStorage.get("bathTemp") != null) {
             bathTemp = Double.valueOf(TempStorage.mapStorage.get("bathTemp").toString());

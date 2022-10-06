@@ -32,7 +32,7 @@ public class CentralCommand extends Thread {
         while (loop) {
 
             if (TempStorage.bathroomFanMode == TempStorage.Mode.AUTO) {
-                bathroomFan.Auto(repeatInterval);
+                bathroomFan.Auto();
             }
 
             lightSwitch.Auto();
