@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class TempStorage {
-    enum Mode {ON, OFF, AUTO}
+    public enum Mode {ON, OFF, AUTO}
 
     public static Map mapStorage = new LinkedHashMap();
     public static Mode bathroomFanMode = Mode.AUTO;

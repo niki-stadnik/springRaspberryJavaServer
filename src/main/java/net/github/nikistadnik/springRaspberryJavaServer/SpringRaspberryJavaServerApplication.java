@@ -19,7 +19,7 @@ public class SpringRaspberryJavaServerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringRaspberryJavaServerApplication.class, args);
 	}
-
+/*
 	@Value("${local.port}")
 	private int PORT;
 
@@ -61,7 +61,7 @@ public class SpringRaspberryJavaServerApplication {
 			//PostgreSQL.terminate();
 		}
 
-	}
+	}*/
 }
 
 

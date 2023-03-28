@@ -1,7 +1,6 @@
 package net.github.nikistadnik.springRaspberryJavaServer.storage;
 
-import net.github.nikistadnik.springRaspberryJavaServer.TempStorage;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.BathroomFan;
+import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.bathroomFan.BathroomFanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
@@ -36,15 +35,15 @@ public class StorageController {
     );
 
 
-    @Scheduled(fixedRate = 10000)
+    //@Scheduled(fixedRate = 10000)
     public void insertIns(){
         Storage ins = new Storage(
-                BathroomFan.bathTemp,
-                BathroomFan.bathHum,
-                BathroomFan.bathLight,
-                BathroomFan.bathFan
+                BathroomFanService.getBathTemp(),
+                BathroomFanService.getBathHum(),
+                BathroomFanService.getBathLight(),
+                BathroomFanService.isBathFan()
         );
-        if (BathroomFan.bathTemp != null) {
+        if (BathroomFanService.getBathTemp() != null) {
             storageService.insert(ins);
         }
         hii();
