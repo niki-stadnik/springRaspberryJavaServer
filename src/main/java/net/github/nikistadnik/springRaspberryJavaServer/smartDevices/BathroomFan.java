@@ -15,12 +15,12 @@ public class BathroomFan {
 
     int rInt = CentralCommand.getRepeatInterval();
     double BathroomFanDelay;
-    double spamDelay = 2 / ((double) rInt / 1000);
+    double spamDelay = 2 / ((double) rInt / 1000);  //if rInt = 10 -- 2/(10/1000) = 200
 
     JSONObject jo;
     int counterForBathroomFan = 0;
     int noResponse = 0;
-    int counterSpamDelay = 0;
+    int counterSpamDelay = 0;   //if spamDelay is 200 and rInt is 10 -- command can be sent every 2000ms or 2s
     boolean flag = false;
 
     static int fanCom = 0;
