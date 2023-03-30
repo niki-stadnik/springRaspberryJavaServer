@@ -9,27 +9,39 @@ import org.springframework.stereotype.Service;
 @Service
 public class BathroomFanService {
 
+    private static boolean flag = false;
+    private static boolean disregard = false;
+
     private static Double bathTemp = null;
     private static Double bathHum = null;
     private static Double bathLight = null;
     private static boolean bathFan = false;
 
 
-    double BathroomFanDelay;
-    int counterForBathroomFan = 0;
+    private static int bathroomFanDelay = 30;
+    private static int counterForBathroomFan = 0;
+    private static int bathroomFanCycles = 0;
     JSONObject jo;
 
     public BathroomFanService() {
-        TempStorage.mapStorage.put("bathroomFanMode", "auto");
-        TempStorage.mapStorage.put("bathroomFanDelay", 30);
     }
 
 
-    public void setData(BathroomFanModel data){
+    public void setData(BathroomFanModel data) {
         System.out.println(data);
+        if (!flag) {
+            if (!disregard){
+                flag = true;
+            }else
+            disregard = false;
+        }
         bathTemp = data.getBathTemp();
+        bathTemp -= 2.2;    //calibrating
+        System.out.println(bathTemp);
         TempStorage.mapStorage.put("bathTemp", bathTemp);
         bathHum = data.getBathHum();
+        bathHum += 24.7;      //calibrating
+        System.out.println(bathHum);
         TempStorage.mapStorage.put("bathHum", bathHum);
         bathLight = data.getBathLight();
         TempStorage.mapStorage.put("bathLight", bathLight);
@@ -37,18 +49,21 @@ public class BathroomFanService {
         TempStorage.mapStorage.put("bathFan", bathFan);
     }
 
-    @Scheduled(fixedRate = 100)
+
+    @Scheduled(fixedRate = 500)    //500
     private void Auto() {
-        BathroomFanDelay = Double.parseDouble(TempStorage.mapStorage.get("bathroomFanDelay").toString()) / (100 / 1000);
+        bathroomFanCycles = bathroomFanDelay * 2;   //it's *2 because the schedule is 2 times per second
 
         //todo does the 30 sek delay work with the changes (not calculated in auto but in class)
 
         if (bathHum != null && bathLight != null && bathTemp != null) {
             if ((bathHum > 60 || bathLight >= 0.01) && !bathFan) {
                 switchON();
-            } else if (bathHum < 50 && bathLight < 0.01 && bathFan) {
-                if (counterForBathroomFan >= BathroomFanDelay) {
-                switchOFF();
+            } else if (bathHum < 55 && bathLight < 0.01 && bathFan) {
+                System.out.println(counterForBathroomFan);
+                System.out.println(bathroomFanCycles);
+                if (counterForBathroomFan >= bathroomFanCycles) {
+                    switchOFF();
                 } else {
                     counterForBathroomFan++;
                     //System.out.println("off delay: " + counterForBathroomFan);
@@ -65,22 +80,28 @@ public class BathroomFanService {
 
 
     public synchronized void switchON() {
-        System.out.println("switch it on");
-        jo = new JSONObject();
-        jo.put("data", true);
-        String data = jo.toString();
-        SendMessage.sendMessage("/topic/bathroomFan", data);
+        if(flag) {
+            flag = false;
+            disregard = true;
+            System.out.println("switch it on");
+            jo = new JSONObject();
+            jo.put("data", true);
+            String data = jo.toString();
+            SendMessage.sendMessage("/topic/bathroomFan", data);
+        }
     }
 
     public synchronized void switchOFF() {
-        System.out.println("switch it off");
-        jo = new JSONObject();
-        jo.put("data", false);
-        String data = jo.toString();
-        SendMessage.sendMessage("/topic/bathroomFan", data);
+        if(flag) {
+            flag = false;
+            disregard = true;
+            System.out.println("switch it off");
+            jo = new JSONObject();
+            jo.put("data", false);
+            String data = jo.toString();
+            SendMessage.sendMessage("/topic/bathroomFan", data);
+        }
     }
-
-
 
 
     public static Double getBathTemp() {

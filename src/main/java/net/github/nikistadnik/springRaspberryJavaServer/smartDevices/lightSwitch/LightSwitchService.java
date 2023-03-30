@@ -2,7 +2,6 @@ package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitc
 
 import net.github.nikistadnik.springRaspberryJavaServer.TempStorage;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SendMessage;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.bathroomFan.BathroomFanModel;
 import org.json.JSONObject;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -10,6 +9,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class LightSwitchService {
 
+    private static boolean flag = false;
+    private static boolean disregard = false;
     JSONObject jo;
     private static Double fuseBoxTemp = null;
     private static Double fuseBoxHum = null;
@@ -26,6 +27,12 @@ public class LightSwitchService {
 
     public void setData(LightSwitchModel data) {
         System.out.println(data);
+        if (!flag) {
+            if (!disregard){
+                flag = true;
+            }else
+                disregard = false;
+        }
         fuseBoxTemp = data.getFuseBoxTemp();
         TempStorage.mapStorage.put("fuseBoxTemp", fuseBoxTemp);
         fuseBoxHum = data.getFuseBoxHum();
@@ -51,21 +58,39 @@ public class LightSwitchService {
     }
 
     public synchronized void ChangeState(boolean[] puls) {
-        System.out.println("Change State");
-
-        jo = new JSONObject();
-        jo.put("pulse0", puls[0]);  //on off state for fan and not lights
-        jo.put("pulse1", puls[1]);  // all the other are light pulses
-        jo.put("pulse2", puls[2]);
-        jo.put("pulse3", puls[3]);
-        jo.put("pulse4", puls[4]);
-        jo.put("pulse5", puls[5]);
-        jo.put("pulse6", puls[6]);
-        jo.put("pulse7", puls[7]);
-        jo.put("pulse8", puls[8]);
-        String data = jo.toString();
-        SendMessage.sendMessage("/topic/lightSwitch", data);
+        if(flag) {
+            flag = false;
+            disregard = true;
+            System.out.println("Change State");
+            jo = new JSONObject();
+            jo.put("pulse0", puls[0]);  //on off state for fan and not lights
+            jo.put("pulse1", puls[1]);  // all the other are light pulses
+            jo.put("pulse2", puls[2]);
+            jo.put("pulse3", puls[3]);
+            jo.put("pulse4", puls[4]);
+            jo.put("pulse5", puls[5]);
+            jo.put("pulse6", puls[6]);
+            jo.put("pulse7", puls[7]);
+            jo.put("pulse8", puls[8]);
+            String data = jo.toString();
+            SendMessage.sendMessage("/topic/lightSwitch", data);
+        }
     }
+
+    /*
+    @Scheduled(fixedRate = 10000)
+    void fanTest(){
+        if(fuseBoxFan){
+            boolean[] fanoff = {false, false, false, false, false, false, false, false, false};
+            ChangeState(fanoff);
+        }else{
+            boolean[] fanon = {true, false, false, false, false, false, false, false, false};
+            ChangeState(fanon);
+        }
+    }
+
+     */
+
 
     @Scheduled(fixedRate = 5000)
     void fanControl() {
@@ -83,7 +108,7 @@ public class LightSwitchService {
                 ChangeState(alloff);
 
             }
-            if ((fuseBoxTemp > 30 || fuseBoxHum > 60) && !fuseBoxFan) {
+            if ((fuseBoxTemp > 40 || fuseBoxHum > 60) && !fuseBoxFan) {
                 boolean[] fanon = {true, false, false, false, false, false, false, false, false};
                 ChangeState(fanon);
             } else if (fuseBoxFan) {
