@@ -1,6 +1,12 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.client;
 
+import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SendMessage;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 @Service
 public class ClientService {
@@ -8,8 +14,16 @@ public class ClientService {
     }
 
     void setData(ClientModel data){
-
     }
+    @Scheduled(fixedRate = 1000)
+    public void testSpam() throws JSONException {
+        JSONObject data = new JSONObject();
+        data.put("test", "pest");
+        data.put("wtf", "omfg");
+        //ClientModel mod = new ClientModel(HtmlUtils.htmlEscape("test beee"));
+        SendMessage.sendMessage("/topic/client", String.valueOf(data));
+    }
+
 
 
 /*

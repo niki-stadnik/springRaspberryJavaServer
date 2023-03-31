@@ -1,5 +1,25 @@
 var stompClient = null;
 
+function myFunction() {
+	document.getElementById("welcome").textContent = "Welcome back!";
+}
+
+window.onload = function() {
+    var reloading = sessionStorage.getItem("reloading");
+    connect();
+    if (reloading) {
+        sessionStorage.removeItem("reloading");
+        myFunction();
+    }
+}
+
+function reloadP() {
+    sessionStorage.setItem("reloading", "true");
+    document.location.reload();
+}
+
+
+
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
@@ -20,39 +40,46 @@ function connect() {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/client', function (greeting) {
             showGreeting(JSON.parse(greeting.body));
+            showGreeting2(JSON.parse(greeting.body));
         });
     });
 }
 
-function disconnect() {
-    if (stompClient !== null) {
-        stompClient.disconnect();
-    }
-    setConnected(false);
-    console.log("Disconnected");
+function showGreeting(test) {
+    $("#greetings").append("<tr><td>" + test.test + "</td></tr>");
 }
+function showGreeting2(wtf) {
+    $("#greetings").append("<tr><td>" + wtf.wtf + "</td></tr>");
+    document.getElementById("teststr").textContent = wtf.wtf;
+}
+
+
 
 function sendBFOn() {
     //stompClient.send("/app/bathroomFan", {}, JSON.stringify({'name': $("#name").val()}));
     stompClient.send("/app/clientBathroomFan", {}, JSON.stringify({'bathFanCommand': true,'auto': false}));
 }
-
 function sendBFOff() {
     stompClient.send("/app/clientBathroomFan", {}, JSON.stringify({'bathFanCommand': false,'auto': false}));
 }
 function sendBFAuto() {
     stompClient.send("/app/clientBathroomFan", {}, JSON.stringify({'bathFanCommand': false,'auto': true}));
 }
-function lightBath() {
-    stompClient.send("/app/clientLightSwitch", {}, JSON.stringify({'light0': false,'light1': true,'light2': false,'light3': false,'light4': false,'light5': false,'light6': false,'light7': false}));
+function lightBedOn() {
+    stompClient.send("/app/clientLightSwitch", {}, JSON.stringify({'light': 0, 'state': true}));
 }
-function lightBed() {
-    stompClient.send("/app/clientLightSwitch", {}, JSON.stringify({'light0': true,'light1': false,'light2': false,'light3': false,'light4': false,'light5': false,'light6': false,'light7': false}));
+function lightBedOff() {
+    stompClient.send("/app/clientLightSwitch", {}, JSON.stringify({'light': 0, 'state': false}));
+}
+function lightBathOn() {
+    stompClient.send("/app/clientLightSwitch", {}, JSON.stringify({'light': 1, 'state': true}));
+}
+function lightBathOff() {
+    stompClient.send("/app/clientLightSwitch", {}, JSON.stringify({'light': 1, 'state': false}));
 }
 
-function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message.message + "</td></tr>");
-}
+
+
 
 $(function () {
     $("form").on('submit', function (e) {
@@ -63,6 +90,8 @@ $(function () {
     $( "#sendBFOn" ).click(function() { sendBFOn(); });
     $( "#sendBFOff" ).click(function() { sendBFOff(); });
     $( "#sendBFAuto" ).click(function() { sendBFAuto(); });
-    $( "#lightBath" ).click(function() { lightBath(); });
-    $( "#lightBed" ).click(function() { lightBed(); });
+    $( "#lightBathOn" ).click(function() { lightBathOn(); });
+    $( "#lightBathOff" ).click(function() { lightBathOff(); });
+    $( "#lightBedOn" ).click(function() { lightBedOn(); });
+    $( "#lightBedOff" ).click(function() { lightBedOff(); });
 });

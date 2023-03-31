@@ -20,7 +20,12 @@
         <div class="form-group">
           <label for="connect">WebSocket connection:</label>
           <button id="connect" class="btn btn-default" type="submit">Connect</button>
-          <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+          <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect</button>
+          <div id="welcome">
+            It's your first time here.
+          </div>
+          <button onclick="reloadP()">
+            Click
           </button>
         </div>
       </form>
@@ -28,14 +33,16 @@
     <div class="col-md-6">
       <form class="form-inline">
         <div class="form-group">
-          <label for="name">What is your name?</label>
+          <label id="teststr" for="name">What is your name?</label>
           <input type="text" id="name" class="form-control" placeholder="Your name here...">
         </div>
         <button id="sendBFOn" class="btn btn-default" type="submit">On</button>
         <button id="sendBFOff" class="btn btn-default" type="submit">Off</button>
         <button id="sendBFAuto" class="btn btn-default" type="submit">Auto</button>
-        <button id="lightBath" class="btn btn-default" type="submit">lightBath</button>
-        <button id="lightBed" class="btn btn-default" type="submit">lightBed</button>
+        <button id="lightBathOn" class="btn btn-default" type="submit">lightBathOn</button>
+        <button id="lightBathOff" class="btn btn-default" type="submit">lightBathOff</button>
+        <button id="lightBedOn" class="btn btn-default" type="submit">lightBedOn</button>
+        <button id="lightBedOff" class="btn btn-default" type="submit">lightBedOff</button>
       </form>
     </div>
   </div>

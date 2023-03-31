@@ -20,7 +20,7 @@ public class BathroomFanService {
     private static Double bathLight = null;
     private static boolean bathFan = false;
 
-
+    private static boolean commandFlag = false;
     private static int bathroomFanDelay = 30;
     private static int counterForBathroomFan = 0;
     private static int bathroomFanCycles = 0;
@@ -35,24 +35,33 @@ public class BathroomFanService {
         auto = data.isAuto();
         if (!auto) {
             bathFanCommand = data.isBathFanCommand();
+            if(!commandFlag){
+                commandFlag = true;
+                jobToDo();
+            }
+        }
+    }
+
+    private void jobToDo(){
+        while (bathFan != bathFanCommand){
             if (bathFanCommand) {
                 switchON();
             } else {
                 switchOFF();
             }
-            check = true;
         }
+        commandFlag = false;
     }
 
 
     public void setData(BathroomFanModel data) {
         System.out.println(data);
         bathTemp = data.getBathTemp();
-        bathTemp -= 2.2;    //calibrating
+        //bathTemp -= 2.2;    //calibrating
         System.out.println(bathTemp);
         TempStorage.mapStorage.put("bathTemp", bathTemp);
         bathHum = data.getBathHum();
-        bathHum += 24.7;      //calibrating
+        //bathHum += 24.7;      //calibrating
         System.out.println(bathHum);
         TempStorage.mapStorage.put("bathHum", bathHum);
         bathLight = data.getBathLight();
@@ -62,15 +71,6 @@ public class BathroomFanService {
         if (!flag) {                //check if message is sent
             if (!disregard) {       //disregard the next batch of data since it can be sent before the message
                 flag = true;        //if disregarded allow the next message to be sent
-                if (check) {        //if a command from client was given, check if it is done
-                    if (bathFanCommand && !bathFan) {
-                        switchOFF();
-                    } else if (!bathFanCommand && bathFan) {
-                        switchON();
-                    }else{
-                        check = false;
-                    }
-                }
             } else {
                 disregard = false;
             }
@@ -125,12 +125,12 @@ public class BathroomFanService {
         }
     }
 
-    @Scheduled(fixedRate = 300000)    //every 5 min = 300000
+    @Scheduled(fixedRate = 20000)    //every 20s
     private void keepAlive() {
         if (flag) {
             flag = false;
             disregard = true;
-            SendMessage.sendMessage("/topic/keepAlive", "donNotDie");
+            SendMessage.sendMessage("/topic/keepAlive", "doNotDie");
         }
     }
 
