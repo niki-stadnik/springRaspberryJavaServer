@@ -11,6 +11,9 @@ public class BathroomFanService {
 
     private static boolean flag = false;
     private static boolean disregard = false;
+    private static boolean check = false;
+    private static boolean auto = true;
+    private static boolean bathFanCommand = false;
 
     private static Double bathTemp = null;
     private static Double bathHum = null;
@@ -27,14 +30,23 @@ public class BathroomFanService {
     }
 
 
+    public void command(BathroomFanClientModel data) {
+        System.out.println(data);
+        auto = data.isAuto();
+        if (!auto) {
+            bathFanCommand = data.isBathFanCommand();
+            if (bathFanCommand) {
+                switchON();
+            } else {
+                switchOFF();
+            }
+            check = true;
+        }
+    }
+
+
     public void setData(BathroomFanModel data) {
         System.out.println(data);
-        if (!flag) {
-            if (!disregard){
-                flag = true;
-            }else
-            disregard = false;
-        }
         bathTemp = data.getBathTemp();
         bathTemp -= 2.2;    //calibrating
         System.out.println(bathTemp);
@@ -47,40 +59,50 @@ public class BathroomFanService {
         TempStorage.mapStorage.put("bathLight", bathLight);
         bathFan = data.isBathFan();
         TempStorage.mapStorage.put("bathFan", bathFan);
+        if (!flag) {                //check if message is sent
+            if (!disregard) {       //disregard the next batch of data since it can be sent before the message
+                flag = true;        //if disregarded allow the next message to be sent
+                if (check) {        //if a command from client was given, check if it is done
+                    if (bathFanCommand && !bathFan) {
+                        switchOFF();
+                    } else if (!bathFanCommand && bathFan) {
+                        switchON();
+                    }else{
+                        check = false;
+                    }
+                }
+            } else {
+                disregard = false;
+            }
+        }
     }
 
 
     @Scheduled(fixedRate = 500)    //500
     private void Auto() {
-        bathroomFanCycles = bathroomFanDelay * 2;   //it's *2 because the schedule is 2 times per second
-
-        //todo does the 30 sek delay work with the changes (not calculated in auto but in class)
-
-        if (bathHum != null && bathLight != null && bathTemp != null) {
-            if ((bathHum > 60 || bathLight >= 0.01) && !bathFan) {
-                switchON();
-            } else if (bathHum < 55 && bathLight < 0.01 && bathFan) {
-                System.out.println(counterForBathroomFan);
-                System.out.println(bathroomFanCycles);
-                if (counterForBathroomFan >= bathroomFanCycles) {
-                    switchOFF();
+        if (auto) {
+            bathroomFanCycles = bathroomFanDelay * 2;   //it's *2 because the schedule is 2 times per second
+            if (bathHum != null && bathLight != null && bathTemp != null) {
+                if ((bathHum > 65 || bathLight >= 0.01) && !bathFan) {
+                    switchON();
+                } else if (bathHum < 56 && bathLight < 0.01 && bathFan) {
+                    System.out.println(counterForBathroomFan);
+                    System.out.println(bathroomFanCycles);
+                    if (counterForBathroomFan >= bathroomFanCycles) {
+                        switchOFF();
+                    } else {
+                        counterForBathroomFan++;
+                    }
                 } else {
-                    counterForBathroomFan++;
-                    //System.out.println("off delay: " + counterForBathroomFan);
+                    if (bathLight >= 0.01) counterForBathroomFan = 0;
                 }
-            } else {
-                //fanCom = 0;
-                if (bathLight >= 0.01) counterForBathroomFan = 0;
             }
-
-        } else {
-            //System.out.println("no data from bathroomFan");
         }
     }
 
 
     public synchronized void switchON() {
-        if(flag) {
+        if (flag) {
             flag = false;
             disregard = true;
             System.out.println("switch it on");
@@ -92,7 +114,7 @@ public class BathroomFanService {
     }
 
     public synchronized void switchOFF() {
-        if(flag) {
+        if (flag) {
             flag = false;
             disregard = true;
             System.out.println("switch it off");
@@ -102,6 +124,16 @@ public class BathroomFanService {
             SendMessage.sendMessage("/topic/bathroomFan", data);
         }
     }
+
+    @Scheduled(fixedRate = 300000)    //every 5 min = 300000
+    private void keepAlive() {
+        if (flag) {
+            flag = false;
+            disregard = true;
+            SendMessage.sendMessage("/topic/keepAlive", "donNotDie");
+        }
+    }
+
 
 
     public static Double getBathTemp() {
@@ -136,4 +168,27 @@ public class BathroomFanService {
         BathroomFanService.bathFan = bathFan;
     }
 
+    public static boolean isAuto() {
+        return auto;
+    }
+
+    public static void setAuto(boolean auto) {
+        BathroomFanService.auto = auto;
+    }
+
+    public static boolean isBathFanCommand() {
+        return bathFanCommand;
+    }
+
+    public static void setBathFanCommand(boolean bathFanCommand) {
+        BathroomFanService.bathFanCommand = bathFanCommand;
+    }
+
+    public static int getBathroomFanDelay() {
+        return bathroomFanDelay;
+    }
+
+    public static void setBathroomFanDelay(int bathroomFanDelay) {
+        BathroomFanService.bathroomFanDelay = bathroomFanDelay;
+    }
 }

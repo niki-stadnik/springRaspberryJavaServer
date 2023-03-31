@@ -17,4 +17,10 @@ public class LightSwitchController {
         service.setData(data);
     }
 
+    @MessageMapping("/clientLightSwitch")
+    public void getData(LightSwitchClientModel data) throws InterruptedException {
+        Thread.sleep(50);
+        service.command(data);
+    }
+
 }

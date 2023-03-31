@@ -1,10 +1,17 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.client;
 
-import net.github.nikistadnik.springRaspberryJavaServer.Encryption;
-import net.github.nikistadnik.springRaspberryJavaServer.TempStorage;
-import org.json.simple.JSONObject;
+import org.springframework.stereotype.Service;
 
-public class Client {
+@Service
+public class ClientService {
+    public ClientService() {
+    }
+
+    void setData(ClientModel data){
+
+    }
+
+
 /*
     void handleCommand(String command) {
         switch (command) {
