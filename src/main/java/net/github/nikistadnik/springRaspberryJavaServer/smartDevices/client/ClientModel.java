@@ -4,21 +4,21 @@ import lombok.Data;
 
 @Data
 public class ClientModel {
-/*
-    private String message;
+
+    private String freeH;
 
     public ClientModel() {
     }
 
-    public ClientModel(String test) {
-        this.message = test;
+    public ClientModel(String freeH) {
+        this.freeH = freeH;
     }
 
-    public String getTest() {
-        return message;
+    public String getFreeH() {
+        return freeH;
     }
 
-    public void setTest(String test) {
-        this.message = test;
-    }*/
+    public void setFreeH(String freeH) {
+        this.freeH = freeH;
+    }
 }

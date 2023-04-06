@@ -15,6 +15,6 @@ public class SendMessage {
 
     public static void sendMessage(String address, String data) {
         messagingTemplate.convertAndSend(address, data);
-        System.out.println(data);
+        //System.out.println(data);
     }
 }

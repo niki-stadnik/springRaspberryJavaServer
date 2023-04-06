@@ -46,16 +46,15 @@ public class LightSwitchService {
             comm[0] = fuseBoxFan;
             comm[lightNum + 1] = true;
             ChangeState(comm);
-            if (!lightCommand[lightNum]) {
-                Thread.sleep(4000); //4 sec delay
-            }
+            if (lightCommand[lightNum]) Thread.sleep(1000); //1 sec delay
+            else Thread.sleep(4000); //4 sec delay
         }
         commandFlag[lightNum] = false;
     }
 
 
     public void setData(LightSwitchModel data) {
-        System.out.println(data);
+        //System.out.println(data);
         fuseBoxTemp = data.getFuseBoxTemp();
         fuseBoxHum = data.getFuseBoxHum();
         fuseBoxFan = data.isFuseBoxFan();

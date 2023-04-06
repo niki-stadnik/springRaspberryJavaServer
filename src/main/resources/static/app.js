@@ -45,6 +45,8 @@ function connect() {
     });
 }
 
+
+
 function showGreeting(test) {
     $("#greetings").append("<tr><td>" + test.test + "</td></tr>");
 }

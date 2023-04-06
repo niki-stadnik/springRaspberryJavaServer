@@ -19,6 +19,8 @@ public class SpringRaspberryJavaServerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringRaspberryJavaServerApplication.class, args);
 	}
+
+	//todo оптимизиране на паузите от thread.sleep на millis
 /*
 	@Value("${local.port}")
 	private int PORT;

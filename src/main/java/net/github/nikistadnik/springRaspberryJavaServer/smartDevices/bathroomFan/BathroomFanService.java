@@ -30,7 +30,7 @@ public class BathroomFanService {
     }
 
 
-    public void command(BathroomFanClientModel data) {
+    public void command(BathroomFanClientModel data) throws InterruptedException {
         System.out.println(data);
         auto = data.isAuto();
         if (!auto) {
@@ -42,26 +42,31 @@ public class BathroomFanService {
         }
     }
 
-    private void jobToDo(){
+    private void jobToDo() throws InterruptedException {
         while (bathFan != bathFanCommand){
             if (bathFanCommand) {
                 switchON();
             } else {
                 switchOFF();
             }
+            Thread.sleep(2000);
         }
         commandFlag = false;
     }
 
 
     public void setData(BathroomFanModel data) {
-        System.out.println(data);
+        //System.out.println(data);
         bathTemp = data.getBathTemp();
-        //bathTemp -= 2.2;    //calibrating
-        System.out.println(bathTemp);
+        bathTemp -= 2;    //calibrating
+        int tem = (int)(bathTemp*100);
+        bathTemp = tem/100d;
+        //System.out.println(bathTemp);
         TempStorage.mapStorage.put("bathTemp", bathTemp);
         bathHum = data.getBathHum();
-        //bathHum += 24.7;      //calibrating
+        bathHum += 15;      //calibrating
+        int hum = (int)(bathHum*100);
+        bathHum = hum/100d;
         System.out.println(bathHum);
         TempStorage.mapStorage.put("bathHum", bathHum);
         bathLight = data.getBathLight();
@@ -78,10 +83,10 @@ public class BathroomFanService {
     }
 
 
-    @Scheduled(fixedRate = 500)    //500
+    @Scheduled(fixedRate = 1000)    //500
     private void Auto() {
         if (auto) {
-            bathroomFanCycles = bathroomFanDelay * 2;   //it's *2 because the schedule is 2 times per second
+            bathroomFanCycles = bathroomFanDelay;   //it's *2 because the schedule is 2 times per second
             if (bathHum != null && bathLight != null && bathTemp != null) {
                 if ((bathHum > 65 || bathLight >= 0.01) && !bathFan) {
                     switchON();

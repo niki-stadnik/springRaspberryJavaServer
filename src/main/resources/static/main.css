@@ -3,7 +3,7 @@ body {
 }
 
 #main-content {
-    max-width: 1200px;
+    max-width: 100%;
     padding: 2em 3em;
     margin: 0 auto 20px;
     background-color: #fff;
@@ -12,3 +12,5 @@ body {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
+
+

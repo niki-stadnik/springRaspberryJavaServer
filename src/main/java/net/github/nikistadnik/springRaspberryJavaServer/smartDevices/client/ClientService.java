@@ -14,12 +14,15 @@ public class ClientService {
     }
 
     void setData(ClientModel data){
+        System.out.println(data);
     }
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 10000)
     public void testSpam() throws JSONException {
         JSONObject data = new JSONObject();
         data.put("test", "pest");
-        data.put("wtf", "omfg");
+        data.put("wtf", "49");
+        data.put("tt", true);
+        data.put("te", 25.02);
         //ClientModel mod = new ClientModel(HtmlUtils.htmlEscape("test beee"));
         SendMessage.sendMessage("/topic/client", String.valueOf(data));
     }
