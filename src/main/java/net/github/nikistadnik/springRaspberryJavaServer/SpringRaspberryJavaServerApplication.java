@@ -1,7 +1,5 @@
 package net.github.nikistadnik.springRaspberryJavaServer;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -9,8 +7,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 @SpringBootApplication
 @EnableScheduling
@@ -18,6 +14,11 @@ public class SpringRaspberryJavaServerApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringRaspberryJavaServerApplication.class, args);
+	}
+
+	@EventListener(ApplicationReadyEvent.class)
+	public void camStart() throws IOException {
+
 	}
 
 	//todo оптимизиране на паузите от thread.sleep на millis

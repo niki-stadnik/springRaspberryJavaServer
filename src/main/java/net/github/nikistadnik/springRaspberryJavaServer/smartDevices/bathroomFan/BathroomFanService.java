@@ -64,7 +64,7 @@ public class BathroomFanService {
         //System.out.println(bathTemp);
         TempStorage.mapStorage.put("bathTemp", bathTemp);
         bathHum = data.getBathHum();
-        bathHum += 15;      //calibrating
+        bathHum += 20;      //calibrating
         int hum = (int)(bathHum*100);
         bathHum = hum/100d;
         System.out.println(bathHum);
