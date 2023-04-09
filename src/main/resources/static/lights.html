@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/lights.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/lights.js"></script>
+    <title>Lights</title>
+</head>
+<body>
+<div class="grid-container">
+    <!--Bedroom -->
+    <div class="name">Спалня</div>
+    <div>
+        <label class="switch">
+            <input type="checkbox" id="0" onclick="switchLight(this)">
+            <span class="slider round"></span>
+        </label>
+    </div>
+    <div class="dimmer" id="dimmer0">dimmer</div>
+    <!--Bathroom -->
+    <div class="name">Баня</div>
+    <div>
+        <label class="switch">
+            <input type="checkbox" id="1" onclick="switchLight(this)">
+            <span class="slider round"></span>
+        </label>
+    </div>
+    <div class="dimmer" id="dimmer1">dimmer</div>
+    <!--Bedroom -->
+    <div class="name">Коридор баня</div>
+    <div>
+        <label class="switch">
+            <input type="checkbox" id="2" onclick="switchLight(this)">
+            <span class="slider round"></span>
+        </label>
+    </div>
+    <div class="dimmer" id="dimmer2">dimmer</div>
+    <!--Bedroom -->
+    <div class="name">3</div>
+    <div>
+        <label class="switch">
+            <input type="checkbox" id="3" onclick="switchLight(this)">
+            <span class="slider round"></span>
+        </label>
+    </div>
+    <div class="dimmer" id="dimmer3">dimmer</div>
+    <!--Bedroom -->
+    <div class="name">4</div>
+    <div>
+        <label class="switch">
+            <input type="checkbox" id="4" onclick="switchLight(this)">
+            <span class="slider round"></span>
+        </label>
+    </div>
+    <div class="dimmer" id="dimmer4">dimmer</div>
+    <!--Bedroom -->
+    <div class="name">5</div>
+    <div>
+        <label class="switch">
+            <input type="checkbox" id="5" onclick="switchLight(this)">
+            <span class="slider round"></span>
+        </label>
+    </div>
+    <div class="dimmer" id="dimmer5">dimmer</div>
+    <!--Bedroom -->
+    <div class="name">6</div>
+    <div>
+        <label class="switch">
+            <input type="checkbox" id="6" onclick="switchLight(this)">
+            <span class="slider round"></span>
+        </label>
+    </div>
+    <div class="dimmer" id="dimmer6">dimmer</div>
+    <!--Bedroom -->
+    <div class="name">Коридор Врата</div>
+    <div>
+        <label class="switch">
+            <input type="checkbox" id="7" onclick="switchLight(this)">
+            <span class="slider round"></span>
+        </label>
+    </div>
+    <div class="dimmer" id="dimmer7">dimmer</div>
+</div>
+</body>
+</html>

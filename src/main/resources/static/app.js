@@ -51,7 +51,7 @@ function showGreeting(test) {
     $("#greetings").append("<tr><td>" + test.test + "</td></tr>");
 }
 function showGreeting2(wtf) {
-    $("#greetings").append("<tr><td>" + wtf.wtf + "</td></tr>");
+   // $("#greetings").append("<tr><td>" + wtf.wtf + "</td></tr>");
     document.getElementById("teststr").textContent = wtf.wtf;
 }
 
