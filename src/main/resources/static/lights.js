@@ -47,7 +47,7 @@ function switchLight(ele) {
     var checkBox = document.getElementById(ele.id);
     stompClient.send("/app/clientLightSwitch", {}, JSON.stringify({'light': id, 'state': checkBox.checked}));
     flag[id] = true;
-    if(checkBox.checked) setTimeout(() => {flag[id] = false;}, "2000");
+    if(checkBox.checked) setTimeout(() => {flag[id] = false;}, "3000");
     else setTimeout(() => {flag[id] = false;}, "5000");
 }
 

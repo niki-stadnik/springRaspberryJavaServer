@@ -1,0 +1,91 @@
+:root {
+  --bg: #202d1f;
+  --comp: #4f574d57;
+}
+
+body {
+    background-color: var(--bg);
+}
+
+
+.grid-container {
+  display: grid;
+  column-gap: 16px;
+  row-gap: 16px;
+  grid-template-columns: 90px auto;
+  background-color: var(--bg);
+  padding: 20px;
+}
+.back {
+  grid-row: 1 / ;
+  background-color: var(--bg);
+  padding: 5px;
+}
+.back button {
+    display: back;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: var(--comp);
+    color: white;
+    padding: 14px 28px;
+    font-size: 30px;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 51px;
+}
+
+.sub-grid-container {
+  display: grid;
+  column-gap: 16px;
+  row-gap: 16px;
+  grid-template-columns: auto auto auto;
+  background-color: var(--bg);
+  padding: 5px;
+}
+.name {
+  grid-column: 1 / 4;
+  background-color: var(--comp);
+  color: white;
+  height: 51px;
+  padding: 5px;
+  font-size: 30px;
+  text-align: center;
+  border-radius: 51px;
+}
+.group {
+  background-color: var(--comp);
+  color: white;
+  height: 51px;
+  padding: 8px 12px;
+  font-size: 23px;
+  text-align: left;
+  border-radius: 51px;
+}
+.group2 {
+  grid-column: 1 / 4;
+  display: grid;
+  column-gap: 16px;
+  row-gap: 16px;
+  grid-template-columns: auto auto auto auto;
+  background-color: var(--comp);
+  color: white;
+  height: 51px;
+  padding: 7px 30px;
+  font-size: 23px;
+  text-align: left;
+  border-radius: 51px;
+}
+.val {
+  display: inline-block;
+  width: 110px;
+}
+.btn{
+  font-size: 25px;
+  background-color: var(--comp);
+  padding: 0;
+}
+.btn:focus {
+    border: none;
+    outline: none;
+}

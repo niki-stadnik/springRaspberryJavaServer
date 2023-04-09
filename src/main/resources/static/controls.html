@@ -2,9 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/controls.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/controls.js"></script>
     <title>Controls</title>
 </head>
 <body>
-
+<div class="grid-container">
+    <div class="back">
+        <button type="button" value="Go back!" onclick="history.back()"><</button>
+    </div>
+    <div class="sub-grid-container">
+        <!--Bathroom -->
+        <div class="name">Баня</div>
+        <div class="group">
+            <form class="form-inline">
+                <span class="text">Температура:</span>
+                <span class="val" id="temp"></span>
+            </form>
+        </div>
+        <div class="group">
+            <form class="form-inline">
+                <span class="text">Влажност:</span>
+                <span class="val" id="hum"></span>
+            </form>
+        </div>
+        <div class="group">
+            <form class="form-inline">
+                <span class="text">Светлина:</span>
+                <span class="val" id="light"></span>
+            </form>
+        </div>
+        <div class="group2">
+            <div class="tag">Вентилатор</div>
+            <button id="sendBFOn" class="btn" type="submit" onclick="sendBFOn()">On</button>
+            <button id="sendBFOff" class="btn" type="submit" onclick="sendBFOff()">Off</button>
+            <button id="sendBFAuto" class="btn" type="submit" onclick="sendBFAuto()">Auto</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>

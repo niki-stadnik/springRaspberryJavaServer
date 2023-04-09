@@ -30,9 +30,20 @@ public class BathroomFanService {
     }
 
 
+    public void initClient(){
+        jo = new JSONObject();
+        jo.put("auto", auto);
+        String dataOut = jo.toString();
+        SendMessage.sendMessage("/topic/modeBathroomFan", dataOut);
+    }
+
     public void command(BathroomFanClientModel data) throws InterruptedException {
         System.out.println(data);
         auto = data.isAuto();
+        jo = new JSONObject();
+        jo.put("auto", auto);
+        String dataOut = jo.toString();
+        SendMessage.sendMessage("/topic/modeBathroomFan", dataOut);
         if (!auto) {
             bathFanCommand = data.isBathFanCommand();
             if(!commandFlag){
@@ -67,7 +78,7 @@ public class BathroomFanService {
         bathHum += 20;      //calibrating
         int hum = (int)(bathHum*100);
         bathHum = hum/100d;
-        System.out.println(bathHum);
+        //System.out.println(bathHum);
         TempStorage.mapStorage.put("bathHum", bathHum);
         bathLight = data.getBathLight();
         TempStorage.mapStorage.put("bathLight", bathLight);
