@@ -12,78 +12,113 @@
 </head>
 <body>
 <div class="grid-container">
+    <div class="back">
+        <button type="button" value="Go back!" onclick="history.back()"><</button>
+    </div>
     <!--Bedroom -->
     <div class="name">Спалня</div>
-    <div>
+    <div class="switch-box">
         <label class="switch">
             <input type="checkbox" id="0" onclick="switchLight(this)">
             <span class="slider round"></span>
         </label>
     </div>
-    <div class="dimmer" id="dimmer0">dimmer</div>
+    <div class="dimmer-box">
+        <div class="dimmer-container">
+            <input type="range" min="1" max="100" value="100" class="dimmer" id="dim0" onchange="updateDimmer(this)">
+        </div>
+    </div>
     <!--Bathroom -->
     <div class="name">Баня</div>
-    <div>
+    <div class="switch-box">
         <label class="switch">
             <input type="checkbox" id="1" onclick="switchLight(this)">
             <span class="slider round"></span>
         </label>
     </div>
-    <div class="dimmer" id="dimmer1">dimmer</div>
+    <div class="dimmer-box">
+        <div class="dimmer-container">
+            <input type="range" min="1" max="100" value="100" class="dimmer" id="dim1" onchange="updateDimmer(this)">
+        </div>
+    </div>
     <!--Bedroom -->
     <div class="name">Коридор баня</div>
-    <div>
+    <div class="switch-box">
         <label class="switch">
             <input type="checkbox" id="2" onclick="switchLight(this)">
             <span class="slider round"></span>
         </label>
     </div>
-    <div class="dimmer" id="dimmer2">dimmer</div>
+    <div class="dimmer-box">
+        <div class="dimmer-container">
+            <input type="range" min="1" max="100" value="100" class="dimmer" id="dim2" onchange="updateDimmer(this)">
+        </div>
+    </div>
     <!--Bedroom -->
-    <div class="name">3</div>
-    <div>
+    <div class="name">Кугня</div>
+    <div class="switch-box">
         <label class="switch">
             <input type="checkbox" id="3" onclick="switchLight(this)">
             <span class="slider round"></span>
         </label>
     </div>
-    <div class="dimmer" id="dimmer3">dimmer</div>
+    <div class="dimmer-box">
+        <div class="dimmer-container">
+            <input type="range" min="1" max="100" value="100" class="dimmer" id="dim3" onchange="updateDimmer(this)">
+        </div>
+    </div>
     <!--Bedroom -->
-    <div class="name">4</div>
-    <div>
+    <div class="name">Трапезария</div>
+    <div class="switch-box">
         <label class="switch">
             <input type="checkbox" id="4" onclick="switchLight(this)">
             <span class="slider round"></span>
         </label>
     </div>
-    <div class="dimmer" id="dimmer4">dimmer</div>
+    <div class="dimmer-box">
+        <div class="dimmer-container">
+            <input type="range" min="1" max="100" value="100" class="dimmer" id="dim4" onchange="updateDimmer(this)">
+        </div>
+    </div>
     <!--Bedroom -->
-    <div class="name">5</div>
-    <div>
+    <div class="name">Хол</div>
+    <div class="switch-box">
         <label class="switch">
             <input type="checkbox" id="5" onclick="switchLight(this)">
             <span class="slider round"></span>
         </label>
     </div>
-    <div class="dimmer" id="dimmer5">dimmer</div>
+    <div class="dimmer-box">
+        <div class="dimmer-container">
+            <input type="range" min="1" max="100" value="100" class="dimmer" id="dim5" onchange="updateDimmer(this)">
+        </div>
+    </div>
     <!--Bedroom -->
-    <div class="name">6</div>
-    <div>
+    <div class="name">Балкон</div>
+    <div class="switch-box">
         <label class="switch">
             <input type="checkbox" id="6" onclick="switchLight(this)">
             <span class="slider round"></span>
         </label>
     </div>
-    <div class="dimmer" id="dimmer6">dimmer</div>
+    <div class="dimmer-box">
+        <div class="dimmer-container">
+            <input type="range" min="1" max="100" value="100" class="dimmer" id="dim6" onchange="updateDimmer(this)">
+        </div>
+    </div>
     <!--Bedroom -->
     <div class="name">Коридор Врата</div>
-    <div>
+    <div class="switch-box">
         <label class="switch">
             <input type="checkbox" id="7" onclick="switchLight(this)">
             <span class="slider round"></span>
         </label>
     </div>
-    <div class="dimmer" id="dimmer7">dimmer</div>
+    <div class="dimmer-box">
+        <div class="dimmer-container">
+            <input type="range" min="1" max="100" value="100" class="dimmer" id="dim7" onchange="updateDimmer(this)">
+        </div>
+    </div>
 </div>
 </body>
 </html>
