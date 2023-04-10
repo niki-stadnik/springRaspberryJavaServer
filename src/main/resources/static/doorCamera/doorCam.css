@@ -1,0 +1,45 @@
+html {
+  background-color: var(--bg);
+  height: 100%;
+}
+
+body {
+    height: 100%;
+    background-color: var(--bg);
+}
+
+.box{
+    height: 100%;
+    background-color: var(--bg);
+}
+
+.image{
+    width: 100%;
+    object-fit: contain;
+}
+
+.buttons{
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 30px;
+    padding: 10px;
+}
+.butt {
+  background-color: #fff0;
+  font-size: 25px;
+  height: 100px;
+  width: 100px;
+  border-radius: 20px;
+
+}
+.conf{
+  grid-column: 2 / 3;
+}
+
+.text{
+  font-size: 30px;
+  color: #ffffff70;
+}

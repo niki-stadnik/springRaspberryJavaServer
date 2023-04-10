@@ -13,21 +13,14 @@ public class BathroomFanController {
     }
 
     @MessageMapping("/bathroomFan")
-    @SendTo("/topic/clientBathroomFan")
-    public BathroomFanModel getData(BathroomFanModel data) throws InterruptedException {
+    public void getData(BathroomFanModel data) throws InterruptedException {
         Thread.sleep(50);
         service.setData(data);
-        return data;
     }
 
     @MessageMapping("/clientBathroomFan")
     public void getData(BathroomFanClientModel data) throws InterruptedException {
         Thread.sleep(50);
         service.command(data);
-    }
-    @MessageMapping("/clientInitBF")
-    public void init(){
-        service.initClient();
-        System.out.println("init fan");
     }
 }

@@ -7,16 +7,6 @@ window.onload = function() {
         sessionStorage.removeItem("reloading");
     }
 }
-function reloadP() {
-    sessionStorage.setItem("reloading", "true");
-    document.location.reload();
-}
-function controls() {
-     window.location.href="/controls/controls.html";
-}
-function lights() {
-     window.location.href="/lights/lights.html";
-}
 
 function connect() {
     var socket = new SockJS('/stomp-endpoint');

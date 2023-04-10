@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/colors.css" rel="stylesheet">
+    <link href="/hallway/hallway.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/hallway/hallway.js"></script>
+    <title>Hallway</title>
+</head>
+<body>
+
+<div class="grid-container">
+    <!-- clock -->
+    <div class="clock" style="cursor: pointer;" onclick="reloadP()">
+        <canvas id="canvas" width="400" height="400">cccc</canvas>
+        <script src="/clock/script.js"></script>
+    </div>
+    <!-- camera -->
+    <div class="camera">
+        <a href="/doorCamera/doorCam.html">
+            <img class="image" id="image" src=""/>
+        </a>
+    </div>
+    <!-- buttons -->
+    <div class="sub-grid-container">
+        <button id="lights" class="butt" type="submit" onclick="lights()">Лампи</button>
+        <button id="climate" class="butt" type="submit" onclick="">Климат</button>
+        <button id="exit" class="butt-big" type="submit" onclick="">Излизане</button>
+        <button id="controls" class="butt" type="submit" onclick="controls()">Контроли</button>
+        <button id="cameras" class="butt" type="submit" onclick="">Камери</button>
+    </div>
+</div>
+</body>
+</html>
