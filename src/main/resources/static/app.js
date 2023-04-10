@@ -79,6 +79,9 @@ function lightBathOn() {
 function lightBathOff() {
     stompClient.send("/app/clientLightSwitch", {}, JSON.stringify({'light': 1, 'state': false}));
 }
+function adax1() {
+    stompClient.send("/app/adax", {}, JSON.stringify({'id': 161132 ,'temp': 2100}));
+}
 
 
 
@@ -96,4 +99,5 @@ $(function () {
     $( "#lightBathOff" ).click(function() { lightBathOff(); });
     $( "#lightBedOn" ).click(function() { lightBedOn(); });
     $( "#lightBedOff" ).click(function() { lightBedOff(); });
+    $( "#adax1" ).click(function() { adax1(); });
 });

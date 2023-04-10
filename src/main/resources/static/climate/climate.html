@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/colors.css" rel="stylesheet">
+    <link href="/climate/climate.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/climate/climate.js"></script>
+    <title>Climate</title>
+</head>
+<body>
+<div class="grid-container">
+    <div class="back">
+        <button type="button" value="Go back!" onclick="history.back()"><</button>
+    </div>
+    <div class="sub-grid-container">
+        <!--Bedroom -->
+        <div class="name">Спалня</div>
+        <div class="group2">
+            <button id="BedDecrease" class="butt" type="submit" onclick="BedDecrease()">-</button>
+            <button id="update" class="butt" type="submit" onclick="update()">--</button>
+            <button id="BedIncrease" class="butt" type="submit" onclick="BedIncrease()">+</button>
+        </div>
+        <div class="group">
+            <form class="form-inline">
+                <span class="text">Температура:</span>
+                <span class="val" id="BedTemp"></span>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

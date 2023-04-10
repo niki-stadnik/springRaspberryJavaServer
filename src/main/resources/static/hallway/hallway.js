@@ -17,6 +17,9 @@ function controls() {
 function lights() {
      window.location.href="/lights/lights.html";
 }
+function climate() {
+     window.location.href="/climate/climate.html";
+}
 
 function connect() {
     var socket = new SockJS('/stomp-endpoint');
