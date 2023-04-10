@@ -2,9 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/colors.css" rel="stylesheet">
+    <link href="hallway/hallway.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="hallway/hallway.js"></script>
+    <title>Hallway</title>
 </head>
 <body>
+<!-- clock -->
+<canvas id="canvas" width="400" height="400" >cccc</canvas>
+<script  src="./clock/script.js"></script>
 
+<div class="grid-container">
+    <div class="sub-grid-container">
+        <button id="sendBFOn" class="btn" type="submit" onclick="sendBFOn()">On</button>
+        <div class="name">Лампи</div>
+        <div class="name">Климат</div>
+        <div class="name">Контроли</div>
+    </div>
+</div>
 </body>
 </html>

@@ -1,8 +1,3 @@
-:root {
-  --bg: #202d1f;
-  --comp: #4f574d57;
-}
-
 body {
     background-color: var(--bg);
 }
