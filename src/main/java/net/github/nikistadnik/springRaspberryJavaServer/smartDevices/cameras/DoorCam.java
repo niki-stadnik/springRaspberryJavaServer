@@ -11,11 +11,12 @@ import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class DoorCam {
     private static String imageUrl = "http://192.168.88.69/capture";
 
-    @Scheduled(fixedRate = 40)
+    //@Scheduled(fixedRate = 40)
     public static void getImage() throws JSONException {
         while (true) {
             try {
