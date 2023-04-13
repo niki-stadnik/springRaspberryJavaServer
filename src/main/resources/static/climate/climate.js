@@ -38,10 +38,8 @@ function update() {
 function BedDecrease() {
     var dec = (BedTarget - 1) * 100;
     stompClient.send("/app/adax", {}, JSON.stringify({'id': 161132 ,'temp': dec}));    //bedroom
-    document.getElementById("update").textContent = dec;
 }
 function BedIncrease() {
     var dec = (BedTarget + 1) * 100;
     stompClient.send("/app/adax", {}, JSON.stringify({'id': 161132 ,'temp': dec}));    //bedroom
-    document.getElementById("update").textContent = dec;
 }

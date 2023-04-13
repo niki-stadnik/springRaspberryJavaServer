@@ -22,6 +22,6 @@ public class AdaxAPIController {
     @MessageMapping("/adaxInit")
     public void init() throws InterruptedException {
         Thread.sleep(50);
-        adaxAPI.getData();
+        adaxAPI.updateClient();
     }
 }

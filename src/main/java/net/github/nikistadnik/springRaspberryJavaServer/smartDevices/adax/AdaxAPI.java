@@ -34,28 +34,32 @@ public class AdaxAPI {
 
     private String token;
 
-    private int targetTemp;
-    private int realTemp;
 
-    private boolean recursFlag;
+    private boolean coolDown;
 
     private JSONObject tempBedroom;
 
 
-    public AdaxAPI() throws Exception {}
-    @PostConstruct
-    private void init() throws Exception {token = getToken();}
+    public AdaxAPI() throws Exception {
+    }
 
-    public void command(AdaxAPIModel data){
+    @PostConstruct
+    private void init() throws Exception {
+        token = getToken();
+    }
+
+    public void command(AdaxAPIModel data) {
         // Change the temperature to 24 C in the room with an Id of 196342
         // Replace the 196342 with the room id from the getHomesInfo output
         int temp = data.getTemp();
         int id = data.getId();
+        coolDown = true;
+        if (id == 161132) tempBedroom.put("targetTemperature", temp / 100);
+        updateClient();
         changeTemp(id, temp);
     }
 
     private void changeTemp(int id, int temp) { //room id for Bedroom is 161132
-        recursFlag = true;
         try {
             setRoomTargetTemperature(id, temp, token);  //temp is 4 digit 23* is 2300
         } catch (Exception e) {
@@ -66,15 +70,6 @@ public class AdaxAPI {
                 throw new RuntimeException(ex);
             }
             changeTemp(id, temp);
-        }
-        if(recursFlag){
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            getData();
-            recursFlag = false;
         }
     }
 
@@ -105,17 +100,24 @@ public class AdaxAPI {
         System.out.println(response);
     }
 
+    public void updateClient() {
+        if (tempBedroom != null) {
+            SendMessage.sendMessage("/topic/adax", String.valueOf(tempBedroom));
+        }
+    }
 
 
-    @Scheduled(fixedRate = 900000)  //every 15 minutes
-    public void getData(){
+    @Scheduled(fixedRate = 600000)  //every 10 minutes
+    private void getData() {
         try {
             getHomesInfo(token);
+            coolDown = false;
         } catch (Exception e) {
             System.out.println("exep..");
             //throw new RuntimeException(e);
         }
     }
+
     private void getHomesInfo(String token) throws Exception {
         HttpsURLConnection connection = (HttpsURLConnection) (new URL(apiUrl + "/rest/v1/content/").openConnection());
 
@@ -149,11 +151,17 @@ public class AdaxAPI {
             jo.put("targetTemperature", targetTemperature);
             jo.put("currentTemperature", currentTemperature);
             String dataOut = jo.toString();
-            SendMessage.sendMessage("/topic/adax", dataOut);
-
-            if(roomId == 161132) tempBedroom = jo;
-
             System.out.println(dataOut);
+
+
+            if (!coolDown) {
+                switch (roomId) {
+                    case 161132:    //bedroom
+                        tempBedroom = jo;
+                        SendMessage.sendMessage("/topic/adax", dataOut);
+                        break;
+                }
+            }
 
             //double test = roomData.getDouble("temperature");
             //System.out.println(test);
