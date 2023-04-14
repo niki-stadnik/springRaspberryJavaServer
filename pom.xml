@@ -15,7 +15,7 @@
 	<description>Home Automation Server</description>
 	<packaging>jar</packaging>
 	<properties>
-		<java.version>18</java.version>
+		<java.version>20</java.version>
 	</properties>
 
 
