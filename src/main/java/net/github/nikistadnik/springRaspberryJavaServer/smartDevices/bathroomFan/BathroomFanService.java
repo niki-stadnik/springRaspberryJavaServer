@@ -77,17 +77,13 @@ public class BathroomFanService {
         int tem = (int)(bathTemp*100);
         bathTemp = tem/100d;
         //System.out.println(bathTemp);
-        TempStorage.mapStorage.put("bathTemp", bathTemp);
         bathHum = data.getBathHum();
         bathHum += 15;      //calibrating
         int hum = (int)(bathHum*100);
         bathHum = hum/100d;
         //System.out.println(bathHum);
-        TempStorage.mapStorage.put("bathHum", bathHum);
         bathLight = data.getBathLight();
-        TempStorage.mapStorage.put("bathLight", bathLight);
         bathFan = data.isBathFan();
-        TempStorage.mapStorage.put("bathFan", bathFan);
         if (!flag) {                //check if message is sent
             if (!disregard) {       //disregard the next batch of data since it can be sent before the message
                 flag = true;        //if disregarded allow the next message to be sent
@@ -104,9 +100,9 @@ public class BathroomFanService {
         if (auto) {
             bathroomFanCycles = bathroomFanDelay;   //it's *2 because the schedule is 2 times per second
             if (bathHum != null && bathLight != null && bathTemp != null) {
-                if ((bathHum > 65 || bathLight >= 0.01) && !bathFan) {
+                if ((bathHum > 70 || bathLight >= 0.01) && !bathFan) {
                     switchON();
-                } else if (bathHum < 56 && bathLight < 0.01 && bathFan) {
+                } else if (bathHum < 54 && bathLight < 0.01 && bathFan) {
                     System.out.println(counterForBathroomFan);
                     System.out.println(bathroomFanCycles);
                     if (counterForBathroomFan >= bathroomFanCycles) {

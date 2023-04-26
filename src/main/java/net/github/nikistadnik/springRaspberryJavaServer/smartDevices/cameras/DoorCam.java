@@ -6,18 +6,17 @@ import java.net.URL;
 import java.util.Base64;
 
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SendMessage;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.json.JSONObject;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class DoorCam {
-    private static String imageUrl = "http://192.168.88.69/capture";
+    private String imageUrl = "http://192.168.88.69/capture";
 
-    //@Scheduled(fixedRate = 40)
-    public static void getImage() throws JSONException {
+    @Scheduled(fixedRate = 40)
+    public void getImage(){
         while (true) {
             try {
                 URL url = new URL(imageUrl);
