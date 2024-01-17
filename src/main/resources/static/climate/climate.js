@@ -36,10 +36,16 @@ function update() {
 }
 
 function BedDecrease() {
-    var dec = (BedTarget - 1) * 100;
-    stompClient.send("/app/adax", {}, JSON.stringify({'id': 161132 ,'temp': dec}));    //bedroom
+    if (BedTarget > 5 && BedTarget <= 30){
+        var dec = (BedTarget - 1) * 100;
+        stompClient.send("/app/adax", {}, JSON.stringify({'id': 161132 ,'temp': dec}));    //bedroom
+    }
 }
 function BedIncrease() {
-    var dec = (BedTarget + 1) * 100;
-    stompClient.send("/app/adax", {}, JSON.stringify({'id': 161132 ,'temp': dec}));    //bedroom
+    if (BedTarget >= 5 && BedTarget <= 30){
+        var dec = (BedTarget + 1) * 100;
+        stompClient.send("/app/adax", {}, JSON.stringify({'id': 161132 ,'temp': dec}));    //bedroom
+    }else {
+        stompClient.send("/app/adax", {}, JSON.stringify({'id': 161132 ,'temp': 500}));    //bedroom
+    }
 }

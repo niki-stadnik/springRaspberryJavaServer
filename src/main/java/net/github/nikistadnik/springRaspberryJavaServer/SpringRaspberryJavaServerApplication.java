@@ -75,3 +75,5 @@ public class SpringRaspberryJavaServerApplication {
 
 //json parsera ot serveOneClient moje da se podobri poneje ponastoq6tem iska vun6na biblioteka
 	//suotvetno da se mahne dependacito na json simple
+
+//keepalive ne trqbva li da e na otdelen klas ponexe ako go ima vyv vseki 6te ima mnogo spam

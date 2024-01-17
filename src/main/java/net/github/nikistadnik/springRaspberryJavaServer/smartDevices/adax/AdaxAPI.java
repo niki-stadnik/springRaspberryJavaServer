@@ -108,13 +108,26 @@ public class AdaxAPI {
 
 
     @Scheduled(fixedRate = 600000)  //every 10 minutes
+    //@Scheduled(fixedRate = 60000)  //every 1 minutes
     private void getData() {
         try {
             getHomesInfo(token);
             coolDown = false;
-        } catch (Exception e) {
-            System.out.println("exep..");
-            //throw new RuntimeException(e);
+        } catch (Exception e) {     //when heater is off (--) it gives exception
+            //System.out.println("exep..");
+            JSONObject jo = new JSONObject();
+            jo.put("roomName", "Bedroom");
+            jo.put("roomId", 161132);
+            jo.put("targetTemperature", "--");
+            jo.put("currentTemperature", "--");
+            String dataOut = jo.toString();
+            System.out.println(dataOut);
+            if (!coolDown) {
+                        tempBedroom = jo;
+                        SendMessage.sendMessage("/topic/adax", dataOut);
+
+            }
+            coolDown = false;
         }
     }
 

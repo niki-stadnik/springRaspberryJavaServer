@@ -11,9 +11,9 @@ public class LightSwitchService {
     private static boolean flag = false;
     private static boolean disregard = false;
     JSONObject jo;
-    private static Double fuseBoxTemp = null;
-    private static Double fuseBoxHum = null;
-    private static boolean fuseBoxFan = false;
+    //private static Double fuseBoxTemp = null;
+    //private static Double fuseBoxHum = null;
+    //private static boolean fuseBoxFan = false;
     private static final boolean[] light = new boolean[8];
     private static final boolean[] lightCommand = new boolean[8];
     private static final boolean[] commandFlag = new boolean[8];
@@ -43,8 +43,8 @@ public class LightSwitchService {
     private void jobToDo(int lightNum) throws InterruptedException {
         while (light[lightNum] != lightCommand[lightNum]){
             boolean[] comm = new boolean[9];
-            comm[0] = fuseBoxFan;
-            comm[lightNum + 1] = true;
+            //comm[0] = fuseBoxFan;
+            comm[lightNum/* + 1*/] = true;
             ChangeState(comm);
             if (lightCommand[lightNum]) Thread.sleep(1000); //1 sec delay
             else Thread.sleep(4000); //4 sec delay
@@ -55,9 +55,9 @@ public class LightSwitchService {
 
     public void setData(LightSwitchModel data) {
         //System.out.println(data);
-        fuseBoxTemp = data.getFuseBoxTemp();
-        fuseBoxHum = data.getFuseBoxHum();
-        fuseBoxFan = data.isFuseBoxFan();
+        //fuseBoxTemp = data.getFuseBoxTemp();
+        //fuseBoxHum = data.getFuseBoxHum();
+        //fuseBoxFan = data.isFuseBoxFan();
         light[0] = data.isLight0();
         light[1] = data.isLight1();
         light[2] = data.isLight2();
@@ -103,7 +103,7 @@ public class LightSwitchService {
         }
     }
 
-
+    /*
     @Scheduled(fixedRate = 5000)
     void fanControl() {
         if (fuseBoxTemp != null && fuseBoxHum != null) {
@@ -130,5 +130,6 @@ public class LightSwitchService {
             }
         }
     }
+    */
 
 }

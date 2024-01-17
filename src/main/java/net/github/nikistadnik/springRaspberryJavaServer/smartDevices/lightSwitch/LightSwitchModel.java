@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class LightSwitchModel {
 
-    private Double fuseBoxTemp;
-    private Double fuseBoxHum;
-    private boolean fuseBoxFan;
+    //private Double fuseBoxTemp;
+    //private Double fuseBoxHum;
+    //private boolean fuseBoxFan;
     private boolean light0;
     private boolean light1;
     private boolean light2;
@@ -21,10 +21,10 @@ public class LightSwitchModel {
     public LightSwitchModel() {
     }
 
-    public LightSwitchModel(Double fuseBoxTemp, Double fuseBoxHum, boolean fuseBoxFan, boolean light0, boolean light1, boolean light2, boolean light3, boolean light4, boolean light5, boolean light6, boolean light7) {
-        this.fuseBoxTemp = fuseBoxTemp;
-        this.fuseBoxHum = fuseBoxHum;
-        this.fuseBoxFan = fuseBoxFan;
+    public LightSwitchModel(/*Double fuseBoxTemp, Double fuseBoxHum, boolean fuseBoxFan,*/ boolean light0, boolean light1, boolean light2, boolean light3, boolean light4, boolean light5, boolean light6, boolean light7) {
+        //this.fuseBoxTemp = fuseBoxTemp;
+        //this.fuseBoxHum = fuseBoxHum;
+        //this.fuseBoxFan = fuseBoxFan;
         this.light0 = light0;
         this.light1 = light1;
         this.light2 = light2;
@@ -34,7 +34,7 @@ public class LightSwitchModel {
         this.light6 = light6;
         this.light7 = light7;
     }
-
+/*
     public Double getFuseBoxTemp() {
         return fuseBoxTemp;
     }
@@ -58,7 +58,7 @@ public class LightSwitchModel {
     public void setFuseBoxFan(boolean fuseBoxFan) {
         this.fuseBoxFan = fuseBoxFan;
     }
-
+*/
     public boolean isLight0() {
         return light0;
     }

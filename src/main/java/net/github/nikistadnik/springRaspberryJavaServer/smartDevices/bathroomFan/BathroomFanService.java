@@ -73,12 +73,12 @@ public class BathroomFanService {
     public void setData(BathroomFanModel data) {
         //System.out.println(data);
         bathTemp = data.getBathTemp();
-        bathTemp -= 2;    //calibrating
+        //bathTemp -= 2;    //calibrating
         int tem = (int)(bathTemp*100);
         bathTemp = tem/100d;
         //System.out.println(bathTemp);
         bathHum = data.getBathHum();
-        bathHum += 15;      //calibrating
+        //bathHum += 10;      //calibrating
         int hum = (int)(bathHum*100);
         bathHum = hum/100d;
         //System.out.println(bathHum);

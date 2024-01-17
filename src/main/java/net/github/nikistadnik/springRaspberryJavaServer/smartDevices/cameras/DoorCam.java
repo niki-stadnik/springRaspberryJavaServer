@@ -28,7 +28,7 @@ public class DoorCam {
                 json.put("image", imageString);
                 SendMessage.sendMessage("/topic/imageDoorCam", String.valueOf(json));
             } catch (IOException e) {
-                System.out.println("connection with the cam has been broken");
+                //System.out.println("connection with the cam has been broken");
                 //throw new RuntimeException(e);
             }
             break;
