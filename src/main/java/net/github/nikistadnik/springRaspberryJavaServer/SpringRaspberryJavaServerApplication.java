@@ -74,6 +74,6 @@ public class SpringRaspberryJavaServerApplication {
 //to run it - Terminal : java -jar target/springRaspberryJavaServer-0.0.1-SNAPSHOT.jar
 
 //json parsera ot serveOneClient moje da se podobri poneje ponastoq6tem iska vun6na biblioteka
-	//suotvetno da se mahne dependacito na json simple
+	//suotvetno da se mahne dependacito na json simple 
 
-//keepalive ne trqbva li da e na otdelen klas ponexe ako go ima vyv vseki 6te ima mnogo spam
+//da naprav[ restart metoda za isp dvojkite

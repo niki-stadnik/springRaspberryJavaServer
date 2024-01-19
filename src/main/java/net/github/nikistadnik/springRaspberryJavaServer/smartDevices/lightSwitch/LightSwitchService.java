@@ -1,6 +1,7 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitch;
 
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SendMessage;
+import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.doorman.DoormanService;
 import org.json.JSONObject;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -8,9 +9,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class LightSwitchService {
 
+    private static boolean active = false;
     private static boolean flag = false;
     private static boolean disregard = false;
-    JSONObject jo;
+    static JSONObject jo;
     //private static Double fuseBoxTemp = null;
     //private static Double fuseBoxHum = null;
     //private static boolean fuseBoxFan = false;
@@ -54,7 +56,8 @@ public class LightSwitchService {
 
 
     public void setData(LightSwitchModel data) {
-        //System.out.println(data);
+        System.out.println(data);
+        active = true;
         //fuseBoxTemp = data.getFuseBoxTemp();
         //fuseBoxHum = data.getFuseBoxHum();
         //fuseBoxFan = data.isFuseBoxFan();
@@ -74,7 +77,7 @@ public class LightSwitchService {
     }
 
 
-    public synchronized void ChangeState(boolean[] puls) {
+    public static synchronized void ChangeState(boolean[] puls) {
         if (flag) {
             flag = false;
             disregard = true;
@@ -94,13 +97,26 @@ public class LightSwitchService {
         }
     }
 
-    @Scheduled(fixedRate = 20000)    //every 20s
+
+    //@Scheduled(fixedRate = 20000)    //every 20s
     private void keepAlive() {
         if (flag) {
             flag = false;
             disregard = true;
             SendMessage.sendMessage("/topic/keepAlive", "donNotDie");
         }
+    }
+
+    @Scheduled(fixedRate = 5000)    //every 5s
+    private synchronized void selfReboot(){
+        if (!active) DoormanService.rebootLightSwitch();
+        active = false;
+    }
+
+    public static synchronized void rebootDoorman() {
+        System.out.println("reboot Doorman");
+        boolean[] res = {false, false, false, false, false, false, false, false, true};
+        ChangeState(res);
     }
 
     /*
