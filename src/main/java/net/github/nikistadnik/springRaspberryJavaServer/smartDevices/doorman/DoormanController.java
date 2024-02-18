@@ -20,4 +20,10 @@ public class DoormanController {
         return data;
     }
 
+    @MessageMapping("/clientDoorman")
+    public void getData(DoormanClientModel data) throws InterruptedException {
+        Thread.sleep(50);
+        service.command(data);
+    }
+
 }

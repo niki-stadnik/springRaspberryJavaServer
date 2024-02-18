@@ -43,6 +43,43 @@
             <button id="sendBFOff" class="btn" type="submit" onclick="sendBFOff()">Off</button>
             <button id="sendBFAuto" class="btn" type="submit" onclick="sendBFAuto()">Auto</button>
         </div>
+
+        <!--Reboots -->
+        <div class="name">Reboot</div>
+        <div class="group2">
+            <div class="tag">Reboot</div>
+            <button id="sendResLight" class="btn" type="submit" onclick="sendResLight()">LightSwitcch</button>
+            <button id="sendResDoor" class="btn" type="submit" onclick="sendResDoor()">Doorman</button>
+        </div>
+
+        <!--Cameras -->
+        <div class="name">Cameras</div>
+        <div class="group2">
+            <div class="tag">Doorcam</div>
+            <button id="conf" class="btn" onclick="window.location.href='http://192.168.88.69:80';" >config</button>
+            <button id="cap" class="btn" onclick="window.location.href='http://192.168.88.69:80/capture';" >pic</button>
+            <button id="str" class="btn" onclick="window.location.href='/doorCamera/doorCam.html';" >stream</button>
+        </div>
+        <div class="group">
+            <form class="form-inline">
+                <span class="text">FPS:</span>
+                <span class="val" id="fps"></span>
+            </form>
+        </div>
+        <div class="group">
+            <form class="form-inline">
+                <span class="text">FPM:</span>
+                <span class="val" id="fpm"></span>
+            </form>
+        </div>
+
+        <!--Console -->
+        <div class="name">Console</div>
+        <div class="group2">
+            <div class="tag">Console</div>
+            <button id="con" class="btn" onclick="window.location.href='/controls/console/console.html';" >console</button>
+        </div>
+
     </div>
 </div>
 </body>

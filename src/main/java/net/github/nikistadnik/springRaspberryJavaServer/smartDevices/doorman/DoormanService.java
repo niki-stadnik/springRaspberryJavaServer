@@ -31,13 +31,18 @@ public class DoormanService {
         rfid = data.isRfid();
     }
 
+    public void command(DoormanClientModel data){
+        System.out.println(data);
+        int com = data.getCommand();
+        if (com == 1) rebootLightSwitch();
+        if (com == 2) LightSwitchService.rebootDoorman();
+    }
 
 
 
 
 
-
-    @Scheduled(fixedRate = 5000)    //every 5s
+    @Scheduled(fixedRate = 10000)    //every 10s
     private synchronized void selfReboot(){
         if (!active) LightSwitchService.rebootDoorman();
         active = false;

@@ -83,15 +83,15 @@ public class LightSwitchService {
             disregard = true;
             System.out.println("Change State");
             jo = new JSONObject();
-            jo.put("pulse0", puls[0]);  //on off state for fan and not lights
-            jo.put("pulse1", puls[1]);  // all the other are light pulses
+            jo.put("pulse0", puls[0]);
+            jo.put("pulse1", puls[1]);
             jo.put("pulse2", puls[2]);
             jo.put("pulse3", puls[3]);
             jo.put("pulse4", puls[4]);
             jo.put("pulse5", puls[5]);
             jo.put("pulse6", puls[6]);
             jo.put("pulse7", puls[7]);
-            jo.put("pulse8", puls[8]);
+            jo.put("pulse8", puls[8]);  //relay for doorman (operated with a pulse like the lights)
             String data = jo.toString();
             SendMessage.sendMessage("/topic/lightSwitch", data);
         }
@@ -107,7 +107,7 @@ public class LightSwitchService {
         }
     }
 
-    @Scheduled(fixedRate = 5000)    //every 5s
+    @Scheduled(fixedRate = 10000)    //every 10s
     private synchronized void selfReboot(){
         if (!active) DoormanService.rebootLightSwitch();
         active = false;

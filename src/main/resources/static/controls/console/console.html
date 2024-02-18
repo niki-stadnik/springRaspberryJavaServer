@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/colors.css" rel="stylesheet">
+    <link href="/controls/console/console.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/controls/console/console.js"></script>
+    <title>Console</title>
+</head>
+<body>
+    <div id="checkbox-container">
+        <label><input type="checkbox" onclick="enableScroll(this)" id="auto-scroll-checkbox" checked> Scroll</label>
+    </div>
+
+    <textarea id="text" readonly>
+    </textarea>
+</body>
+</html>

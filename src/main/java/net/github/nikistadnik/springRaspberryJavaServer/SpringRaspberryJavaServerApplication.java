@@ -75,5 +75,3 @@ public class SpringRaspberryJavaServerApplication {
 
 //json parsera ot serveOneClient moje da se podobri poneje ponastoq6tem iska vun6na biblioteka
 	//suotvetno da se mahne dependacito na json simple 
-
-//da naprav[ restart metoda za isp dvojkite

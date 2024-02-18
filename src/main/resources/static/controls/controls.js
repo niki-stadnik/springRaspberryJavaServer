@@ -16,6 +16,12 @@ function connect() {
         stompClient.subscribe('/topic/clientBathroomFan', function(message) {
             showMessage(JSON.parse(message.body));
         });
+        stompClient.subscribe('/topic/frameRate', function(message) {
+            showFrameRate(JSON.parse(message.body));
+        });
+        stompClient.subscribe('/topic/console', function(message) {
+                    //showFrameRate(JSON.parse(message.body));
+                });
     });
 }
 
@@ -46,4 +52,19 @@ function sendBFOff() {
 }
 function sendBFAuto() {
     stompClient.send("/app/clientBathroomFan", {}, JSON.stringify({'bathFanCommand': false,'auto': true}));
+}
+
+
+function sendResLight() {
+    stompClient.send("/app/clientDoorman", {}, JSON.stringify({'command': 1}));
+}
+function sendResDoor() {
+    stompClient.send("/app/clientDoorman", {}, JSON.stringify({'command': 2}));
+}
+
+
+
+function showFrameRate(message){
+    document.getElementById("fps").textContent = message.fps;
+    document.getElementById("fpm").textContent = message.fpm;
 }
