@@ -24,7 +24,7 @@ var isAutoScrollEnabled = true;
 
 
 function showMessage(message) {
-    document.getElementById("text").textContent = message;
+    document.getElementById("text").textContent += message;
     console.log(isAutoScrollEnabled);
     if (isAutoScrollEnabled) {
         scrollToBottom();

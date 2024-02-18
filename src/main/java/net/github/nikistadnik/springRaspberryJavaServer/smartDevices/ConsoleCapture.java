@@ -56,20 +56,18 @@ public class ConsoleCapture implements InitializingBean, DisposableBean {
     ///////////////////////////////////////////////
 
     //sending to web app
-    private String lastSentOutput = "";
-    static JSONObject jo;
     @Scheduled(fixedDelay = 1000) // Adjust the delay as needed
     public void sendCapturedOutputToWebSocket() {
         // Retrieve the captured output from the ByteArrayOutputStream
         String capturedOutput = outBuffer.toString();
 
         // Check if there is any new output since the last sent output
-        if (!capturedOutput.equals(lastSentOutput)) {
-            // Send captured output to WebSocket clients subscribed to "/topic/cons"
+        if (!capturedOutput.equals("")) {
+            // Send captured output to WebSocket clients subscribed to "/topic/console"
             SendMessage.sendMessage("/topic/console", capturedOutput);
 
-            // Update the last sent output
-            lastSentOutput = capturedOutput;
+            //reset the buffer
+            outBuffer.reset();
         }
     }
     ///////////////////////////////////////////////////////////
