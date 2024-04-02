@@ -61,6 +61,12 @@ function sendResLight() {
 function sendResDoor() {
     stompClient.send("/app/clientDoorman", {}, JSON.stringify({'command': 2}));
 }
+function sendResKitchenStrip() {
+    stompClient.send("/app/clientKitchenStrip", {}, JSON.stringify({'command': 2}));
+}
+function sendResKitchen2() {
+    stompClient.send("/app/clientKitchenStrip", {}, JSON.stringify({'command': 1}));
+}
 
 
 

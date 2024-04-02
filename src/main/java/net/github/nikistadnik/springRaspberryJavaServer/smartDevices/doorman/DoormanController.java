@@ -13,7 +13,7 @@ public class DoormanController {
     public DoormanController(DoormanService service) {this.service = service; }
 
     @MessageMapping("/doorman")
-    @SendTo("/topic/doorman")
+    @SendTo("/topic/doormanClient")
     public DoormanModel getData (DoormanModel data) throws InterruptedException {
         Thread.sleep(50);
         service.setData(data);

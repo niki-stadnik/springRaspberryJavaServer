@@ -19,6 +19,9 @@ function connect() {
         stompClient.subscribe('/topic/dimmersClient', function(message) {
             showDimmers(JSON.parse(message.body));
         });
+        stompClient.subscribe('/topic/clientKitchenStrip', function(message) {
+            showStripDimmer(JSON.parse(message.body));
+        });
     });
     setTimeout(() => {stompClient.send("/app/clientLightDimmer", {}, JSON.stringify({'name': "getData", 'value': 200}));}, "100");
 }
@@ -40,6 +43,9 @@ function showDimmers(message) {
     document.getElementById(message.name).value = message.value;
 }
 
+function showStripDimmer(message) {
+    document.getElementById("kitchenStrip").value = message.duty;
+}
 
 
 function switchLight(ele) {
@@ -55,4 +61,10 @@ function switchLight(ele) {
 function updateDimmer(ele) {
     var dimmer = document.getElementById(ele.id);
     stompClient.send("/app/clientLightDimmer", {}, JSON.stringify({'name': ele.id, 'value': dimmer.value}));
+}
+
+function kitchenStrip(ele) {
+    var dimmer = document.getElementById(ele.id);
+    var time = document.getElementById("time");
+    stompClient.send("/app/clientKitchenStrip", {}, JSON.stringify({'command': 3, 'duty': dimmer.value, 'time': time.value}));
 }
