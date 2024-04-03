@@ -2,6 +2,7 @@ package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitc
 
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SendMessage;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.doorman.DoormanService;
+import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.kitchenLEDstrip.kitchenLEDstripService;
 import org.json.JSONObject;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -56,24 +57,36 @@ public class LightSwitchService {
 
 
     public void setData(LightSwitchModel data) {
+        boolean[] newLight = new boolean[8];
         System.out.println(data);
         active = true;
         //fuseBoxTemp = data.getFuseBoxTemp();
         //fuseBoxHum = data.getFuseBoxHum();
         //fuseBoxFan = data.isFuseBoxFan();
-        light[0] = data.isLight0();
-        light[1] = data.isLight1();
-        light[2] = data.isLight2();
-        light[3] = data.isLight3();
-        light[4] = data.isLight4();
-        light[5] = data.isLight5();
-        light[6] = data.isLight6();
-        light[7] = data.isLight7();
+        newLight[0] = data.isLight0();
+        newLight[1] = data.isLight1();
+        newLight[2] = data.isLight2();
+        newLight[3] = data.isLight3();
+        newLight[4] = data.isLight4();
+        newLight[5] = data.isLight5();
+        newLight[6] = data.isLight6();
+        newLight[7] = data.isLight7();
+        //check for updated state
+        for (int i = 0; i < 8; i++){
+            if (light[i] != newLight[i]){
+                light[i] = newLight[i];
+                alertSubscribers(i, newLight[i]);
+            }
+        }
         if (!flag) {
             if (!disregard) {
                 flag = true;
             } else disregard = false;
         }
+    }
+
+    private void alertSubscribers(int light, boolean state){
+        if (light == 3) kitchenLEDstripService.receiveAlert(state);
     }
 
 

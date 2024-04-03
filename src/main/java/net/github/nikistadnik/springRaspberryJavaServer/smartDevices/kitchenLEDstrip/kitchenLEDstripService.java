@@ -11,7 +11,7 @@ public class kitchenLEDstripService {
 
     private static boolean active = false;
 
-    private static int duty;
+    private static int duty = 0;
     private static int newDuty = 0;
     private static int time = 0;
     private static int from;
@@ -25,6 +25,9 @@ public class kitchenLEDstripService {
         active = true;
         System.out.println(data);
         duty = data.getDuty();
+        if (duty != newDuty){
+            stripControl();
+        }
     }
 
     public void command (kitchenLEDstripClientModel data){
@@ -32,14 +35,15 @@ public class kitchenLEDstripService {
         int com = data.getCommand();
         if (com == 1) rebootkitchen2();
         if (com == 2) kitchenESP2Service.rebootkitchenLEDstrip();
-        if (com == 3) {
+        if (com == 3) reloadPage();
+        if (com == 4) {
             newDuty = data.getDuty();
             time = data.getTime();
             stripControl();
         }
     }
 
-    private void stripControl(){
+    private static void stripControl(){
         if (newDuty != duty){
             System.out.println("led strip change");
             JSONObject jo = new JSONObject();
@@ -49,6 +53,27 @@ public class kitchenLEDstripService {
             String data = jo.toString();
             SendMessage.sendMessage("/topic/kitchenStrip", data);
         }
+    }
+
+    //LightSwitchService calls when a change is detected in the kitchen light
+    public static synchronized void receiveAlert(boolean state){
+        if (state){
+            newDuty = 255;
+            time = 10;
+            stripControl();
+        }else{
+            newDuty = 0;
+            time = 10;
+            stripControl();
+        }
+    }
+
+    private void reloadPage(){
+        //System.out.println("init client");
+        JSONObject jo = new JSONObject();
+        jo.put("duty", duty);
+        String dataOut = jo.toString();
+        SendMessage.sendMessage("/topic/clientKitchenStrip", dataOut);
     }
 
     @Scheduled(fixedRate = 30000)    //every 30s
