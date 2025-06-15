@@ -19,6 +19,9 @@ function connect() {
         stompClient.subscribe('/topic/frameRate', function(message) {
             showFrameRate(JSON.parse(message.body));
         });
+        stompClient.subscribe('/topic/clientHerbPot', function(message) {
+            showPotData(JSON.parse(message.body));
+        });
         stompClient.subscribe('/topic/console', function(message) {
                     //showFrameRate(JSON.parse(message.body));
                 });
@@ -73,4 +76,11 @@ function sendResKitchen2() {
 function showFrameRate(message){
     document.getElementById("fps").textContent = message.fps;
     document.getElementById("fpm").textContent = message.fpm;
+}
+
+function showPotData(message){
+    document.getElementById("temp1").textContent = message.temp1;
+    document.getElementById("temp2").textContent = message.temp2;
+    document.getElementById("moisture1").textContent = message.moisture1;
+    document.getElementById("moisture2").textContent = message.moisture2;
 }

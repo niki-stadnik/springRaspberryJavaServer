@@ -58,7 +58,8 @@ public class LightSwitchService {
 
     public void setData(LightSwitchModel data) {
         boolean[] newLight = new boolean[8];
-        System.out.println(data);
+        JSONObject jsonObject = new JSONObject(data);
+        System.out.println(jsonObject.toString());
         active = true;
         //fuseBoxTemp = data.getFuseBoxTemp();
         //fuseBoxHum = data.getFuseBoxHum();
@@ -86,7 +87,7 @@ public class LightSwitchService {
     }
 
     private void alertSubscribers(int light, boolean state){
-        if (light == 3) kitchenLEDstripService.receiveAlert(state);
+        if (light == 2) kitchenLEDstripService.receiveAlert(state);
     }
 
 

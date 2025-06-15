@@ -23,7 +23,8 @@ public class kitchenLEDstripService {
 
     public void setData (kitchenLEDstripModel data){
         active = true;
-        System.out.println(data);
+        JSONObject jsonObject = new JSONObject(data);
+        System.out.println(jsonObject.toString());
         duty = data.getDuty();
         if (duty != newDuty){
             stripControl();
@@ -31,7 +32,8 @@ public class kitchenLEDstripService {
     }
 
     public void command (kitchenLEDstripClientModel data){
-        System.out.println(data);
+        JSONObject jsonObject = new JSONObject(data);
+        System.out.println(jsonObject.toString());
         int com = data.getCommand();
         if (com == 1) rebootkitchen2();
         if (com == 2) kitchenESP2Service.rebootkitchenLEDstrip();

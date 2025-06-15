@@ -35,5 +35,5 @@ function connect() {
 function showImage(image) {
     var dd = image.image;
     const imageData = document.getElementById('image');
-    imageData.src = 'data:image/png;base64,' + dd;
+    imageData.src = 'data:image/jpeg;base64,' + dd;
 }

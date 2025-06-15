@@ -14,7 +14,8 @@ public class LightDimmersService {
     }
 
     public void command(LightDimmerModel data){
-        System.out.println(data);
+        JSONObject jsonObject = new JSONObject(data);
+        System.out.println(jsonObject.toString());
         //todo request data from the client on init (handle message with name=getData and value=200)
         if(data.getName().equals("getData")){
             //System.out.println("init client");

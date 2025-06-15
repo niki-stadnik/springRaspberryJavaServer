@@ -22,7 +22,8 @@ public class DoormanService {
     }
 
     public void setData (DoormanModel data){
-        System.out.println(data);
+        JSONObject jsonObject = new JSONObject(data);
+        System.out.println(jsonObject.toString());
         active = true;
         doorOpen = data.isDoorOpen();
         doorLock = data.isDoorLock();

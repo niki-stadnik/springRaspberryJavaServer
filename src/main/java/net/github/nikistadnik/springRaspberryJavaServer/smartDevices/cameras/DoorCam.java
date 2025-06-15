@@ -14,7 +14,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DoorCam {
-    private String imageUrl = "http://192.168.88.69/capture";
+    //private String imageUrl = "http://192.168.88.69/capture";
+    private String imageUrl = "http://192.168.88.54/picture/1/current/";
 
     private static int  fpsCount = 0;
     private static int  fpmCount = 0;
