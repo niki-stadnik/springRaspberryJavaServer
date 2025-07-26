@@ -1,6 +1,5 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightDimmers;
 
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitch.LightSwitchClientModel;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -16,10 +15,9 @@ public class LightDimmersController {
 
     @MessageMapping("/lightDimmer")
     @SendTo("/topic/dimmersClient")
-    public LightDimmerModel getData(LightDimmerModel data) throws InterruptedException {
+    public void getData(LightDimmerModel data) throws InterruptedException {
         Thread.sleep(50);
         service.setData(data);
-        return data;
     }
 
     @MessageMapping("/clientLightDimmer")

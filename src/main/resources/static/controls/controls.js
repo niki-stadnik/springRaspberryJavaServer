@@ -25,6 +25,9 @@ function connect() {
         stompClient.subscribe('/topic/console', function(message) {
                     //showFrameRate(JSON.parse(message.body));
                 });
+        stompClient.subscribe('/topic/clientDoorlock', function(message) {
+            showDoorlock(JSON.parse(message.body));
+        });
     });
 }
 
@@ -72,6 +75,14 @@ function sendResKitchen2() {
 }
 
 
+function sendlock() {
+    stompClient.send("/app/clientDoorlock", {}, JSON.stringify({'move': 2162}));
+}
+function sendunlock() {
+    stompClient.send("/app/clientDoorlock", {}, JSON.stringify({'move': 11762}));
+}
+
+
 
 function showFrameRate(message){
     document.getElementById("fps").textContent = message.fps;
@@ -83,4 +94,8 @@ function showPotData(message){
     document.getElementById("temp2").textContent = message.temp2;
     document.getElementById("moisture1").textContent = message.moisture1;
     document.getElementById("moisture2").textContent = message.moisture2;
+}
+
+function showDoorlock(message){
+    document.getElementById("posit").textContent = message.posit;
 }

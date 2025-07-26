@@ -15,10 +15,9 @@ public class kitchenLEDstripController {
 
     @MessageMapping("/kitchenStrip")
     @SendTo("/topic/clientKitchenStrip")
-    public kitchenLEDstripModel getData(kitchenLEDstripModel data) throws InterruptedException {
+    public void getData(kitchenLEDstripModel data) throws InterruptedException {
         Thread.sleep(50);
         service.setData(data);
-        return data;
     }
 
     @MessageMapping("/clientKitchenStrip")

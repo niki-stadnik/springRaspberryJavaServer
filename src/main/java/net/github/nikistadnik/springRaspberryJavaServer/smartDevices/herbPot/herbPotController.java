@@ -1,8 +1,6 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.herbPot;
 
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.kitchenLEDstrip.kitchenLEDstripClientModel;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -16,10 +14,9 @@ public class herbPotController {
 
     @MessageMapping("/herbPot")
     //@SendTo("/topic/clientHerbPot")
-    public herbPotModel getData (herbPotModel data) throws InterruptedException {
+    public void getData (herbPotModel data) throws InterruptedException {
         Thread.sleep(50);
         service.setData(data);
-        return data;
     }
 
     @MessageMapping("/clientHerbPot")

@@ -1,6 +1,5 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitch;
 
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.bathroomFan.BathroomFanModel;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -14,10 +13,9 @@ public class LightSwitchController {
 
     @MessageMapping("/lightSwitch")
     @SendTo("/topic/lightsClient")
-    public LightSwitchModel getData(LightSwitchModel data) throws InterruptedException {
+    public void getData(LightSwitchModel data) throws InterruptedException {
         Thread.sleep(50);
         service.setData(data);
-        return data;
     }
 
     @MessageMapping("/clientLightSwitch")
