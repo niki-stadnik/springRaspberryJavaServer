@@ -73,5 +73,28 @@ public class SpringRaspberryJavaServerApplication {
 //to build a new jar - Terminal : mvn package
 //to run it - Terminal : java -jar target/springRaspberryJavaServer-0.0.1-SNAPSHOT.jar
 
+/* Docker build
+	maven tab to the side
+		Lifecylce - double click Install
+			this will create the homebrain.jar file as specified in pom.xml
+	docker build -t testf/sptestt .
+		with random name and . at the and, indicating to use the same directory
+	docker images
+		shows the created images and their id
+	docker tag testf/sptestt localhost:5000/testf/sptestt
+		tag the image for pull on nas
+	docker push localhost:5000/testf/sptestt
+		Push the Image to the Local Registry
+	docker run -p 1994:1994 8ca75d5d7033
+		testing
+
+	truenas app
+		include:
+ 			- /mnt/Mirror/NAS-Config/homebrain/compose.yaml
+ */
+
 //json parsera ot serveOneClient moje da se podobri poneje ponastoq6tem iska vun6na biblioteka
-	//suotvetno da se mahne dependacito na json simple 
+	//suotvetno da se mahne dependacito na json simple
+
+//javax replaced by jakarta
+//do i need any of the 2 json dep

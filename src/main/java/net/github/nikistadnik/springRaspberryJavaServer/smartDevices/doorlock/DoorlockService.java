@@ -32,7 +32,7 @@ public class DoorlockService {
     }
 
     @Scheduled(fixedRate = 1000)
-    private synchronized void lockUpdate() {
+    synchronized void lockUpdate() {
         jo = new JSONObject();
         jo.put("posit", position);
         String data = jo.toString();

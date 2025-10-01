@@ -17,6 +17,7 @@ public class DoorlockController {
     public void getData (DoorlockModel data) throws InterruptedException {
         Thread.sleep(50);
         service.setData(data);
+        service.lockUpdate();
     }
 
     @MessageMapping("/clientDoorlock")

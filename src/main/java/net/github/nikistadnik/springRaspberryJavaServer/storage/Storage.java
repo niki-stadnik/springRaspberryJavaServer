@@ -1,6 +1,7 @@
 package net.github.nikistadnik.springRaspberryJavaServer.storage;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 

@@ -13,7 +13,7 @@ import com.github.scribejava.core.oauth.OAuth20Service;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;

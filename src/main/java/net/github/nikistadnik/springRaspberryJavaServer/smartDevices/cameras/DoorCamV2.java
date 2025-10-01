@@ -13,7 +13,7 @@ import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SendMessage
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class DoorCamV2 {
