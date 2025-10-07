@@ -77,21 +77,26 @@ public class SpringRaspberryJavaServerApplication {
 	maven tab to the side
 		Lifecylce - double click Install
 			this will create the homebrain.jar file as specified in pom.xml
-	docker build -t testf/sptestt .
+	docker build -t docker/homebrain .
 		with random name and . at the and, indicating to use the same directory
 	docker images
 		shows the created images and their id
-	docker tag testf/sptestt localhost:5000/testf/sptestt
+	docker tag docker/homebrain localhost:5000/docker/homebrain
 		tag the image for pull on nas
-	docker push localhost:5000/testf/sptestt
+	docker push localhost:5000/docker/homebrain
 		Push the Image to the Local Registry
-	docker run -p 1994:1994 8ca75d5d7033
+	docker run -p 1994:1994 b22398153237
 		testing
 
 	truenas app
 		include:
  			- /mnt/Mirror/NAS-Config/homebrain/compose.yaml
  */
+
+
+//docker push nikistadnik/homebrain:latest
+
+
 
 //json parsera ot serveOneClient moje da se podobri poneje ponastoq6tem iska vun6na biblioteka
 	//suotvetno da se mahne dependacito na json simple
