@@ -39,7 +39,7 @@ function showMessage(message) {
     if(!flag[4]) document.getElementById("4").checked = message.light4;
     if(!flag[5]) document.getElementById("5").checked = message.light5;
     if(!flag[6]) document.getElementById("6").checked = message.light6;
-    if(!flag[7]) document.getElementById("7").checked = message.light7;
+//    if(!flag[7]) document.getElementById("7").checked = message.light7;
 }
 function showDimmers(message) {
     document.getElementById(message.name).value = message.value;

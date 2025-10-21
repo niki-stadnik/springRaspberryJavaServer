@@ -13,9 +13,10 @@ public class LightSwitchController {
 
     @MessageMapping("/lightSwitch")
     @SendTo("/topic/lightsClient")
-    public void getData(LightSwitchModel data) throws InterruptedException {
+    public LightSwitchModel getData(LightSwitchModel data) throws InterruptedException {
         Thread.sleep(50);
         service.setData(data);
+        return data;
     }
 
     @MessageMapping("/clientLightSwitch")

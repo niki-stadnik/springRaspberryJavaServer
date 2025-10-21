@@ -73,6 +73,8 @@ public class LightSwitchService {
         newLight[6] = data.isLight6();
         newLight[7] = data.isLight7();
         //check for updated state
+        //String dataOut = data.toString();
+        //SendMessage.sendMessage("/topic/lightsClient", dataOut);
         for (int i = 0; i < 8; i++){
             if (light[i] != newLight[i]){
                 light[i] = newLight[i];
