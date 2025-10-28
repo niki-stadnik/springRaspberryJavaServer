@@ -18,9 +18,6 @@ public class DoormanService {
     private static boolean rfid = false;
 
 
-    public DoormanService() {
-    }
-
     public void setData (DoormanModel data){
         JSONObject jsonObject = new JSONObject(data);
         System.out.println(jsonObject.toString());

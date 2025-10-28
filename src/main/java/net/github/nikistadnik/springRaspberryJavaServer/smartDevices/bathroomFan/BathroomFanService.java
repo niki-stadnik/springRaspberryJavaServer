@@ -1,5 +1,7 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.bathroomFan;
 
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import net.github.nikistadnik.springRaspberryJavaServer.TempStorage;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SendMessage;
 import org.json.JSONObject;
@@ -26,8 +28,6 @@ public class BathroomFanService {
     private static int bathroomFanCycles = 0;
     JSONObject jo;
 
-    public BathroomFanService() {
-    }
 
 
     private void sendToClient(){

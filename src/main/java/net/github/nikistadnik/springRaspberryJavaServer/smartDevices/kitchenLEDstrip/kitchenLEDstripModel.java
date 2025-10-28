@@ -1,24 +1,14 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.kitchenLEDstrip;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class kitchenLEDstripModel {
 
     private int duty;
 
-    public kitchenLEDstripModel() {
-    }
-
-    public kitchenLEDstripModel(int duty) {
-        this.duty = duty;
-    }
-
-    public int getDuty() {
-        return duty;
-    }
-
-    public void setDuty(int duty) {
-        this.duty = duty;
-    }
 }

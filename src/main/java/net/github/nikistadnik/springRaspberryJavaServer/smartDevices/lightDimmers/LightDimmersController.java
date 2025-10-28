@@ -1,17 +1,15 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightDimmers;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller
+@RequiredArgsConstructor
 public class LightDimmersController {
 
-    private LightDimmersService service;
-
-    public LightDimmersController(LightDimmersService service) {
-        this.service = service;
-    }
+    private final LightDimmersService service;
 
     @MessageMapping("/lightDimmer")
     @SendTo("/topic/dimmersClient")

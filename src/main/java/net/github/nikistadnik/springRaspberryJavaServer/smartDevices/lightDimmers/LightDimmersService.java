@@ -1,17 +1,15 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightDimmers;
 
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SendMessage;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitch.LightSwitchClientModel;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class LightDimmersService {
 
-    JSONObject jo;
-
-    public LightDimmersService() {
-    }
+    private final SimpMessageSendingOperations messaging;
 
     public void command(LightDimmerModel data){
         JSONObject jsonObject = new JSONObject(data);
@@ -19,11 +17,7 @@ public class LightDimmersService {
         //todo request data from the client on init (handle message with name=getData and value=200)
         if(data.getName().equals("getData")){
             //System.out.println("init client");
-            jo = new JSONObject();
-            jo.put("name", "dim1");
-            jo.put("value", 33);
-            String dataOut = jo.toString();
-            SendMessage.sendMessage("/topic/dimmersClient", dataOut);
+            messaging.convertAndSend("/topic/dimmersClient", new LightDimmerModel("dim1", 33));
         }
     }
     public void setData(LightDimmerModel data){

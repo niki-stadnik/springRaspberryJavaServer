@@ -1,17 +1,15 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.doorlock;
 
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 
 @Controller
+@RequiredArgsConstructor
 public class DoorlockController {
 
-    private DoorlockService service;
-
-    public DoorlockController(DoorlockService service) {
-        this.service = service;
-    }
+    private final DoorlockService service;
 
     @MessageMapping("/doorlock")
     public void getData (DoorlockModel data) throws InterruptedException {

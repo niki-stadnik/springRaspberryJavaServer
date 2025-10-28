@@ -23,10 +23,6 @@ public class herbPotService {
 
     static JSONObject jo;
 
-
-    public herbPotService() {
-    }
-
     public void setData(herbPotModel data) {
         JSONObject jsonObject = new JSONObject(data);
         System.out.println(jsonObject.toString());

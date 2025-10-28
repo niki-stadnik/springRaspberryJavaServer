@@ -1,16 +1,14 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.herbPot;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 
 @Controller
+@RequiredArgsConstructor
 public class herbPotController {
 
-    private herbPotService service;
-
-    public herbPotController(herbPotService service) {
-        this.service = service;
-    }
+    private final herbPotService service;
 
     @MessageMapping("/herbPot")
     //@SendTo("/topic/clientHerbPot")

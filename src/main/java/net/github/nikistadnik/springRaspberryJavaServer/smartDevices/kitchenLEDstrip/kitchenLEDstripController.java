@@ -1,17 +1,15 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.kitchenLEDstrip;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller
+@RequiredArgsConstructor
 public class kitchenLEDstripController {
 
-    private kitchenLEDstripService service;
-
-    public kitchenLEDstripController(kitchenLEDstripService service) {
-        this.service = service;
-    }
+    private final kitchenLEDstripService service;
 
     @MessageMapping("/kitchenStrip")
     @SendTo("/topic/clientKitchenStrip")

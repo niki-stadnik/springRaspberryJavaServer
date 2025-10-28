@@ -37,6 +37,22 @@
 				<configuration>
 					<source>25</source>
 					<target>25</target>
+
+					<!-- this section is needed for lambok to work in java 25 -->
+					<proc>full</proc>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</path>
+						<path>
+							<groupId>org.springframework.boot</groupId>
+							<artifactId>spring-boot-configuration-processor</artifactId>
+						</path>
+					</annotationProcessorPaths>
+
+
+
 				</configuration>
 			</plugin>
 		</plugins>

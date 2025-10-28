@@ -1,15 +1,15 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitch;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller
+@RequiredArgsConstructor
 public class LightSwitchController {
 
-    private LightSwitchService service;
-
-    public LightSwitchController(LightSwitchService service){this.service = service; }
+    private final LightSwitchService service;
 
     @MessageMapping("/lightSwitch")
     @SendTo("/topic/lightsClient")

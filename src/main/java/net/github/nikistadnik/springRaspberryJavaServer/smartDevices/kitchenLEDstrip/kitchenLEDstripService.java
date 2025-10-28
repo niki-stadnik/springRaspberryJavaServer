@@ -18,9 +18,6 @@ public class kitchenLEDstripService {
     private static int to;
     private static int over;
 
-    public kitchenLEDstripService() {
-    }
-
     public void setData (kitchenLEDstripModel data){
         active = true;
         JSONObject jsonObject = new JSONObject(data);
