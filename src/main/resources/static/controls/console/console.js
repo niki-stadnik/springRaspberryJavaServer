@@ -1,7 +1,10 @@
 var stompClient = null;
+var ansi_up = null;
 
 window.onload = function() {
     var reloading = sessionStorage.getItem("reloading");
+    // Initialize the converter
+    ansi_up = new AnsiUp();
     connect();
     if (reloading) {
         sessionStorage.removeItem("reloading");
@@ -24,17 +27,20 @@ var isAutoScrollEnabled = true;
 
 
 function showMessage(message) {
-    document.getElementById("text").textContent += message;
+    var textElement = document.getElementById("text");
+    // Convert ANSI to HTML and append
+    textElement.innerHTML += ansi_up.ansi_to_html(message);
+
     console.log(isAutoScrollEnabled);
     if (isAutoScrollEnabled) {
-        scrollToBottom();
+        setTimeout(scrollToBottom, 0);
     }
 }
 
 // Function to scroll textarea to the bottom
 function scrollToBottom() {
-    var textarea = document.getElementById("text");
-    textarea.scrollTop = textarea.scrollHeight;
+    var scrollableElement = document.getElementById("text");
+    scrollableElement.scrollTop = scrollableElement.scrollHeight;
 }
 
 function enableScroll(ele){

@@ -2,6 +2,7 @@ package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.herbPot;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -11,7 +12,6 @@ public class herbPotController {
     private final herbPotService service;
 
     @MessageMapping("/herbPot")
-    //@SendTo("/topic/clientHerbPot")
     public void getData (herbPotModel data) throws InterruptedException {
         Thread.sleep(50);
         service.setData(data);

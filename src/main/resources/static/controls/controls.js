@@ -68,10 +68,10 @@ function sendResDoor() {
     stompClient.send("/app/clientDoorman", {}, JSON.stringify({'command': 2}));
 }
 function sendResKitchenStrip() {
-    stompClient.send("/app/clientKitchenStrip", {}, JSON.stringify({'command': 2}));
+    stompClient.send("/app/clientKitchenStrip", {}, JSON.stringify({'command': 1}));
 }
 function sendResKitchen2() {
-    stompClient.send("/app/clientKitchenStrip", {}, JSON.stringify({'command': 1}));
+    stompClient.send("/app/clientKitchenStrip", {}, JSON.stringify({'command': 2}));
 }
 
 
@@ -97,5 +97,5 @@ function showPotData(message){
 }
 
 function showDoorlock(message){
-    document.getElementById("posit").textContent = message.posit;
+    document.getElementById("position").textContent = message.position;
 }

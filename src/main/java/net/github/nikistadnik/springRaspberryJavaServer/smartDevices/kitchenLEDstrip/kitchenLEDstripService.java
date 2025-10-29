@@ -1,91 +1,83 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.kitchenLEDstrip;
 
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SendMessage;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.kitchenESP2.kitchenESP2Service;
-import org.json.JSONObject;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.RebootDevice;
+import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitch.LightStatusChangedEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class kitchenLEDstripService {
+
+    private final RebootDevice rebootDevice;
+    private final SimpMessageSendingOperations messaging;
 
     private static boolean active = false;
 
     private static int duty = 0;
     private static int newDuty = 0;
     private static int time = 0;
-    private static int from;
-    private static int to;
-    private static int over;
 
     public void setData (kitchenLEDstripModel data){
         active = true;
-        JSONObject jsonObject = new JSONObject(data);
-        System.out.println(jsonObject.toString());
         duty = data.getDuty();
-        if (duty != newDuty){
+        if (duty != newDuty && (duty - newDuty > 2 || newDuty - duty > 2)){
             stripControl();
         }
+        //log.info(String.valueOf(data));
     }
 
     public void command (kitchenLEDstripClientModel data){
-        JSONObject jsonObject = new JSONObject(data);
-        System.out.println(jsonObject.toString());
         int com = data.getCommand();
-        if (com == 1) rebootkitchen2();
-        if (com == 2) kitchenESP2Service.rebootkitchenLEDstrip();
+        if (com == 1) rebootDevice.rebootDev("restartKitchen1"); //self
+        if (com == 2) rebootDevice.rebootDev("restartKitchen2"); //kitchenESP32Service
         if (com == 3) reloadPage();
         if (com == 4) {
             newDuty = data.getDuty();
             time = data.getTime();
             stripControl();
         }
+        log.info(data.toString());
     }
 
-    private static void stripControl(){
+    private void stripControl(){
         if (newDuty != duty){
-            System.out.println("led strip change");
-            JSONObject jo = new JSONObject();
-            jo.put("from", duty);
-            jo.put("to", newDuty);
-            jo.put("over", time);
-            String data = jo.toString();
-            SendMessage.sendMessage("/topic/kitchenStrip", data);
+            messaging.convertAndSend("/topic/kitchenStrip", new kitchenLEDstripCommamdModel(duty, newDuty, time));
+            log.info("led strip change:" + duty + "->" + newDuty);
         }
     }
 
     //LightSwitchService calls when a change is detected in the kitchen light
-    public static synchronized void receiveAlert(boolean state){
-        if (state){
-            newDuty = 255;
-            time = 10;
-            stripControl();
-        }else{
-            newDuty = 0;
-            time = 10;
-            stripControl();
+    @EventListener
+    public void handleLightStatusChangeEvent(LightStatusChangedEvent event) {
+        if (event.getLight() == 2) {
+            log.info("event:" + event);
+            boolean state = event.isState();
+            if (state){
+                newDuty = 255;
+                time = 10;
+                stripControl();
+            }else{
+                newDuty = 0;
+                time = 10;
+                stripControl();
+            }
         }
     }
 
+
     private void reloadPage(){
-        //System.out.println("init client");
-        JSONObject jo = new JSONObject();
-        jo.put("duty", duty);
-        String dataOut = jo.toString();
-        SendMessage.sendMessage("/topic/clientKitchenStrip", dataOut);
+        messaging.convertAndSend("/topic/clientKitchenStrip", "{\"duty\":" + duty + "}");
     }
 
     @Scheduled(fixedRate = 30000)    //every 30s
     private synchronized void selfReboot(){
-        if (!active) kitchenESP2Service.rebootkitchenLEDstrip();
+        if (!active) rebootDevice.rebootDev("restartKitchen1");
         active = false;
-    }
-
-    public static synchronized void rebootkitchen2() {
-        System.out.println("reboot kitchen2");
-        JSONObject jo = new JSONObject();
-        jo.put("relayRestart", true);
-        String data = jo.toString();
-        SendMessage.sendMessage("/topic/restartKitchen2", data);
     }
 }

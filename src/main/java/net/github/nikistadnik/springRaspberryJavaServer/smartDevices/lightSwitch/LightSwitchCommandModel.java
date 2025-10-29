@@ -17,6 +17,5 @@ public class LightSwitchCommandModel {
     private boolean pulse5;
     private boolean pulse6;
     private boolean pulse7;
-    private boolean pulse8;
 
 }

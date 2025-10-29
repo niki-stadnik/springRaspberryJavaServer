@@ -1,5 +1,8 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.doorman;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.RebootDevice;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SendMessage;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitch.LightSwitchService;
 import org.json.JSONObject;
@@ -7,7 +10,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class DoormanService {
+
+    private final RebootDevice rebootDevice;
 
     private static boolean active = false;
 
@@ -19,39 +26,27 @@ public class DoormanService {
 
 
     public void setData (DoormanModel data){
-        JSONObject jsonObject = new JSONObject(data);
-        System.out.println(jsonObject.toString());
         active = true;
         doorOpen = data.isDoorOpen();
         doorLock = data.isDoorLock();
         doorButton = data.isDoorButton();
         bell = data.isBell();
         rfid = data.isRfid();
+        //log.info(data.toString());
     }
 
     public void command(DoormanClientModel data){
-        System.out.println(data);
         int com = data.getCommand();
-        if (com == 1) rebootLightSwitch();
-        if (com == 2) LightSwitchService.rebootDoorman();
+        if (com == 1) rebootDevice.rebootDev("rebootLightSwitch");
+        if (com == 2) rebootDevice.rebootDev("rebootDoorman");
+        log.info(data.toString());
     }
-
-
 
 
 
     @Scheduled(fixedRate = 10000)    //every 10s
     private synchronized void selfReboot(){
-        if (!active) LightSwitchService.rebootDoorman();
+        if (!active) rebootDevice.rebootDev("rebootDoorman");
         active = false;
     }
-
-    public static synchronized void rebootLightSwitch() {
-        System.out.println("reboot LightSwitch");
-        JSONObject jo = new JSONObject();
-        jo.put("relayRestart", true);
-        String data = jo.toString();
-        SendMessage.sendMessage("/topic/doorman", data);
-    }
-
 }

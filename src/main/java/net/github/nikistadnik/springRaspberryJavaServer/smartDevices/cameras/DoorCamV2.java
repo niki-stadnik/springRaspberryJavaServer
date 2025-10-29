@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
 
-@Service
+//@Service
 public class DoorCamV2 {
 
     @PostConstruct
@@ -57,7 +57,7 @@ public class DoorCamV2 {
                 System.out.println("here1?");
                 // Convert the current buffer to Base64 and send it to the web app server
                 String base64Data = Base64.getEncoder().encodeToString(outputStream.toByteArray());
-                SendMessage.sendMessage("/topic/imageDoorCamV2", base64Data);
+                SendMessage.sendMessage("/topic/imageDoorCam", base64Data);
                 // Reset the output stream for the next chunk of data
                 outputStream.reset();
             }

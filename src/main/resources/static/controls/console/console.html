@@ -8,6 +8,8 @@
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <!--  ansi-to-html library -->
+    <script src="https://unpkg.com/ansi_up@4.0.4/ansi_up.js"></script>
     <script src="/controls/console/console.js"></script>
     <title>Console</title>
 </head>
@@ -16,7 +18,11 @@
         <label><input type="checkbox" onclick="enableScroll(this)" id="auto-scroll-checkbox" checked> Scroll</label>
     </div>
 
-    <textarea id="text" readonly>
-    </textarea>
+
+    <div id="text-container">
+        <pre id="text"></pre>
+    </div>
+
+
 </body>
-</html>
+ </html>

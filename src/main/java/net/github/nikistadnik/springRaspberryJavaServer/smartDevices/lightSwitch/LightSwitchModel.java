@@ -9,9 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LightSwitchModel {
 
-    //private Double fuseBoxTemp;
-    //private Double fuseBoxHum;
-    //private boolean fuseBoxFan;
     private boolean light0;
     private boolean light1;
     private boolean light2;
