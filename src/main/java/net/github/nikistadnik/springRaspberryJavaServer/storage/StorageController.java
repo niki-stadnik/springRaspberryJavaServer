@@ -29,6 +29,7 @@ public class StorageController {
 
     Storage test = new Storage(
             125.5,
+            110.2,
             62.6,
             26.7,
             false
@@ -38,12 +39,13 @@ public class StorageController {
     //@Scheduled(fixedRate = 10000)
     public void insertIns(){
         Storage ins = new Storage(
-                BathroomFanService.getBathTemp(),
-                BathroomFanService.getBathHum(),
-                BathroomFanService.getBathLight(),
+                BathroomFanService.getBathTemp1(),
+                BathroomFanService.getBathTemp2(),
+                BathroomFanService.getBathHum2(),
+                BathroomFanService.getBathHum1(),
                 BathroomFanService.isBathFan()
         );
-        if (BathroomFanService.getBathTemp() != null) {
+        if (BathroomFanService.getBathTemp1() != null) {
             storageService.insert(ins);
         }
         hii();

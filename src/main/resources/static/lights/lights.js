@@ -50,13 +50,44 @@ function showStripDimmer(message) {
 }
 
 
+function switchLightOFF() {
+    const NUM_LIGHTS = 7; // adjust to your setup
+    const switchStateOf = Array(NUM_LIGHTS).fill(true);
+    const stateLight = Array(NUM_LIGHTS).fill(false);
+    stompClient.send("/app/clientLightSwitch", {}, JSON.stringify({switchStateOf, stateLight}));
+    for (let i = 0; i < 8; i++)
+    {
+        flag[i] = true;
+        setTimeout(() => {
+            flag[i] = false;
+        }, "2000");
+    }
+}
+function switchLightON() {
+    const NUM_LIGHTS = 7; // adjust to your setup
+    const switchStateOf = Array(NUM_LIGHTS).fill(true);
+    const stateLight = Array(NUM_LIGHTS).fill(true);
+    stompClient.send("/app/clientLightSwitch", {}, JSON.stringify({switchStateOf, stateLight}));
+    for (let i = 0; i < 8; i++)
+    {
+        flag[i] = true;
+        setTimeout(() => {
+            flag[i] = false;
+        }, "2000");
+    }
+}
+
 function switchLight(ele) {
-    var id = +ele.id;
-    var checkBox = document.getElementById(ele.id);
-    stompClient.send("/app/clientLightSwitch", {}, JSON.stringify({'light': id, 'state': checkBox.checked}));
+    const NUM_LIGHTS = 7; // adjust to your setup
+    const id = Number(ele.id);
+    const checkBox = document.getElementById(ele.id);
+    const switchStateOf = Array(NUM_LIGHTS).fill(false);
+    const stateLight = Array(NUM_LIGHTS).fill(false);
+    switchStateOf[id] = true;
+    stateLight[id] = checkBox.checked;
+    stompClient.send("/app/clientLightSwitch", {}, JSON.stringify({switchStateOf, stateLight}));
     flag[id] = true;
-    if(checkBox.checked) setTimeout(() => {flag[id] = false;}, "3000");
-    else setTimeout(() => {flag[id] = false;}, "5000");
+    setTimeout(() => {flag[id] = false;}, "2000");
 }
 
 

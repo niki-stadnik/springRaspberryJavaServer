@@ -1,6 +1,9 @@
 package net.github.nikistadnik.springRaspberryJavaServer.storage;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -8,23 +11,30 @@ import java.util.Map;
 
 enum Mode {ON, OFF, AUTO}
 
-
+@NoArgsConstructor
 @Entity
 @Table(name = "storage")
 public class Storage {
+
+    @Getter @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     //from bathroom fan
+    @Getter @Setter
     @Column(name = "bath_temp")
     private Double bathTemp;
+    @Getter @Setter
     @Column(name = "bath_hum")
     private Double bathHum;
+    @Getter @Setter
     @Column(name = "bath_light")
     private Double bathLight;
+    @Getter @Setter
     @Column(name = "bath_fan")
     private boolean bathFan;
+
     //"bathroomFanMode", "auto"
     //"BathroomFanDelay", 30
     private static Double bathroomFanDelay;
@@ -40,58 +50,16 @@ public class Storage {
     }
 
 
-    public Storage() {
-    }
-
     public Storage(
-            Double bathTemp,
-            Double bathHum,
-            Double bathLight,
+            Double bathTemp1,
+            Double bathTemp2,
+            Double bathHum1,
+            Double bathHum2,
             boolean bathFan
     ) {
         this.bathTemp = bathTemp;
         this.bathHum = bathHum;
         this.bathLight = bathLight;
         this.bathFan =bathFan;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Double getBathTemp() {
-        return bathTemp;
-    }
-
-    public void setBathTemp(Double bathTemp) {
-        this.bathTemp = bathTemp;
-    }
-
-    public Double getBathHum() {
-        return bathHum;
-    }
-
-    public void setBathHum(Double bathHum) {
-        this.bathHum = bathHum;
-    }
-
-    public Double getBathLight() {
-        return bathLight;
-    }
-
-    public void setBathLight(Double bathLight) {
-        this.bathLight = bathLight;
-    }
-
-    public boolean isBathFan() {
-        return bathFan;
-    }
-
-    public void setBathFan(boolean bathFan) {
-        this.bathFan = bathFan;
     }
 }

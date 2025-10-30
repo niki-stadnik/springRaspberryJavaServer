@@ -37,8 +37,8 @@ public class DoormanService {
 
     public void command(DoormanClientModel data){
         int com = data.getCommand();
-        if (com == 1) rebootDevice.rebootDev("rebootLightSwitch");
-        if (com == 2) rebootDevice.rebootDev("rebootDoorman");
+        if (com == 1) rebootDevice.rebootDev(RebootDevice.destination.LIGHT_SWITCH);
+        if (com == 2) rebootDevice.rebootDev(RebootDevice.destination.DOORMAN);
         log.info(data.toString());
     }
 
@@ -46,7 +46,7 @@ public class DoormanService {
 
     @Scheduled(fixedRate = 10000)    //every 10s
     private synchronized void selfReboot(){
-        if (!active) rebootDevice.rebootDev("rebootDoorman");
+        if (!active) rebootDevice.rebootDev(RebootDevice.destination.DOORMAN);
         active = false;
     }
 }

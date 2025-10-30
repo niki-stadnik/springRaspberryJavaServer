@@ -3,14 +3,12 @@ package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitc
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.RebootDevice;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SendMessage;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.doorman.DoormanService;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.kitchenLEDstrip.kitchenLEDstripService;
-import org.json.JSONObject;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
 
 @Slf4j
 @Service
@@ -21,14 +19,15 @@ public class LightSwitchService {
     private final SimpMessageSendingOperations messaging;
     private final ApplicationEventPublisher eventPublisher;
 
-
+    public static final boolean[] light = new boolean[8];
+    private static boolean[] lightCommand = new boolean[8];
+    private static boolean[] newLight = new boolean[8];
+    private static final boolean[] commandFlag = new boolean[8];
     private static boolean active = false;
     private static boolean flag = false;
     private static boolean disregard = false;
-    private static final boolean[] light = new boolean[8];
-    private static final boolean[] lightCommand = new boolean[8];
-    private static final boolean[] commandFlag = new boolean[8];
-
+    private static boolean flagBlock = false;
+    private static boolean flagLoop = true;
 
 
     //@Scheduled(fixedRate = 500)
@@ -39,29 +38,48 @@ public class LightSwitchService {
     }
 
     public void command(LightSwitchClientModel data) throws InterruptedException {
+        if (flagLoop) {
+            flagLoop = false;
+            log.info("forced loop off");
+        }
         log.info(data.toString());
-        int lightNum = data.getLight();
-        lightCommand[lightNum] = data.isState();
-        if(!commandFlag[lightNum]) {
-            commandFlag[lightNum] = true;
-            jobToDo(lightNum);
+        lightCommand = data.switchStateOf();
+        newLight = data.stateLight();
+        if (!flagBlock) {
+            flagBlock = true;
+            jobToDo();
+            log.info("flagLoop: 3");
         }
     }
 
-    private void jobToDo(int lightNum) throws InterruptedException {
-        while (light[lightNum] != lightCommand[lightNum]){
-            boolean[] pulse = new boolean[8];
-            pulse[lightNum] = true;
-            if (flag) {
-                flag = false;
-                disregard = true;
-                messaging.convertAndSend("/topic/lightSwitch", new LightSwitchCommandModel(pulse[0], pulse[1], pulse[2], pulse[3], pulse[4], pulse[5], pulse[6], pulse[7]));
-                log.info("change state");
+
+    private void jobToDo() throws InterruptedException {
+        flagLoop = true;
+        while (flagLoop) {
+            flagLoop = false;
+            for (int i = 0; i < 7; i++) {
+                if (lightCommand[i]) {
+                    if (newLight[i] == light[i]) {
+                        lightCommand[i] = false;
+                    } else {
+                        flagLoop = true;
+                    }
+                }
             }
-            Thread.sleep(100);
-            log.info("jobtodo");
+            if (flagLoop) {
+                if (flag) {
+                    flag = false;
+                    disregard = true;
+                    log.info("change state of: {}", Arrays.toString(lightCommand));
+                    messaging.convertAndSend("/topic/lightSwitch", new LightSwitchCommandModel(lightCommand[0], lightCommand[1], lightCommand[2], lightCommand[3], lightCommand[4], lightCommand[5], lightCommand[6], false));
+                    Thread.sleep(100);
+                }
+            }
+            log.info("flagLoop: 1");
+            Thread.sleep(10);
         }
-        commandFlag[lightNum] = false;
+        log.info("flagLoop: 2");
+        flagBlock = false;
     }
 
 
@@ -69,13 +87,13 @@ public class LightSwitchService {
         boolean[] newLight = new boolean[8];
         //log.info(data.toString());
         active = true;
-        newLight[0] = data.isLight0();
-        newLight[1] = data.isLight1();
-        newLight[2] = data.isLight2();
-        newLight[3] = data.isLight3();
-        newLight[4] = data.isLight4();
-        newLight[5] = data.isLight5();
-        newLight[6] = data.isLight6();
+        newLight[0] = data.isLight0();  //Спалня
+        newLight[1] = data.isLight1();  //Баня
+        newLight[2] = data.isLight2();  //Кухня
+        newLight[3] = data.isLight3();  //Трапезария
+        newLight[4] = data.isLight4();  //Хол
+        newLight[5] = data.isLight5();  //Балкон
+        newLight[6] = data.isLight6();  //Коридор
         newLight[7] = data.isLight7();
         //check for updated state
         for (int i = 0; i < 8; i++){
@@ -91,20 +109,10 @@ public class LightSwitchService {
         }
     }
 
-   /* public void Switch (boolean[] pulse) {
-        if (flag) {
-            flag = false;
-            disregard = true;
-            messaging.convertAndSend("/topic/lightSwitch", new LightSwitchCommandModel(pulse[0], pulse[1], pulse[2], pulse[3], pulse[4], pulse[5], pulse[6], pulse[7]));
-            log.info("change state");
-        }
-    }*/
-
-
 
     @Scheduled(fixedRate = 10000)    //every 10s
     private synchronized void selfReboot(){
-        if (!active) rebootDevice.rebootDev("rebootLightSwitch");
+        if (!active) rebootDevice.rebootDev(RebootDevice.destination.LIGHT_SWITCH);
         active = false;
     }
 }

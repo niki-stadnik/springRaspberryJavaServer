@@ -68,6 +68,6 @@ public class DoorCam {
         //Self Reboot Logic
         if (fpm == 0) resCounter--;
         else resCounter = resInterval;
-        if (resCounter == 0) rebootDevice.rebootDev("rebootDoorman");
+        if (resCounter == 0) rebootDevice.rebootDev(RebootDevice.destination.DOORMAN);
     }
 }

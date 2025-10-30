@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BathroomFanModel {
 
-    private Double bathTemp = null;
-    private Double bathHum = null;
-    private Double bathLight = null;
+    private boolean auto = true;
+    private Double bathTemp1 = null;
+    private Double bathTemp2 = null;
+    private Double bathHum1 = null;
+    private Double bathHum2 = null;
     private boolean bathFan = false;
 
 }

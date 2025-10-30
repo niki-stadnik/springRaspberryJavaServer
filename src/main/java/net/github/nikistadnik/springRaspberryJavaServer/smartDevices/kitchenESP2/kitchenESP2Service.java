@@ -25,7 +25,7 @@ public class kitchenESP2Service {
 
     @Scheduled(fixedRate = 300000)    //every 5m
     private synchronized void selfReboot(){
-        if (!active) rebootDevice.rebootDev("restartKitchen2");
+        if (!active) rebootDevice.rebootDev(RebootDevice.destination.KITCHEN);
         active = false;
     }
 }

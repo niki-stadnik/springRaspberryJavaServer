@@ -1,28 +1,45 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.bathroomFan;
 
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.github.nikistadnik.springRaspberryJavaServer.TempStorage;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SendMessage;
+import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitch.LightSwitchCommandModel;
+import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitch.LightSwitchService;
 import org.json.JSONObject;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class BathroomFanService {
+
+    private final SimpMessageSendingOperations messaging;
 
     private static boolean flag = false;
     private static boolean disregard = false;
     private static boolean check = false;
     private static boolean auto = true;
+    @Getter @Setter
     private static boolean bathFanCommand = false;
 
-    private static Double bathTemp = null;
-    private static Double bathHum = null;
-    private static Double bathLight = null;
+    @Getter @Setter
+    private static Double bathTemp1 = null;
+    @Getter @Setter
+    private static Double bathTemp2 = null;
+    @Getter @Setter
+    private static Double bathHum1 = null;
+    @Getter @Setter
+    private static Double bathHum2 = null;
+    @Getter @Setter
     private static boolean bathFan = false;
 
     private static boolean commandFlag = false;
+    @Getter @Setter
     private static int bathroomFanDelay = 30;
     private static int counterForBathroomFan = 0;
     private static int bathroomFanCycles = 0;
@@ -31,23 +48,12 @@ public class BathroomFanService {
 
 
     private void sendToClient(){
-        jo = new JSONObject();
-        jo.put("auto", auto);
-        jo.put("bathTemp", bathTemp);
-        jo.put("bathHum", bathHum);
-        jo.put("bathLight", bathLight);
-        jo.put("bathFan", bathFan);
-        String dataOut = jo.toString();
-        SendMessage.sendMessage("/topic/clientBathroomFan", dataOut);
+        messaging.convertAndSend("/topic/clientBathroomFan", new BathroomFanModel(auto, bathTemp1, bathTemp2, bathHum1, bathHum2, bathFan));
     }
 
     public void command(BathroomFanClientModel data) throws InterruptedException {
-        System.out.println(data);
+        log.info(data.toString());
         auto = data.isAuto();
-        jo = new JSONObject();
-        jo.put("auto", auto);
-        String dataOut = jo.toString();
-        SendMessage.sendMessage("/topic/modeBathroomFan", dataOut);
         if (!auto) {
             bathFanCommand = data.isBathFanCommand();
             if(!commandFlag){
@@ -60,9 +66,9 @@ public class BathroomFanService {
     private void jobToDo() throws InterruptedException {
         while (bathFan != bathFanCommand){
             if (bathFanCommand) {
-                switchON();
+                switchState(true);
             } else {
-                switchOFF();
+                switchState(false);
             }
             Thread.sleep(2000);
         }
@@ -72,17 +78,16 @@ public class BathroomFanService {
 
     public void setData(BathroomFanModel data) {
         //System.out.println(data);
-        bathTemp = data.getBathTemp();
+        bathTemp1 = data.getBathTemp1();
         //bathTemp -= 2;    //calibrating
-        int tem = (int)(bathTemp*100);
-        bathTemp = tem/100d;
+        int tem = (int)(bathTemp1*100);
+        bathTemp1 = tem/100d;
         //System.out.println(bathTemp);
-        bathHum = data.getBathHum();
+        bathHum1 = data.getBathHum1();
         //bathHum += 10;      //calibrating
-        int hum = (int)(bathHum*100);
-        bathHum = hum/100d;
+        int hum = (int)(bathHum1*100);
+        bathHum1 = hum/100d;
         //System.out.println(bathHum);
-        bathLight = data.getBathLight();
         bathFan = data.isBathFan();
         if (!flag) {                //check if message is sent
             if (!disregard) {       //disregard the next batch of data since it can be sent before the message
@@ -99,113 +104,31 @@ public class BathroomFanService {
     private void Auto() {
         if (auto) {
             bathroomFanCycles = bathroomFanDelay;   //it's *2 because the schedule is 2 times per second
-            if (bathHum != null && bathLight != null && bathTemp != null) {
-                if ((bathHum > 70 || bathLight >= 0.01) && !bathFan) {
-                    switchON();
-                } else if (bathHum < 54 && bathLight < 0.01 && bathFan) {
+            if (bathHum1 != null && bathTemp1 != null) {
+                if ((bathHum1 > 70 || LightSwitchService.light[1]) && !bathFan) {
+                    switchState(true);
+                } else if (bathHum1 < 54 && !LightSwitchService.light[1] && bathFan) {
                     System.out.println(counterForBathroomFan);
                     System.out.println(bathroomFanCycles);
                     if (counterForBathroomFan >= bathroomFanCycles) {
-                        switchOFF();
+                        switchState(false);
                     } else {
                         counterForBathroomFan++;
                     }
                 } else {
-                    if (bathLight >= 0.01) counterForBathroomFan = 0;
+                    if (LightSwitchService.light[1]) counterForBathroomFan = 0;
                 }
             }
         }
     }
 
 
-    public synchronized void switchON() {
+    public synchronized void switchState(boolean state) {
         if (flag) {
             flag = false;
             disregard = true;
-            System.out.println("switch it on");
-            jo = new JSONObject();
-            jo.put("data", true);
-            String data = jo.toString();
-            SendMessage.sendMessage("/topic/bathroomFan", data);
+            messaging.convertAndSend("/topic/bathroomFan", "{\"data\":" + state + "}");
+            log.info("change state: {}", state);
         }
-    }
-
-    public synchronized void switchOFF() {
-        if (flag) {
-            flag = false;
-            disregard = true;
-            System.out.println("switch it off");
-            jo = new JSONObject();
-            jo.put("data", false);
-            String data = jo.toString();
-            SendMessage.sendMessage("/topic/bathroomFan", data);
-        }
-    }
-
-    @Scheduled(fixedRate = 20000)    //every 20s
-    private void keepAlive() {
-        if (flag) {
-            flag = false;
-            disregard = true;
-            SendMessage.sendMessage("/topic/keepAlive", "doNotDie");
-        }
-    }
-
-
-
-    public static Double getBathTemp() {
-        return bathTemp;
-    }
-
-    public static void setBathTemp(Double bathTemp) {
-        BathroomFanService.bathTemp = bathTemp;
-    }
-
-    public static Double getBathHum() {
-        return bathHum;
-    }
-
-    public static void setBathHum(Double bathHum) {
-        BathroomFanService.bathHum = bathHum;
-    }
-
-    public static Double getBathLight() {
-        return bathLight;
-    }
-
-    public static void setBathLight(Double bathLight) {
-        BathroomFanService.bathLight = bathLight;
-    }
-
-    public static boolean isBathFan() {
-        return bathFan;
-    }
-
-    public static void setBathFan(boolean bathFan) {
-        BathroomFanService.bathFan = bathFan;
-    }
-
-    public static boolean isAuto() {
-        return auto;
-    }
-
-    public static void setAuto(boolean auto) {
-        BathroomFanService.auto = auto;
-    }
-
-    public static boolean isBathFanCommand() {
-        return bathFanCommand;
-    }
-
-    public static void setBathFanCommand(boolean bathFanCommand) {
-        BathroomFanService.bathFanCommand = bathFanCommand;
-    }
-
-    public static int getBathroomFanDelay() {
-        return bathroomFanDelay;
-    }
-
-    public static void setBathroomFanDelay(int bathroomFanDelay) {
-        BathroomFanService.bathroomFanDelay = bathroomFanDelay;
     }
 }

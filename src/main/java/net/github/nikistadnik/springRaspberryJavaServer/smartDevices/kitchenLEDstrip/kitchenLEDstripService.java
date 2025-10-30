@@ -34,8 +34,8 @@ public class kitchenLEDstripService {
 
     public void command (kitchenLEDstripClientModel data){
         int com = data.getCommand();
-        if (com == 1) rebootDevice.rebootDev("restartKitchen1"); //self
-        if (com == 2) rebootDevice.rebootDev("restartKitchen2"); //kitchenESP32Service
+        if (com == 1) rebootDevice.rebootDev(RebootDevice.destination.LED_KITCHEN); //self
+        if (com == 2) rebootDevice.rebootDev(RebootDevice.destination.KITCHEN); //kitchenESP32Service
         if (com == 3) reloadPage();
         if (com == 4) {
             newDuty = data.getDuty();
@@ -77,7 +77,7 @@ public class kitchenLEDstripService {
 
     @Scheduled(fixedRate = 30000)    //every 30s
     private synchronized void selfReboot(){
-        if (!active) rebootDevice.rebootDev("restartKitchen1");
+        if (!active) rebootDevice.rebootDev(RebootDevice.destination.LED_KITCHEN);
         active = false;
     }
 }

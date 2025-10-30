@@ -42,9 +42,10 @@ function showMessage(message) {
         document.getElementById("sendBFOff").style.backgroundColor = '#009933';
         document.getElementById("sendBFOn").style.backgroundColor = '#cacaca57';
     }
-    document.getElementById("temp").textContent = message.bathTemp;
-    document.getElementById("hum").textContent = message.bathHum;
-    document.getElementById("light").textContent = message.bathLight;
+    document.getElementById("bathTemp1").textContent = message.bathTemp1;
+    document.getElementById("bathTemp2").textContent = message.bathTemp2;
+    document.getElementById("bathHum1").textContent = message.bathHum1;
+    document.getElementById("bathHum2").textContent = message.bathHum2;
     if(message.auto) document.getElementById("sendBFAuto").style.backgroundColor = '#009933';
     else document.getElementById("sendBFAuto").style.backgroundColor = '#cacaca57';
 }
