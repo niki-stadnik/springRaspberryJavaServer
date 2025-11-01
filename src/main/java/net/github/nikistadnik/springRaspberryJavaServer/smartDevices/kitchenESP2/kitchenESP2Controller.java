@@ -1,9 +1,7 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.kitchenESP2;
 
 import lombok.RequiredArgsConstructor;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.kitchenLEDstrip.kitchenLEDstripModel;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller

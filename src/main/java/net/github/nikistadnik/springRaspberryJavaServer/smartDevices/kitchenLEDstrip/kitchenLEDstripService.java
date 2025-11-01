@@ -75,7 +75,7 @@ public class kitchenLEDstripService {
         messaging.convertAndSend("/topic/clientKitchenStrip", "{\"duty\":" + duty + "}");
     }
 
-    @Scheduled(fixedRate = 30000)    //every 30s
+    @Scheduled(initialDelay = 10000, fixedRate = 30000)    //every 30s
     private synchronized void selfReboot(){
         if (!active) rebootDevice.rebootDev(RebootDevice.destination.LED_KITCHEN);
         active = false;

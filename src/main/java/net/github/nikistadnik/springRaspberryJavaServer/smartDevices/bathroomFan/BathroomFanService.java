@@ -4,11 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.github.nikistadnik.springRaspberryJavaServer.TempStorage;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SendMessage;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitch.LightSwitchCommandModel;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitch.LightSwitchService;
-import org.json.JSONObject;
+import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.DeviceRegistry;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,42 +15,38 @@ import org.springframework.stereotype.Service;
 public class BathroomFanService {
 
     private final SimpMessageSendingOperations messaging;
+    private final DeviceRegistry deviceRegistry;
 
     private static boolean flag = false;
     private static boolean disregard = false;
     private static boolean check = false;
-    private static boolean auto = true;
+
     @Getter @Setter
     private static boolean bathFanCommand = false;
 
-    @Getter @Setter
-    private static Double bathTemp1 = null;
-    @Getter @Setter
-    private static Double bathTemp2 = null;
-    @Getter @Setter
-    private static Double bathHum1 = null;
-    @Getter @Setter
-    private static Double bathHum2 = null;
-    @Getter @Setter
-    private static boolean bathFan = false;
 
     private static boolean commandFlag = false;
     @Getter @Setter
     private static int bathroomFanDelay = 30;
     private static int counterForBathroomFan = 0;
     private static int bathroomFanCycles = 0;
-    JSONObject jo;
 
 
 
     private void sendToClient(){
-        messaging.convertAndSend("/topic/clientBathroomFan", new BathroomFanModel(auto, bathTemp1, bathTemp2, bathHum1, bathHum2, bathFan));
+        messaging.convertAndSend("/topic/clientBathroomFan", new BathroomFanModel(
+                deviceRegistry.bathroomFanState().auto(),
+                deviceRegistry.bathroomFanState().bathTemp1(),
+                deviceRegistry.bathroomFanState().bathTemp2(),
+                deviceRegistry.bathroomFanState().bathHum1(),
+                deviceRegistry.bathroomFanState().bathHum2(),
+                deviceRegistry.bathroomFanState().bathFan()));
     }
 
     public void command(BathroomFanClientModel data) throws InterruptedException {
         log.info(data.toString());
-        auto = data.isAuto();
-        if (!auto) {
+        deviceRegistry.bathroomFanState().auto(data.isAuto());
+        if (!deviceRegistry.bathroomFanState().auto()) {
             bathFanCommand = data.isBathFanCommand();
             if(!commandFlag){
                 commandFlag = true;
@@ -63,8 +55,8 @@ public class BathroomFanService {
         }
     }
 
-    private void jobToDo() throws InterruptedException {
-        while (bathFan != bathFanCommand){
+    private synchronized void jobToDo() throws InterruptedException {
+        while (deviceRegistry.bathroomFanState().bathFan() != bathFanCommand){
             if (bathFanCommand) {
                 switchState(true);
             } else {
@@ -76,19 +68,30 @@ public class BathroomFanService {
     }
 
 
-    public void setData(BathroomFanModel data) {
-        //System.out.println(data);
-        bathTemp1 = data.getBathTemp1();
+    public synchronized void setData(BathroomFanModel data) {
+        log.info(data.toString());
+
+        Double bathTemp1l = data.getBathTemp1();
         //bathTemp -= 2;    //calibrating
-        int tem = (int)(bathTemp1*100);
-        bathTemp1 = tem/100d;
-        //System.out.println(bathTemp);
-        bathHum1 = data.getBathHum1();
+        int tem1 = (int)(bathTemp1l*100);
+        deviceRegistry.bathroomFanState().bathTemp1(tem1/100d);
+
+        Double bathTemp2l = data.getBathTemp1();
+        //bathTemp -= 2;    //calibrating
+        int tem2 = (int)(bathTemp2l*100);
+        deviceRegistry.bathroomFanState().bathTemp1(tem2/100d);
+
+        Double bathHum1l = data.getBathHum1();
         //bathHum += 10;      //calibrating
-        int hum = (int)(bathHum1*100);
-        bathHum1 = hum/100d;
-        //System.out.println(bathHum);
-        bathFan = data.isBathFan();
+        int hum1 = (int)(bathHum1l*100);
+        deviceRegistry.bathroomFanState().bathHum1(hum1/100d);
+
+        Double bathHum2l = data.getBathHum1();
+        //bathHum += 10;      //calibrating
+        int hum2 = (int)(bathHum2l*100);
+        deviceRegistry.bathroomFanState().bathHum1(hum2/100d);
+
+        deviceRegistry.bathroomFanState().bathFan(data.isBathFan());
         if (!flag) {                //check if message is sent
             if (!disregard) {       //disregard the next batch of data since it can be sent before the message
                 flag = true;        //if disregarded allow the next message to be sent
@@ -102,12 +105,14 @@ public class BathroomFanService {
 
     @Scheduled(fixedRate = 1000)    //500
     private void Auto() {
-        if (auto) {
+        if (deviceRegistry.bathroomFanState().auto()) {
             bathroomFanCycles = bathroomFanDelay;   //it's *2 because the schedule is 2 times per second
-            if (bathHum1 != null && bathTemp1 != null) {
-                if ((bathHum1 > 70 || LightSwitchService.light[1]) && !bathFan) {
+            if (deviceRegistry.bathroomFanState().bathHum1() != null && deviceRegistry.bathroomFanState().bathTemp1() != null) {
+                //if ((bathHum1 > 70 || LightSwitchService.light[1]) && !bathFan) {
+                if ((deviceRegistry.bathroomFanState().bathHum1() > 70 || deviceRegistry.lightSwitchState().light()[1].get()) && !deviceRegistry.bathroomFanState().bathFan()) {
                     switchState(true);
-                } else if (bathHum1 < 54 && !LightSwitchService.light[1] && bathFan) {
+               // } else if (bathHum1 < 54 && !LightSwitchService.light[1] && bathFan) {
+                } else if (deviceRegistry.bathroomFanState().bathHum1() < 54 && !deviceRegistry.lightSwitchState().light()[1].get() && deviceRegistry.bathroomFanState().bathFan()) {
                     System.out.println(counterForBathroomFan);
                     System.out.println(bathroomFanCycles);
                     if (counterForBathroomFan >= bathroomFanCycles) {
@@ -116,7 +121,8 @@ public class BathroomFanService {
                         counterForBathroomFan++;
                     }
                 } else {
-                    if (LightSwitchService.light[1]) counterForBathroomFan = 0;
+                 //   if (LightSwitchService.light[1]) counterForBathroomFan = 0;
+                    if (deviceRegistry.lightSwitchState().light()[1].get()) counterForBathroomFan = 0;
                 }
             }
         }

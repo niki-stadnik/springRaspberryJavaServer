@@ -2,6 +2,7 @@ package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitc
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.DeviceRegistry;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.RebootDevice;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -18,16 +19,12 @@ public class LightSwitchService {
     private final RebootDevice rebootDevice;
     private final SimpMessageSendingOperations messaging;
     private final ApplicationEventPublisher eventPublisher;
+    private final DeviceRegistry deviceRegistry;
 
-    public static final boolean[] light = new boolean[8];
-    private static boolean[] lightCommand = new boolean[8];
-    private static boolean[] newLight = new boolean[8];
-    private static final boolean[] commandFlag = new boolean[8];
+    //public static final boolean[] light = new boolean[8];
     private static boolean active = false;
     private static boolean flag = false;
     private static boolean disregard = false;
-    private static boolean flagBlock = false;
-    private static boolean flagLoop = true;
 
 
     //@Scheduled(fixedRate = 500)
@@ -35,31 +32,22 @@ public class LightSwitchService {
         //todo auto lights
         //flagManual[] is true when the light was turned on or off from the wall or the webapp
         //when flagManual[] is false that lamp can be controlled on auto
+
     }
 
-    public void command(LightSwitchClientModel data) throws InterruptedException {
-        if (flagLoop) {
-            flagLoop = false;
-            log.info("forced loop off");
-        }
+
+    public synchronized void command(LightSwitchClientModel data) throws InterruptedException {
         log.info(data.toString());
-        lightCommand = data.switchStateOf();
-        newLight = data.stateLight();
-        if (!flagBlock) {
-            flagBlock = true;
-            jobToDo();
-            log.info("flagLoop: 3");
-        }
-    }
-
-
-    private void jobToDo() throws InterruptedException {
-        flagLoop = true;
+        long start = System.currentTimeMillis();
+        boolean[] lightCommand = data.switchStateOf();
+        boolean[] newLight = data.stateLight();
+        boolean flagLoop = true;
         while (flagLoop) {
             flagLoop = false;
             for (int i = 0; i < 7; i++) {
                 if (lightCommand[i]) {
-                    if (newLight[i] == light[i]) {
+                    //if (newLight[i] == light[i]) {
+                    if (newLight[i] == deviceRegistry.lightSwitchState().light()[i].get()) {
                         lightCommand[i] = false;
                     } else {
                         flagLoop = true;
@@ -75,11 +63,14 @@ public class LightSwitchService {
                     Thread.sleep(100);
                 }
             }
-            log.info("flagLoop: 1");
+            //log.info("flagLoop: 1");
             Thread.sleep(10);
+            if (System.currentTimeMillis() - start > 5000) {
+                flagLoop = false;
+                log.info("light command timeout");
+            }
         }
-        log.info("flagLoop: 2");
-        flagBlock = false;
+        //log.info("flagLoop: 2");
     }
 
 
@@ -97,9 +88,12 @@ public class LightSwitchService {
         newLight[7] = data.isLight7();
         //check for updated state
         for (int i = 0; i < 8; i++){
-            if (light[i] != newLight[i]){
-                light[i] = newLight[i];
+            //if (light[i] != newLight[i]){
+            if (deviceRegistry.lightSwitchState().light()[i].get() != newLight[i]){
+                //light[i] = newLight[i];
+                deviceRegistry.lightSwitchState().light()[i].set(newLight[i]);
                 eventPublisher.publishEvent(new LightStatusChangedEvent(this, i, newLight[i]));
+                log.info("light change: {} -> {}", i, newLight[i]);
             }
         }
         if (!flag) {
@@ -110,8 +104,8 @@ public class LightSwitchService {
     }
 
 
-    @Scheduled(fixedRate = 10000)    //every 10s
-    private synchronized void selfReboot(){
+    @Scheduled(initialDelay = 10000, fixedRate = 10000)    //every 10s
+    private void selfReboot(){
         if (!active) rebootDevice.rebootDev(RebootDevice.destination.LIGHT_SWITCH);
         active = false;
     }

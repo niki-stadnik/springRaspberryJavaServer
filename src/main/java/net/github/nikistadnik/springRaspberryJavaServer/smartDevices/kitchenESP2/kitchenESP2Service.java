@@ -3,7 +3,6 @@ package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.kitchenESP
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.RebootDevice;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.kitchenLEDstrip.kitchenLEDstripService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class kitchenESP2Service {
         log.info(data.toString());
     }
 
-    @Scheduled(fixedRate = 300000)    //every 5m
+    @Scheduled(initialDelay = 10000, fixedRate = 300000)    //every 5m
     private synchronized void selfReboot(){
         if (!active) rebootDevice.rebootDev(RebootDevice.destination.KITCHEN);
         active = false;

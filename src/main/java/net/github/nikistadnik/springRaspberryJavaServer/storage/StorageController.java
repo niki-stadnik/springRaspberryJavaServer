@@ -1,22 +1,19 @@
 package net.github.nikistadnik.springRaspberryJavaServer.storage;
 
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.bathroomFan.BathroomFanService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
+import lombok.RequiredArgsConstructor;
+import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.DeviceRegistry;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/v1/storage")
+@RequiredArgsConstructor
 public class StorageController {
 
     private final StorageService storageService;
+    private final DeviceRegistry deviceRegistry;
 
-    @Autowired
-    public StorageController(StorageService storageService) {
-        this.storageService = storageService;
-    }
 
     @GetMapping
     public List<Storage> hi(){
@@ -39,13 +36,13 @@ public class StorageController {
     //@Scheduled(fixedRate = 10000)
     public void insertIns(){
         Storage ins = new Storage(
-                BathroomFanService.getBathTemp1(),
-                BathroomFanService.getBathTemp2(),
-                BathroomFanService.getBathHum2(),
-                BathroomFanService.getBathHum1(),
-                BathroomFanService.isBathFan()
+                deviceRegistry.bathroomFanState().bathTemp1(),
+                deviceRegistry.bathroomFanState().bathTemp2(),
+                deviceRegistry.bathroomFanState().bathHum1(),
+                deviceRegistry.bathroomFanState().bathHum2(),
+                deviceRegistry.bathroomFanState().bathFan()
         );
-        if (BathroomFanService.getBathTemp1() != null) {
+        if (deviceRegistry.bathroomFanState().bathTemp1() != null) {
             storageService.insert(ins);
         }
         hii();

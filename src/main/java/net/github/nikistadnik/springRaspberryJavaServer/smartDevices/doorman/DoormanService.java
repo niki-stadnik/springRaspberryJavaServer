@@ -3,9 +3,6 @@ package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.doorman;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.RebootDevice;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SendMessage;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitch.LightSwitchService;
-import org.json.JSONObject;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +41,7 @@ public class DoormanService {
 
 
 
-    @Scheduled(fixedRate = 10000)    //every 10s
+    @Scheduled(initialDelay = 10000, fixedRate = 10000)    //every 10s
     private synchronized void selfReboot(){
         if (!active) rebootDevice.rebootDev(RebootDevice.destination.DOORMAN);
         active = false;

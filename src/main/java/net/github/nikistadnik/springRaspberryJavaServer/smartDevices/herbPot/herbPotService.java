@@ -2,11 +2,6 @@ package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.herbPot;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SendMessage;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.doorlock.DoorlockClientModel;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.doorman.DoormanClientModel;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitch.LightSwitchService;
-import org.json.JSONObject;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -28,8 +23,6 @@ public class herbPotService {
     private static int moisture2Percent = 0;
     private static boolean watered = false;
 
-
-    static JSONObject jo;
 
     public void setData(herbPotModel data) {
         moisture1 = data.getMoisture1();
