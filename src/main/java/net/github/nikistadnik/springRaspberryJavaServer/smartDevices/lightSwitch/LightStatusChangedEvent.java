@@ -1,7 +1,9 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitch;
 
+import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
+@Getter
 public class LightStatusChangedEvent extends ApplicationEvent {
     private final int light;
     private final boolean state;
@@ -12,11 +14,4 @@ public class LightStatusChangedEvent extends ApplicationEvent {
         this.state = state;
     }
 
-    public int getLight() {
-        return light;
-    }
-
-    public boolean isState() {
-        return state;
-    }
 }

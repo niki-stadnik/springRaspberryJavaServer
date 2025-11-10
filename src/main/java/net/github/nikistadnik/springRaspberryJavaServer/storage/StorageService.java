@@ -1,8 +1,11 @@
 package net.github.nikistadnik.springRaspberryJavaServer.storage;
 
+import lombok.RequiredArgsConstructor;
+import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.DeviceRegistry;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -13,14 +16,11 @@ import java.util.stream.Collectors;
 //https://www.baeldung.com/spring-data-jpa-query
 
 @Service
+@RequiredArgsConstructor
 public class StorageService {
 
     private final StorageRepository storageRepository;
-
-    @Autowired
-    public StorageService(StorageRepository storageRepository) {
-        this.storageRepository = storageRepository;
-    }
+    private final DeviceRegistry deviceRegistry;
 
     //get all rows
     public List<Storage> getStorage() {
@@ -52,6 +52,31 @@ public class StorageService {
         storageRepository.save(storage);
     }
 
+    //@Scheduled(initialDelay = 10000, fixedRate = 1000000)
+    public void insertIns() {
+        Storage ins = new Storage();
+             ins.bathTemp1(deviceRegistry.bathroomFanState().bathTemp1())
+                .bathTemp2(deviceRegistry.bathroomFanState().bathTemp2())
+                .bathHum1(deviceRegistry.bathroomFanState().bathHum1())
+                .bathHum2(deviceRegistry.bathroomFanState().bathHum2())
+                .bathFan(deviceRegistry.bathroomFanState().bathFan())
+                .light0(deviceRegistry.lightSwitchState().light()[0].get())
+                .light1(deviceRegistry.lightSwitchState().light()[1].get())
+                .light2(deviceRegistry.lightSwitchState().light()[2].get())
+                .light3(deviceRegistry.lightSwitchState().light()[3].get())
+                .light4(deviceRegistry.lightSwitchState().light()[4].get())
+                .light5(deviceRegistry.lightSwitchState().light()[5].get())
+                .light6(deviceRegistry.lightSwitchState().light()[6].get());
+        storageRepository.save(ins);
+    }
+
+
+    public void hii() {
+        System.out.println("StorageController");
+        List<Storage> tt = getbyID(1);
+        System.out.println("getbyID: " + tt);
+        System.out.println("get?: " + tt.get(1));
+    }
 
 
 /*

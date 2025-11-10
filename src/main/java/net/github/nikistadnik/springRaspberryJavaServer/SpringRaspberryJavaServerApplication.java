@@ -95,7 +95,7 @@ public class SpringRaspberryJavaServerApplication {
 
 
 //mvn package
-//docker tag homebrain:9.49 nikistadnik/homebrain:latest
+//docker tag homebrain:9.82 nikistadnik/homebrain:latest
 //docker push nikistadnik/homebrain:latest
 
 
@@ -105,3 +105,4 @@ public class SpringRaspberryJavaServerApplication {
 
 //javax replaced by jakarta
 //do i need any of the 2 json dep
+

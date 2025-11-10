@@ -1,65 +1,47 @@
 package net.github.nikistadnik.springRaspberryJavaServer.storage;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-
-enum Mode {ON, OFF, AUTO}
+import lombok.*;
+import lombok.experimental.Accessors;
 
 @NoArgsConstructor
-@Entity
+@Accessors(fluent = true, chain = true)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+@Data
+@Entity(name = "Storage")
 @Table(name = "storage")
 public class Storage {
 
-    @Getter @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     //from bathroom fan
-    @Getter @Setter
-    @Column(name = "bath_temp")
-    private Double bathTemp;
-    @Getter @Setter
-    @Column(name = "bath_hum")
-    private Double bathHum;
-    @Getter @Setter
-    @Column(name = "bath_light")
-    private Double bathLight;
-    @Getter @Setter
+    @Column(name = "bath_temp_1")
+    private Double bathTemp1;
+    @Column(name = "bath_temp_2")
+    private Double bathTemp2;
+    @Column(name = "bath_hum_1")
+    private Double bathHum1;
+    @Column(name = "bath_hum_2")
+    private Double bathHum2;
     @Column(name = "bath_fan")
     private boolean bathFan;
+    //from light switch
+    @Column(name = "light_0")
+    private boolean light0;
+    @Column(name = "light_1")
+    private boolean light1;
+    @Column(name = "light_2")
+    private boolean light2;
+    @Column(name = "light_3")
+    private boolean light3;
+    @Column(name = "light_4")
+    private boolean light4;
+    @Column(name = "light_5")
+    private boolean light5;
+    @Column(name = "light_6")
+    private boolean light6;
 
-    //"bathroomFanMode", "auto"
-    //"BathroomFanDelay", 30
-    private static Double bathroomFanDelay;
-    private static Mode bathroomFanMode = Mode.AUTO;
-
-
-    private static Map mapStorage = new LinkedHashMap();
-
-
-    @Override
-    public String toString(){
-        return "{\"id\":" + id + ",\"bathTemp\":" + bathTemp + ",\"bathHum\":" + bathHum + ",\"bathLight\":" + bathLight + ",\"bathFan\":" + bathFan + "}";
-    }
-
-
-    public Storage(
-            Double bathTemp1,
-            Double bathTemp2,
-            Double bathHum1,
-            Double bathHum2,
-            boolean bathFan
-    ) {
-        this.bathTemp = bathTemp;
-        this.bathHum = bathHum;
-        this.bathLight = bathLight;
-        this.bathFan =bathFan;
-    }
 }

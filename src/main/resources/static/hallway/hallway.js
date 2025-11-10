@@ -1,12 +1,14 @@
-var stompClient = null;
+//var stompClient = null;
 
 window.onload = function() {
     var reloading = sessionStorage.getItem("reloading");
-    connect();
+    //connect();
     if (reloading) {
         sessionStorage.removeItem("reloading");
     }
 }
+
+
 function reloadP() {
     sessionStorage.setItem("reloading", "true");
     document.location.reload();
@@ -20,6 +22,8 @@ function lights() {
 function climate() {
      window.location.href="/climate/climate.html";
 }
+
+/*
 
 function connect() {
     var socket = new SockJS('/stomp-endpoint');
@@ -37,3 +41,5 @@ function showImage(image) {
     const imageData = document.getElementById('image');
     imageData.src = 'data:image/jpeg;base64,' + dd;
 }
+
+ */

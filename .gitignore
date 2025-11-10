@@ -9,6 +9,10 @@ target/
 *.properties
 
 
+client_secret_143683117441-3qgea2fddlahgpfb5umdim6edag0sinh.apps.googleusercontent.com.json
+
+/tokens
+
 
 ### STS ###
 .apt_generated

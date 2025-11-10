@@ -1,4 +1,4 @@
-FROM openjdk:25
+FROM mcr.microsoft.com/openjdk/jdk:25-ubuntu
 
 COPY target/homebrain.jar homebrain.jar
 
