@@ -97,7 +97,7 @@ public class VideoRecorderService {
     }
 
 
-    public synchronized void stopRecording() {
+    public synchronized void stopRecording(int width, int height) throws FrameRecorder.Exception {
         if (!recording.get()) return;
         try {
             recorder.stop();
@@ -107,12 +107,14 @@ public class VideoRecorderService {
             e.printStackTrace();
         } finally {
             recording.set(false);
+            startRecording(width, height);
         }
     }
 
 
  //   public synchronized void setImage(byte[] imageBytes) {
     public synchronized void setImage(Frame frame) {
+        FFmpegLogCallback.set();
 
 
         try {
@@ -158,12 +160,6 @@ public class VideoRecorderService {
                     return;
                 }
                 timestampUs = lastTimestamp + 33333;
-                    //log.info("new timestamp:             {} ", timestampUs);
-
-                //}else {
-                    //log.info("dropped: {} \n", timestampUs);
-                    //return;
-                //}
             }
 
 
@@ -183,14 +179,12 @@ public class VideoRecorderService {
 
             // Stop after reaching max video length
             if ((currentTime - startTime) >= videoLengthMs) {
-                log.info("Starting new recording...");
+                log.info("Restarting recording...");
                 new Thread(() -> {
                     synchronized (this) {
-                        stopRecording();
+
                         try {
-                            // Small delay ensures FFmpeg releases file handles properly
-                            Thread.sleep(300);
-                            startRecording(frame.imageWidth, frame.imageHeight);
+                            stopRecording(frame.imageWidth, frame.imageHeight);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

@@ -2,6 +2,7 @@ package net.github.nikistadnik.springRaspberryJavaServer.discord;
 
 import lombok.extern.slf4j.Slf4j;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.cameras.ContinuousCaptureService;
+import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.cameras.GifCreator;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.doorman.DoormanDoorBellEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
@@ -76,18 +77,23 @@ public class DiscordServiceBE {
 
     @EventListener
     public void sendCamToDiscord(DoormanDoorBellEvent event) {
+        ByteArrayResource imageResource;
         String channelId = "1435643869197762683";
         String messageText = "Someone at the door!";
         if (event.held() > 0) messageText = "Someone at the door! Rang for: " + event.held() + " seconds";
 
         try {
-            ByteArrayResource imageResource = new ByteArrayResource(ContinuousCaptureService.imageBytes) {
-            //ByteArrayResource imageResource = new ByteArrayResource(DoorCam.imageBytes) {
-                @Override
-                public String getFilename() {
-                    return "doorcam.jpg"; // required by Discord
-                }
-            };
+            //ByteArrayResource imageResource = new ByteArrayResource(ContinuousCaptureService.imageBytes) {
+            if (event.held() > 0) imageResource = GifCreator.createGifResource();
+            else {
+                imageResource = new ByteArrayResource(ContinuousCaptureService.imageBytes) {
+                //ByteArrayResource imageResource = new ByteArrayResource(DoorCam.imageBytes) {
+                    @Override
+                    public String getFilename() {
+                        return "doorcam.jpg"; // required by Discord
+                    }
+                };
+            }
 
             // Prepare payload (message text)
             Map<String, Object> payload = Map.of("content", messageText);
@@ -130,6 +136,4 @@ public class DiscordServiceBE {
             return status;
         }
     }
-
-
 }

@@ -22,6 +22,7 @@ public class ContinuousCaptureService {
 
 
     private final VideoRecorderService videoRecorderService;
+    private final GifCreator gifCreator;
     private final SimpMessageSendingOperations messaging;
     private final RebootDevice rebootDevice;
 
@@ -41,7 +42,7 @@ public class ContinuousCaptureService {
         captureThread.start();
     }
 
-    public static byte[] imageBytes;
+    public volatile static byte[] imageBytes;
 
     private void captureLoop() {
         //stops the spam of: "[swscaler @ 000001fd1dcd5d80] deprecated pixel format used, make sure you did set range correctly"
@@ -60,8 +61,8 @@ public class ContinuousCaptureService {
                     videoRecorderService.setImage(frame);
 
                     imageBytes = FrameToBytes.frameToJpegBytes(frame);
-                    String imageString = Base64.getEncoder().encodeToString(imageBytes);
-                    messaging.convertAndSend("/topic/imageDoorCam", "{\"image\":\"" + imageString + "\" }");
+                    //String imageString = Base64.getEncoder().encodeToString(imageBytes);
+                    //messaging.convertAndSend("/topic/imageDoorCam", "{\"image\":\"" + imageString + "\" }");
                 }
             }
             log.info("Stopped capturing from {}", STREAM_URL);
@@ -86,6 +87,8 @@ public class ContinuousCaptureService {
     private static int resCounter = 3;
     private static int resInterval = 3; //minutes without frame before reset
 
+    private static boolean resFlag = false;
+
     @Scheduled(fixedRate = 1000)
     private synchronized void fpsCounter() {
         fps = fpsCount;
@@ -98,8 +101,8 @@ public class ContinuousCaptureService {
     private synchronized void fpmCounter() {
         fpm = fpmCount;
         fpmCount = 0;
-        log.info("fpm: {}", fpm);
-        log.info("fpmCount: {}", fpmCount);
+        //log.info("fpm: {}", fpm);
+        //log.info("fpmCount: {}", fpmCount);
 
         //Self Reboot Logic
         if (fpm == 0) resCounter--;
@@ -109,13 +112,21 @@ public class ContinuousCaptureService {
         }
     }
 
-    @Scheduled(initialDelay = 60000, fixedRate = 10000)
+    @Scheduled(initialDelay = 60000, fixedRate = 7000)
     private synchronized void restartCapture() {
         if (fpmCount == 0) {
-            log.info("Restart capture...");
-            stopCapture();
-            startCapture();
-            log.info("Restart capture done...");
-        }
+            if (resFlag) {
+                resFlag = false;
+                log.info("Restart capture...");
+                stopCapture();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                startCapture();
+                log.info("Restart capture done...");
+            }else resFlag = true;
+        }else resFlag = false;
     }
 }

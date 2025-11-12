@@ -95,7 +95,7 @@ public class SpringRaspberryJavaServerApplication {
 
 
 //mvn package
-//docker tag homebrain:9.82 nikistadnik/homebrain:latest
+//docker tag homebrain:9.88 nikistadnik/homebrain:latest
 //docker push nikistadnik/homebrain:latest
 
 
