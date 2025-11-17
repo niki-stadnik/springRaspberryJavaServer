@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -16,7 +18,7 @@ public class RebootDevice {
         KITCHEN("restartKitchen2"),
         LIGHT_SWITCH("rebootLightSwitch"),
         DOORMAN("rebootDoorman"),
-        LED_BATHROOM("rebootBathroomLed"),
+        LED_BATHROOM("rebootBathroomStrip"),
         FAN_BATHROOM("rebootBathroomFan");
 
         private final String value;
@@ -28,9 +30,20 @@ public class RebootDevice {
         }
     }
 
+
     private final SimpMessageSendingOperations messaging;
 
+    private final DeviceRegistry deviceRegistry;
+
     public void rebootDev(destination dest) {
+        long now = System.nanoTime();
+        long last = deviceRegistry.lastCall().get();
+        // 5 seconds in nanoseconds = 5_000_000_000L
+        if (now - last < 5_000_000_000L) {
+            log.info("last reboot call was less than 5 seconds ago");
+            return;
+        }
+        deviceRegistry.lastCall().set(now);
         messaging.convertAndSend("/topic/" + dest.value(), "{\"relayRestart\":true}");
         log.info("restart device:" + dest);
     }

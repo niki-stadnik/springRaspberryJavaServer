@@ -3,8 +3,6 @@ package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.bathroomFa
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.stereotype.Component;
 
@@ -20,4 +18,5 @@ public class BathroomFanState {
     private Double bathHum2 = null;
     private boolean bathFan = false;
     private boolean auto = true;
+    private Double button = null;
 }

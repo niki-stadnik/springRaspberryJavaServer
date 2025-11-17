@@ -2,7 +2,7 @@ package net.github.nikistadnik.springRaspberryJavaServer.smartDevices;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
-
+/*
 @Component
 public class SendMessage {
 
@@ -17,3 +17,5 @@ public class SendMessage {
         //System.out.println(data);
     }
 }
+
+ */

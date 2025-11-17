@@ -1,7 +1,8 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.adax;
 
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SendMessage;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import com.github.scribejava.apis.openid.OpenIdJsonTokenExtractor;
@@ -22,7 +23,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
-
+@RequiredArgsConstructor
 @Service
 public class AdaxAPI {
     @Value("${adax.apiUrl}")
@@ -39,9 +40,7 @@ public class AdaxAPI {
 
     private JSONObject tempBedroom;
 
-
-    public AdaxAPI() throws Exception {
-    }
+    protected final SimpMessageSendingOperations messaging;
 
     @PostConstruct
     private void init() throws Exception {
@@ -102,7 +101,8 @@ public class AdaxAPI {
 
     public void updateClient() {
         if (tempBedroom != null) {
-            SendMessage.sendMessage("/topic/adax", String.valueOf(tempBedroom));
+            //SendMessage.sendMessage("/topic/adax", String.valueOf(tempBedroom));
+            messaging.convertAndSend("/topic/adax", String.valueOf(tempBedroom));
         }
     }
 
@@ -124,7 +124,8 @@ public class AdaxAPI {
             System.out.println(dataOut);
             if (!coolDown) {
                         tempBedroom = jo;
-                        SendMessage.sendMessage("/topic/adax", dataOut);
+                        //SendMessage.sendMessage("/topic/adax", dataOut);
+                        messaging.convertAndSend("/topic/adax", dataOut);
 
             }
             coolDown = false;
@@ -171,7 +172,8 @@ public class AdaxAPI {
                 switch (roomId) {
                     case 161132:    //bedroom
                         tempBedroom = jo;
-                        SendMessage.sendMessage("/topic/adax", dataOut);
+                        //SendMessage.sendMessage("/topic/adax", dataOut);
+                        messaging.convertAndSend("/topic/adax", dataOut);
                         break;
                 }
             }

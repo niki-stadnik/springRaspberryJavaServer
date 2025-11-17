@@ -1,13 +1,17 @@
 package net.github.nikistadnik.springRaspberryJavaServer.storage;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.DeviceRegistry;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +19,7 @@ import java.util.stream.Collectors;
 
 //https://www.baeldung.com/spring-data-jpa-query
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StorageService {
@@ -52,7 +57,7 @@ public class StorageService {
         storageRepository.save(storage);
     }
 
-    //@Scheduled(initialDelay = 10000, fixedRate = 1000000)
+    @Scheduled(initialDelay = 10000, fixedRate = 60000)
     public void insertIns() {
         Storage ins = new Storage();
              ins.bathTemp1(deviceRegistry.bathroomFanState().bathTemp1())
@@ -76,6 +81,14 @@ public class StorageService {
         List<Storage> tt = getbyID(1);
         System.out.println("getbyID: " + tt);
         System.out.println("get?: " + tt.get(1));
+    }
+
+    @Autowired
+    private Environment env;
+
+    @PostConstruct
+    public void checkProfile() {
+        log.info("Active profiles: {}", Arrays.toString(env.getActiveProfiles()));
     }
 
 

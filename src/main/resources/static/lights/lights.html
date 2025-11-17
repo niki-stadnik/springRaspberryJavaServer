@@ -118,13 +118,23 @@
             <input type="range" min="0" max="255" value="0" class="dimmer" id="kitchenStrip" onchange="kitchenStrip(this)">
         </div>
     </div>
+    <!--strip bathroom -->
+    <div class="name">Стрип баня</div>
     <div>
-        <div>
-    <button id="lightsOff" class="textb" type="submit" onclick="switchLightOFF()">Изключване Лампи</button>
-        </div>
-        <div>
-    <button id="lightsOn" class="textb" type="submit" onclick="switchLightON()">Включване Лампи</button>
+        <input class="textb" type="text" id="timeB" value="10"><br><br>
     </div>
+    <div class="dimmer-box">
+        <div class="dimmer-container">
+            <input type="range" min="0" max="255" value="0" class="dimmer" id="bathroomStrip" onchange="bathroomStrip(this)">
+        </div>
+    </div>
+
+    <div>
+        <button id="lightsOff" class="textH" type="submit" onclick="switchLightOFF()">Изключване Лампи</button>
+    </div>
+    <div></div>
+    <div>
+        <button id="lightsOn" class="textH" type="submit" onclick="switchLightON()">Включване Лампи</button>
     </div>
 </div>
 </body>

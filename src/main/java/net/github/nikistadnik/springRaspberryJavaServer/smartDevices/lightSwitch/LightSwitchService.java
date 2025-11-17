@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -41,36 +42,46 @@ public class LightSwitchService {
         long start = System.currentTimeMillis();
         boolean[] lightCommand = data.switchStateOf();
         boolean[] newLight = data.stateLight();
-        boolean flagLoop = true;
-        while (flagLoop) {
-            flagLoop = false;
-            for (int i = 0; i < 7; i++) {
-                if (lightCommand[i]) {
-                    //if (newLight[i] == light[i]) {
-                    if (newLight[i] == deviceRegistry.lightSwitchState().light()[i].get()) {
-                        lightCommand[i] = false;
-                    } else {
-                        flagLoop = true;
+        CompletableFuture.runAsync(() -> {
+            boolean flagLoop = true;
+            while (flagLoop) {
+                flagLoop = false;
+                for (int i = 0; i < 7; i++) {
+                    if (lightCommand[i]) {
+                        //if (newLight[i] == light[i]) {
+                        if (newLight[i] == deviceRegistry.lightSwitchState().light()[i].get()) {
+                            lightCommand[i] = false;
+                        } else {
+                            flagLoop = true;
+                        }
                     }
                 }
-            }
-            if (flagLoop) {
-                if (flag) {
-                    flag = false;
-                    disregard = true;
-                    log.info("change state of: {}", Arrays.toString(lightCommand));
-                    messaging.convertAndSend("/topic/lightSwitch", new LightSwitchCommandModel(lightCommand[0], lightCommand[1], lightCommand[2], lightCommand[3], lightCommand[4], lightCommand[5], lightCommand[6], false));
-                    Thread.sleep(100);
+                if (flagLoop) {
+                    if (flag) {
+                        flag = false;
+                        disregard = true;
+                        log.info("change state of: {}", Arrays.toString(lightCommand));
+                        messaging.convertAndSend("/topic/lightSwitch", new LightSwitchCommandModel(lightCommand[0], lightCommand[1], lightCommand[2], lightCommand[3], lightCommand[4], lightCommand[5], lightCommand[6], false));
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+                //log.info("flagLoop: 1");
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                if (System.currentTimeMillis() - start > 5000) {
+                    flagLoop = false;
+                    log.info("light command timeout");
                 }
             }
-            //log.info("flagLoop: 1");
-            Thread.sleep(10);
-            if (System.currentTimeMillis() - start > 5000) {
-                flagLoop = false;
-                log.info("light command timeout");
-            }
-        }
-        //log.info("flagLoop: 2");
+            //log.info("flagLoop: 2");
+        });
     }
 
 
@@ -87,9 +98,9 @@ public class LightSwitchService {
         newLight[6] = data.isLight6();  //Коридор
         newLight[7] = data.isLight7();
         //check for updated state
-        for (int i = 0; i < 8; i++){
+        for (int i = 0; i < 8; i++) {
             //if (light[i] != newLight[i]){
-            if (deviceRegistry.lightSwitchState().light()[i].get() != newLight[i]){
+            if (deviceRegistry.lightSwitchState().light()[i].get() != newLight[i]) {
                 //light[i] = newLight[i];
                 deviceRegistry.lightSwitchState().light()[i].set(newLight[i]);
                 eventPublisher.publishEvent(new LightStatusChangedEvent(this, i, newLight[i]));
@@ -105,7 +116,7 @@ public class LightSwitchService {
 
 
     @Scheduled(initialDelay = 10000, fixedRate = 10000)    //every 10s
-    private void selfReboot(){
+    private void selfReboot() {
         if (!active) rebootDevice.rebootDev(RebootDevice.destination.LIGHT_SWITCH);
         active = false;
     }

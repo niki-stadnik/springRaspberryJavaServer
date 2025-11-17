@@ -18,7 +18,7 @@ public class BathroomFanController {
     }
 
     @MessageMapping("/clientBathroomFan")
-    public void getData(BathroomFanClientModel data) throws InterruptedException {
+    public void setData(BathroomFanClientModel data) throws InterruptedException {
         Thread.sleep(50);
         service.command(data);
     }

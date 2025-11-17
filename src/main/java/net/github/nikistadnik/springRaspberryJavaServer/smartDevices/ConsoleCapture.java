@@ -1,8 +1,10 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices;
 
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -11,11 +13,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+
+@RequiredArgsConstructor
 @Component
 public class ConsoleCapture implements InitializingBean, DisposableBean {
     private ByteArrayOutputStream outBuffer;
     private PrintStream originalOut;
     private PrintStream originalErr;
+
+    protected final SimpMessageSendingOperations messaging;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -64,7 +70,8 @@ public class ConsoleCapture implements InitializingBean, DisposableBean {
         // Check if there is any new output since the last sent output
         if (!capturedOutput.equals("")) {
             // Send captured output to WebSocket clients subscribed to "/topic/console"
-            SendMessage.sendMessage("/topic/console", capturedOutput);
+            //SendMessage.sendMessage("/topic/console", capturedOutput);
+            messaging.convertAndSend("/topic/console", capturedOutput);
 
             //reset the buffer
             outBuffer.reset();

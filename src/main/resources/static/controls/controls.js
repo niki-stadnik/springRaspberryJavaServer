@@ -74,6 +74,12 @@ function sendResKitchenStrip() {
 function sendResKitchen2() {
     stompClient.send("/app/clientKitchenStrip", {}, JSON.stringify({'command': 2}));
 }
+function sendResBathroomLEDstrip() {
+    stompClient.send("/app/clientBathroomStrip", {}, JSON.stringify({'command': 1}));
+}
+function sendResBathroomFan() {
+    stompClient.send("/app/clientBathroomStrip", {}, JSON.stringify({'command': 2}));
+}
 
 
 function sendlock() {

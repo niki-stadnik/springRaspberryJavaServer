@@ -22,9 +22,13 @@ function connect() {
         stompClient.subscribe('/topic/clientKitchenStrip', function(message) {
             showStripDimmer(JSON.parse(message.body));
         });
+        stompClient.subscribe('/topic/clientBathroomStrip', function(message) {
+            showStripDimmerB(JSON.parse(message.body));
+        });
     });
     setTimeout(() => {stompClient.send("/app/clientLightDimmer", {}, JSON.stringify({'name': "getData", 'value': 200}));}, "100");
     setTimeout(() => {stompClient.send("/app/clientKitchenStrip", {}, JSON.stringify({'command': 3}));}, "100");
+    setTimeout(() => {stompClient.send("/app/clientBathroomStrip", {}, JSON.stringify({'command': 3}));}, "100");
 
 }
 
@@ -48,7 +52,9 @@ function showDimmers(message) {
 function showStripDimmer(message) {
     document.getElementById("kitchenStrip").value = message.duty;
 }
-
+function showStripDimmerB(message) {
+    document.getElementById("bathroomStrip").value = message.duty;
+}
 
 function switchLightOFF() {
     const NUM_LIGHTS = 7; // adjust to your setup
@@ -100,4 +106,9 @@ function kitchenStrip(ele) {
     var dimmer = document.getElementById(ele.id);
     var time = document.getElementById("time");
     stompClient.send("/app/clientKitchenStrip", {}, JSON.stringify({'command': 4, 'duty': dimmer.value, 'time': time.value}));
+}
+function bathroomStrip(ele) {
+    var dimmer = document.getElementById(ele.id);
+    var time = document.getElementById("timeB");
+    stompClient.send("/app/clientBathroomStrip", {}, JSON.stringify({'command': 4, 'duty': dimmer.value, 'time': time.value}));
 }

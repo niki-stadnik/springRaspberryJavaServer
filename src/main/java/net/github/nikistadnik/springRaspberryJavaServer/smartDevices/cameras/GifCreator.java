@@ -26,7 +26,7 @@ import static org.bytedeco.ffmpeg.global.avcodec.AV_CODEC_ID_GIF;
 public class GifCreator {
 
     public static LinkedList<byte[]> frames = new LinkedList<byte[]>();
-    private static int secondsLong = 6;
+    private static int secondsLong = 5;
     private static int fps = 4;
 
     @Scheduled(fixedRate = 500)
@@ -36,6 +36,7 @@ public class GifCreator {
         //log.info("added frame {}", ContinuousCaptureService.frame);
         while (frames.size() > secondsLong * fps){
             frames.removeFirst();
+            //log.info("frame size {}", frames.size());
         }
 
     }

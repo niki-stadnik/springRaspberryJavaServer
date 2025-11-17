@@ -8,6 +8,8 @@ import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.bathroomFan
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitch.LightSwitchState;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 @Component
 @Data
 @Accessors(fluent = true)
@@ -16,4 +18,6 @@ public class DeviceRegistry {
 
     private final LightSwitchState lightSwitchState;
     private final BathroomFanState bathroomFanState;
+
+    private final AtomicLong lastCall = new AtomicLong(0);
 }

@@ -67,7 +67,8 @@ public class ContinuousCaptureService {
             }
             log.info("Stopped capturing from {}", STREAM_URL);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.info("Url not reachable: {}", STREAM_URL);
+            //e.printStackTrace();
         }
     }
 
