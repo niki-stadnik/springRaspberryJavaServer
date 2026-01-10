@@ -1,5 +1,5 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitch;
-
+/*
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -26,3 +26,5 @@ public class LightSwitchController {
     }
 
 }
+
+ */

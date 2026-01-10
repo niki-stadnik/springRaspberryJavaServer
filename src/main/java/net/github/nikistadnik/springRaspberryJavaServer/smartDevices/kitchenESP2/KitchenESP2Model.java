@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class kitchenESP2Model {
+public class KitchenESP2Model {
 
     private boolean here;
 

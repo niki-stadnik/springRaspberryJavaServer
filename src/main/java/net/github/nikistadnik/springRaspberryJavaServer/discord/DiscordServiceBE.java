@@ -34,9 +34,7 @@ public class DiscordServiceBE {
                 .build();
     }
 
-    public void sendHardcodedMessage() {
-        String channelId = "1435313713841442848";
-        String content = "Hello from hardcoded Spring Boot service!";
+    public void sendMessage(String content, String channelId) {
 
         String imageUrl = "https://i.imgur.com/nhRH5Vu.jpeg"; // ← your image URL
 
@@ -75,10 +73,12 @@ public class DiscordServiceBE {
     }
 
 
+    @Value("${discord.channel.id.doorbell}")
+    String discordChannelIdDoorbell;
     @EventListener
     public void sendCamToDiscord(DoormanDoorBellEvent event) {
         ByteArrayResource imageResource;
-        String channelId = "1435643869197762683";
+        String channelId = discordChannelIdDoorbell;
         String messageText = "Someone at the door!";
         if (event.held() > 0) messageText = "Someone at the door! Rang for: " + event.held() + " seconds";
 

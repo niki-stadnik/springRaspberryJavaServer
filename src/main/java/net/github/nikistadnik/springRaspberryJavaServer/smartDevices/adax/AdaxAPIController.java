@@ -5,7 +5,7 @@ import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.bathroomFan
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 
-@Controller
+//@Controller
 @RequiredArgsConstructor
 public class AdaxAPIController {
 

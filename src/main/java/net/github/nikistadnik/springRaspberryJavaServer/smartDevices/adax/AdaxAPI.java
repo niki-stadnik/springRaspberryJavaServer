@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-@Service
+//@Service
 public class AdaxAPI {
     @Value("${adax.apiUrl}")
     private String apiUrl;

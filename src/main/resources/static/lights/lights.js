@@ -19,16 +19,16 @@ function connect() {
         stompClient.subscribe('/topic/dimmersClient', function(message) {
             showDimmers(JSON.parse(message.body));
         });
-        stompClient.subscribe('/topic/clientKitchenStrip', function(message) {
+        stompClient.subscribe('/topic/client/kitchenStrip', function(message) {
             showStripDimmer(JSON.parse(message.body));
         });
-        stompClient.subscribe('/topic/clientBathroomStrip', function(message) {
+        stompClient.subscribe('/topic/client/bathroomStrip', function(message) {
             showStripDimmerB(JSON.parse(message.body));
         });
     });
-    setTimeout(() => {stompClient.send("/app/clientLightDimmer", {}, JSON.stringify({'name': "getData", 'value': 200}));}, "100");
-    setTimeout(() => {stompClient.send("/app/clientKitchenStrip", {}, JSON.stringify({'command': 3}));}, "100");
-    setTimeout(() => {stompClient.send("/app/clientBathroomStrip", {}, JSON.stringify({'command': 3}));}, "100");
+    setTimeout(() => {stompClient.send("/app/client/lightDimmer", {}, JSON.stringify({'name': "getData", 'value': 200}));}, "100");
+    setTimeout(() => {stompClient.send("/app/client/kitchenStrip", {}, JSON.stringify({'command': 3}));}, "100");
+    setTimeout(() => {stompClient.send("/app/client/bathroomStrip", {}, JSON.stringify({'command': 3}));}, "100");
 
 }
 
@@ -60,7 +60,7 @@ function switchLightOFF() {
     const NUM_LIGHTS = 7; // adjust to your setup
     const switchStateOf = Array(NUM_LIGHTS).fill(true);
     const stateLight = Array(NUM_LIGHTS).fill(false);
-    stompClient.send("/app/clientLightSwitch", {}, JSON.stringify({switchStateOf, stateLight}));
+    stompClient.send("/app/client/lightSwitch", {}, JSON.stringify({switchStateOf, stateLight}));
     for (let i = 0; i < 8; i++)
     {
         flag[i] = true;
@@ -73,7 +73,7 @@ function switchLightON() {
     const NUM_LIGHTS = 7; // adjust to your setup
     const switchStateOf = Array(NUM_LIGHTS).fill(true);
     const stateLight = Array(NUM_LIGHTS).fill(true);
-    stompClient.send("/app/clientLightSwitch", {}, JSON.stringify({switchStateOf, stateLight}));
+    stompClient.send("/app/client/lightSwitch", {}, JSON.stringify({switchStateOf, stateLight}));
     for (let i = 0; i < 8; i++)
     {
         flag[i] = true;
@@ -91,7 +91,7 @@ function switchLight(ele) {
     const stateLight = Array(NUM_LIGHTS).fill(false);
     switchStateOf[id] = true;
     stateLight[id] = checkBox.checked;
-    stompClient.send("/app/clientLightSwitch", {}, JSON.stringify({switchStateOf, stateLight}));
+    stompClient.send("/app/client/lightSwitch", {}, JSON.stringify({switchStateOf, stateLight}));
     flag[id] = true;
     setTimeout(() => {flag[id] = false;}, "2000");
 }
@@ -99,16 +99,21 @@ function switchLight(ele) {
 
 function updateDimmer(ele) {
     var dimmer = document.getElementById(ele.id);
-    stompClient.send("/app/clientLightDimmer", {}, JSON.stringify({'name': ele.id, 'value': dimmer.value}));
+    stompClient.send("/app/client/lightDimmer", {}, JSON.stringify({'name': ele.id, 'value': dimmer.value}));
 }
 
 function kitchenStrip(ele) {
     var dimmer = document.getElementById(ele.id);
     var time = document.getElementById("time");
-    stompClient.send("/app/clientKitchenStrip", {}, JSON.stringify({'command': 4, 'duty': dimmer.value, 'time': time.value}));
+    stompClient.send("/app/client/kitchenStrip", {}, JSON.stringify({'command': 4, 'duty': dimmer.value, 'time': time.value}));
 }
 function bathroomStrip(ele) {
     var dimmer = document.getElementById(ele.id);
     var time = document.getElementById("timeB");
-    stompClient.send("/app/clientBathroomStrip", {}, JSON.stringify({'command': 4, 'duty': dimmer.value, 'time': time.value}));
+    const data = {
+        command: 4,
+        duty: dimmer.value,
+        time: time.value
+    };
+    stompClient.send("/app/client/bathroomStrip", {}, JSON.stringify(data));
 }

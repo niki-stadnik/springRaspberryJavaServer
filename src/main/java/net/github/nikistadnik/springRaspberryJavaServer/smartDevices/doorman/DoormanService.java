@@ -1,24 +1,15 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.doorman;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.RebootDevice;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightSwitch.LightStatusChangedEvent;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.scheduling.annotation.Scheduled;
+import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SmartDevice;
 import org.springframework.stereotype.Service;
+
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
-public class DoormanService {
+public class DoormanService extends SmartDevice<DoormanModel, DoormanClientModel> {
 
-    private final RebootDevice rebootDevice;
-
-
-    private final ApplicationEventPublisher eventPublisher;
-
-    private static boolean active = false;
 
     private static boolean doorOpen = false;
     private static boolean doorLock = false;
@@ -29,8 +20,29 @@ public class DoormanService {
     private static long start = 0;
 
 
-    public void setData (DoormanModel data){
-        active = true;
+    @Override
+    protected String provideName() {
+        return "doorman";
+    }
+
+    @Override
+    protected String pairedWithName() {
+        return "lightSwitch";
+    }
+
+    @Override
+    protected Class provideDeviceModel() {
+        return DoormanModel.class;
+    }
+
+    @Override
+    protected Class provideClientModel() {
+        return DoormanClientModel.class;
+    }
+
+    @Override
+    protected void handleDeviceData(DoormanModel data) {
+        messaging.convertAndSend("/topic/doormanClient", data);
         doorOpen = data.isDoorOpen();
         doorLock = data.isDoorLock();
         doorButton = data.isDoorButton();
@@ -55,18 +67,14 @@ public class DoormanService {
         //log.info(data.toString());
     }
 
-    public void command(DoormanClientModel data){
+    @Override
+    protected void handleClientData(DoormanClientModel data) {
         int com = data.getCommand();
-        if (com == 1) rebootDevice.rebootDev(RebootDevice.destination.LIGHT_SWITCH);
-        if (com == 2) rebootDevice.rebootDev(RebootDevice.destination.DOORMAN);
+        if (com == 1) rebootDev(pairName);
+        if (com == 2) {
+            selfRebootDev(deviceName);
+            rebootDev(deviceName);
+        }
         log.info(data.toString());
-    }
-
-
-
-    @Scheduled(initialDelay = 10000, fixedRate = 10000)    //every 10s
-    private synchronized void selfReboot(){
-        if (!active) rebootDevice.rebootDev(RebootDevice.destination.DOORMAN);
-        active = false;
     }
 }

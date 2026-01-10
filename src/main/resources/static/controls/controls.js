@@ -13,13 +13,13 @@ function connect() {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/clientBathroomFan', function(message) {
+        stompClient.subscribe('/topic/client/bathroomFan', function(message) {
             showMessage(JSON.parse(message.body));
         });
         stompClient.subscribe('/topic/frameRate', function(message) {
             showFrameRate(JSON.parse(message.body));
         });
-        stompClient.subscribe('/topic/clientHerbPot', function(message) {
+        stompClient.subscribe('/topic/client/herbPot', function(message) {
             showPotData(JSON.parse(message.body));
         });
         stompClient.subscribe('/topic/console', function(message) {
@@ -28,7 +28,36 @@ function connect() {
         stompClient.subscribe('/topic/clientDoorlock', function(message) {
             showDoorlock(JSON.parse(message.body));
         });
+        stompClient.subscribe('/topic/state/herbPot', function(message) {
+            showState(JSON.parse(message.body), "sendResHerbPot");
+        });
+        stompClient.subscribe('/topic/state/bathroomStrip', function(message) {
+            showState(JSON.parse(message.body), "sendResBathroomLEDstrip");
+        });
+        stompClient.subscribe('/topic/state/bathroomFan', function(message) {
+            showState(JSON.parse(message.body), "sendResBathroomFan");
+        });
+        stompClient.subscribe('/topic/state/kitchenStrip', function(message) {
+            showState(JSON.parse(message.body), "sendResKitchenStrip");
+        });
+        stompClient.subscribe('/topic/state/kitchen2', function(message) {
+            showState(JSON.parse(message.body), "sendResKitchen2");
+        });
+        stompClient.subscribe('/topic/state/lightSwitch', function(message) {
+            showState(JSON.parse(message.body), "sendResLight");
+        });
+        stompClient.subscribe('/topic/state/doorman', function(message) {
+            showState(JSON.parse(message.body), "sendResDoor");
+        });
     });
+}
+
+function showState(message, elementId) {
+    if (message.state){
+        document.getElementById(elementId).style.backgroundColor = '#009933';
+    }else{
+        document.getElementById(elementId).style.backgroundColor = '#cacaca57';
+    }
 }
 
 //var flag = Array.from({length: 8}, (val,index) => false);
@@ -52,33 +81,36 @@ function showMessage(message) {
 
 
 function sendBFOn() {
-    stompClient.send("/app/clientBathroomFan", {}, JSON.stringify({'bathFanCommand': true,'auto': false}));
+    stompClient.send("/app/client/bathroomFan", {}, JSON.stringify({'bathFanCommand': true,'auto': false}));
 }
 function sendBFOff() {
-    stompClient.send("/app/clientBathroomFan", {}, JSON.stringify({'bathFanCommand': false,'auto': false}));
+    stompClient.send("/app/client/bathroomFan", {}, JSON.stringify({'bathFanCommand': false,'auto': false}));
 }
 function sendBFAuto() {
-    stompClient.send("/app/clientBathroomFan", {}, JSON.stringify({'bathFanCommand': false,'auto': true}));
+    stompClient.send("/app/client/bathroomFan", {}, JSON.stringify({'bathFanCommand': false,'auto': true}));
 }
 
 
 function sendResLight() {
-    stompClient.send("/app/clientDoorman", {}, JSON.stringify({'command': 1}));
+    stompClient.send("/app/client/doorman", {}, JSON.stringify({'command': 1}));
 }
 function sendResDoor() {
-    stompClient.send("/app/clientDoorman", {}, JSON.stringify({'command': 2}));
+    stompClient.send("/app/client/doorman", {}, JSON.stringify({'command': 2}));
 }
 function sendResKitchenStrip() {
-    stompClient.send("/app/clientKitchenStrip", {}, JSON.stringify({'command': 1}));
+    stompClient.send("/app/client/kitchenStrip", {}, JSON.stringify({'command': 1}));
 }
 function sendResKitchen2() {
-    stompClient.send("/app/clientKitchenStrip", {}, JSON.stringify({'command': 2}));
+    stompClient.send("/app/client/kitchenStrip", {}, JSON.stringify({'command': 2}));
 }
 function sendResBathroomLEDstrip() {
-    stompClient.send("/app/clientBathroomStrip", {}, JSON.stringify({'command': 1}));
+    stompClient.send("/app/client/bathroomStrip", {}, JSON.stringify({'command': 1}));
 }
 function sendResBathroomFan() {
-    stompClient.send("/app/clientBathroomStrip", {}, JSON.stringify({'command': 2}));
+    stompClient.send("/app/client/bathroomStrip", {}, JSON.stringify({'command': 2}));
+}
+function sendResHerbPot() {
+    stompClient.send("/app/client/herbPot", {}, JSON.stringify({'command': 1}));
 }
 
 
@@ -105,4 +137,8 @@ function showPotData(message){
 
 function showDoorlock(message){
     document.getElementById("position").textContent = message.position;
+}
+
+function water(){
+    stompClient.send("/app/client/herbPot", {}, JSON.stringify({'command': 3}));
 }

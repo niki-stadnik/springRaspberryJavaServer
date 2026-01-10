@@ -1,5 +1,5 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightDimmers;
-
+/*
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -18,10 +18,12 @@ public class LightDimmersController {
         service.setData(data);
     }
 
-    @MessageMapping("/clientLightDimmer")
+    @MessageMapping("/client/lightDimmer")
     public void getClientData(LightDimmerModel data) throws InterruptedException {
         Thread.sleep(50);
         service.command(data);
     }
 
 }
+
+ */

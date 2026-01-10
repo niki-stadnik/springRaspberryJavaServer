@@ -1,5 +1,5 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.kitchenLEDstrip;
-
+/*
 import lombok.RequiredArgsConstructor;
 import net.github.nikistadnik.springRaspberryJavaServer.model.LEDstripClientModel;
 import net.github.nikistadnik.springRaspberryJavaServer.model.LEDstripModel;
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 @RequiredArgsConstructor
-public class kitchenLEDstripController {
+public class KitchenLEDstripController {
 
-    private final kitchenLEDstripService service;
+    private final KitchenLEDstripService service;
 
     @MessageMapping("/kitchenStrip")
     @SendTo("/topic/clientKitchenStrip")
@@ -27,3 +27,5 @@ public class kitchenLEDstripController {
         service.command(data);
     }
 }
+
+ */

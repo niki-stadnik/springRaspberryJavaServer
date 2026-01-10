@@ -113,6 +113,8 @@ public class ContinuousCaptureService {
         }
     }
 
+    //todo why does it start 2 threads from time to time
+
     @Scheduled(initialDelay = 60000, fixedRate = 7000)
     private synchronized void restartCapture() {
         if (fpmCount == 0) {

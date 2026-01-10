@@ -1,4 +1,4 @@
-package net.github.nikistadnik.springRaspberryJavaServer.model;
+package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.herbPot;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.AllArgsConstructor;
@@ -11,10 +11,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Accessors(fluent = true)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class LEDstripClientModel {
+public class HerbPotFromClientModel {
 
     private int command;
-    private int duty;
-    private int time;
-
 }
