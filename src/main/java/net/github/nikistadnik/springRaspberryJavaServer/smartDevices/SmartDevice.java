@@ -3,14 +3,12 @@ package net.github.nikistadnik.springRaspberryJavaServer.smartDevices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.github.nikistadnik.springRaspberryJavaServer.discord.DiscordServiceBE;
-import net.github.nikistadnik.springRaspberryJavaServer.model.SmartDeviceModel;
 import net.github.nikistadnik.springRaspberryJavaServer.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.Environment;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -28,6 +26,11 @@ public abstract class SmartDevice<T, U> implements DeviceService {
     protected DiscordServiceBE discordServiceBE;
     @Autowired
     protected Environment env;
+
+    protected boolean active = false;
+    protected boolean state = false;
+    protected boolean rebootMonitor = true;
+
 
     protected final String deviceName;
     protected abstract String provideName();
@@ -50,35 +53,12 @@ public abstract class SmartDevice<T, U> implements DeviceService {
     }
 
 
-
-
     @Value("${discord.channel.id.reboot-log}")
     protected String discordChannelIdRebootLog;
 
 
-    //todo опция за изключване на рестарт или нотификации поне
-
-    //Reboot logic - make "active" true, every time data is received
-    protected boolean active = false;
-    protected boolean state = false;
-    @Scheduled(initialDelay = 10000, fixedRate = 30000)    //every 30s
-    protected synchronized void selfReboot(){
-        if (!active) {
-            state = false;
-            selfRebootDev(deviceName);
-            rebootDev(deviceName);
-        }
-        active = false;
-    }
-    protected void rebootDev(String dest) {
-        long now = System.nanoTime();
-        long last = deviceRegistry.lastCall().get();
-        // 5 seconds in nanoseconds = 5_000_000_000L
-        if (now - last < 5_000_000_000L) {
-            log.info("last reboot call was less than 5 seconds ago");
-            return;
-        }
-        deviceRegistry.lastCall().set(now);
+    @Override
+    public void rebootDev(String dest) {
         messaging.convertAndSend("/topic/" + dest + "/reboot", "{\"relayRestart\":true}");
         log.info("restart device: " + dest);
         if (Arrays.asList(env.getActiveProfiles()).contains("prod")) {
@@ -86,15 +66,7 @@ public abstract class SmartDevice<T, U> implements DeviceService {
         }
     }
 
-    long lastSelfReboot = 0;
-    protected void selfRebootDev(String dest) {
-        long now = System.nanoTime();
-        // 5 seconds in nanoseconds = 5_000_000_000L
-        if (now - lastSelfReboot < 5_000_000_000L) {
-            log.info("last reboot call was less than 5 seconds ago");
-            return;
-        }
-        lastSelfReboot = now;
+    public void selfRebootDev(String dest) {
         messaging.convertAndSend("/topic/" + dest + "/selfReboot", "{\"relayRestart\":true}");
         log.info("self reboot device: " + dest);
         if (Arrays.asList(env.getActiveProfiles()).contains("prod")) {
@@ -102,11 +74,7 @@ public abstract class SmartDevice<T, U> implements DeviceService {
         }
     }
 
-    @Scheduled(fixedRate = 1000)
-    private synchronized void statusUpdate() {
-        messaging.convertAndSend("/topic/state/" + deviceName, new SmartDeviceModel(state));
-        //log.info(data);
-    }
+
 
     @Override
     public String getName() {
@@ -141,13 +109,34 @@ public abstract class SmartDevice<T, U> implements DeviceService {
         //log.info("map: {}", String.valueOf(map));
     }
     protected abstract void handleClientData(U data);
+
+    @Override
+    public boolean getState() {
+        return state;
+    }
+
+    @Override
+    public void setState(boolean b) {
+        state = b;
+    }
+
+    @Override
+    public boolean getActive() {
+        return active;
+    }
+
+    @Override
+    public void setActive(boolean b) {
+        active = b;
+    }
+
+    @Override
+    public boolean getRebootMonitor() {
+        return rebootMonitor;
+    }
+
+    @Override
+    public void setRebootMonitor(boolean b) {
+        rebootMonitor = b;
+    }
 }
-
-
-
-//todo мога да го направя, дата и статус да се пращат на 1 адрес, но с различна команда?
-//също както направих девайс/ и кллиент/ да са с 1 и същ топик, така и да махна другите
-
-//ако направя моделите да наследяват интерфейс, и в цонтролера подам интерфейса, ще се натаманяват ли сами?
-
-//да си мятам джейсана до сървиса и  там да го конвертирам, вместо да се чудя как да подавам модели

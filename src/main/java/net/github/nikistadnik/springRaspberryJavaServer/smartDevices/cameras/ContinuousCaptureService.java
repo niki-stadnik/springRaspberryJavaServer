@@ -2,7 +2,6 @@ package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.cameras;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.RebootDevice;
 import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
@@ -24,7 +23,6 @@ public class ContinuousCaptureService {
     private final VideoRecorderService videoRecorderService;
     private final GifCreator gifCreator;
     private final SimpMessageSendingOperations messaging;
-    private final RebootDevice rebootDevice;
 
 
     private static final String STREAM_URL = "http://192.168.88.54:8081/"; // your MJPEG stream
@@ -100,6 +98,7 @@ public class ContinuousCaptureService {
 
     @Scheduled(fixedRate = 60000)
     private synchronized void fpmCounter() {
+        String dest = "doorman";
         fpm = fpmCount;
         fpmCount = 0;
         //log.info("fpm: {}", fpm);
@@ -109,7 +108,7 @@ public class ContinuousCaptureService {
         if (fpm == 0) resCounter--;
         else resCounter = resInterval;
         if (resCounter ==0) {
-                rebootDevice.rebootDev(RebootDevice.destination.DOORMAN);
+            messaging.convertAndSend("/topic/" + dest + "/reboot", "{\"relayRestart\":true}");
         }
     }
 

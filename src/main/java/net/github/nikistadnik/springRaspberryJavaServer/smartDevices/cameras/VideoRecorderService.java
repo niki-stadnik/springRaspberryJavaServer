@@ -4,7 +4,6 @@ package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.cameras;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.RebootDevice;
 import org.bytedeco.javacv.*;
 import org.bytedeco.opencv.global.opencv_imgcodecs;
 import org.bytedeco.opencv.opencv_core.Mat;

@@ -1,76 +1,83 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices;
 
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
-import net.github.nikistadnik.springRaspberryJavaServer.discord.DiscordServiceBE;
+import net.github.nikistadnik.springRaspberryJavaServer.model.SmartDeviceModel;
+import net.github.nikistadnik.springRaspberryJavaServer.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.stereotype.Component;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-@Component
-@RequiredArgsConstructor
+@Service
 @Slf4j
 public class RebootDevice {
 
-    public enum destination {
-
-        LED_KITCHEN("kitchenStrip/reboot"), //restartKitchen1
-        KITCHEN("kitchen2/reboot"),     //restartKitchen2
-        LIGHT_SWITCH("lightSwitch/reboot"),
-        DOORMAN("doorman/reboot"),
-        LED_BATHROOM("bathroomStrip/reboot"),
-        FAN_BATHROOM("bathroomFan/reboot");
-
-        private final String value;
-        destination(String value) {
-            this.value = value;
-        }
-        public String value() {
-            return value;
-        }
-    }
-
-
-    private final SimpMessageSendingOperations messaging;
-
-    private final DeviceRegistry deviceRegistry;
-
-    private final DiscordServiceBE discordServiceBE;
-
     @Autowired
-    private Environment env;
+    protected SimpMessageSendingOperations messaging;
 
-    @Value("${discord.channel.id.reboot-log}")
-    private String discordChannelIdRebootLog;
+    private final Map<String, DeviceService> devices;
 
-
-    public void rebootDev(destination dest) {
-        long now = System.nanoTime();
-        long last = deviceRegistry.lastCall().get();
-        // 5 seconds in nanoseconds = 5_000_000_000L
-        if (now - last < 5_000_000_000L) {
-            log.info("last reboot call was less than 5 seconds ago");
-            return;
-        }
-        deviceRegistry.lastCall().set(now);
-        messaging.convertAndSend("/topic/" + dest.value(), "{\"relayRestart\":true}");
-        log.info("restart device:" + dest);
-        if (Arrays.asList(env.getActiveProfiles()).contains("prod")) {
-            discordServiceBE.sendMessage(String.valueOf(dest), discordChannelIdRebootLog);
-        }
+    public RebootDevice(List<DeviceService> deviceServices) {
+        devices = deviceServices.stream().collect(Collectors.toMap(DeviceService::getName, s -> s));
     }
 
-    /*
-    To call this:
-    @RequiredArgsConstructor
-    private final RebootDevice rebootDevice;
-    rebootDevice.rebootDev(RebootDevice.destination.DOORMAN);
-     */
+    public void toggleMonitoring(String name, boolean monitor){
+        devices.get(name).setRebootMonitor(monitor);
+        log.info("reboot monitor for: {} , is now: {}", name, monitor);
+    }
 
+    public void reboot(String name){
+        log.info("rebooting from UI: {}", name);
+        devices.get(name).rebootDev(name);
+        devices.get(name).selfRebootDev(name);
+    }
 
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode jsonNode = mapper.createObjectNode();
 
+    @Scheduled(fixedRate = 1000)
+    private synchronized void statusUpdate() {
+        for (DeviceService device : devices.values()) {
+            jsonNode.put(device.getName(), device.getState());
+        }
+        messaging.convertAndSend("/topic/state", jsonNode);
+        //log.info(data);
+    }
+
+    public JsonNode monitoringStatus(){
+        ObjectNode jsonNode = mapper.createObjectNode();
+        for (DeviceService device : devices.values()) {
+            jsonNode.put(device.getName(), device.getRebootMonitor());
+        }
+        return jsonNode;
+    }
+
+    @Scheduled(initialDelay = 10000, fixedRate = 30000)    //every 30s
+    protected synchronized void autoReboot(){
+        for (DeviceService device : devices.values()) {
+            if (device.getRebootMonitor()) {
+                if (!device.getActive()) {
+                    device.setState(false);
+                    device.selfRebootDev(device.getName());
+                    device.rebootDev(device.getName());
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                device.setActive(false);
+            }
+        }
+    }
 }
+
+
+//todo send reboot monitoring status to db repository, so that it is remembered after power out

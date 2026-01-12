@@ -8,6 +8,10 @@ window.onload = function() {
     }
 }
 
+function reboot() {
+    window.location.href="/controls/reboot/reboot.html";
+}
+
 function connect() {
     var socket = new SockJS('/stomp-endpoint');
     stompClient = Stomp.over(socket);
@@ -28,37 +32,10 @@ function connect() {
         stompClient.subscribe('/topic/clientDoorlock', function(message) {
             showDoorlock(JSON.parse(message.body));
         });
-        stompClient.subscribe('/topic/state/herbPot', function(message) {
-            showState(JSON.parse(message.body), "sendResHerbPot");
-        });
-        stompClient.subscribe('/topic/state/bathroomStrip', function(message) {
-            showState(JSON.parse(message.body), "sendResBathroomLEDstrip");
-        });
-        stompClient.subscribe('/topic/state/bathroomFan', function(message) {
-            showState(JSON.parse(message.body), "sendResBathroomFan");
-        });
-        stompClient.subscribe('/topic/state/kitchenStrip', function(message) {
-            showState(JSON.parse(message.body), "sendResKitchenStrip");
-        });
-        stompClient.subscribe('/topic/state/kitchen2', function(message) {
-            showState(JSON.parse(message.body), "sendResKitchen2");
-        });
-        stompClient.subscribe('/topic/state/lightSwitch', function(message) {
-            showState(JSON.parse(message.body), "sendResLight");
-        });
-        stompClient.subscribe('/topic/state/doorman', function(message) {
-            showState(JSON.parse(message.body), "sendResDoor");
-        });
     });
 }
 
-function showState(message, elementId) {
-    if (message.state){
-        document.getElementById(elementId).style.backgroundColor = '#009933';
-    }else{
-        document.getElementById(elementId).style.backgroundColor = '#cacaca57';
-    }
-}
+
 
 //var flag = Array.from({length: 8}, (val,index) => false);
 
@@ -90,28 +67,6 @@ function sendBFAuto() {
     stompClient.send("/app/client/bathroomFan", {}, JSON.stringify({'bathFanCommand': false,'auto': true}));
 }
 
-
-function sendResLight() {
-    stompClient.send("/app/client/doorman", {}, JSON.stringify({'command': 1}));
-}
-function sendResDoor() {
-    stompClient.send("/app/client/doorman", {}, JSON.stringify({'command': 2}));
-}
-function sendResKitchenStrip() {
-    stompClient.send("/app/client/kitchenStrip", {}, JSON.stringify({'command': 1}));
-}
-function sendResKitchen2() {
-    stompClient.send("/app/client/kitchenStrip", {}, JSON.stringify({'command': 2}));
-}
-function sendResBathroomLEDstrip() {
-    stompClient.send("/app/client/bathroomStrip", {}, JSON.stringify({'command': 1}));
-}
-function sendResBathroomFan() {
-    stompClient.send("/app/client/bathroomStrip", {}, JSON.stringify({'command': 2}));
-}
-function sendResHerbPot() {
-    stompClient.send("/app/client/herbPot", {}, JSON.stringify({'command': 1}));
-}
 
 
 function sendlock() {

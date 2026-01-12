@@ -1,4 +1,4 @@
-package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightDimmers;
+package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.lightDimmer;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

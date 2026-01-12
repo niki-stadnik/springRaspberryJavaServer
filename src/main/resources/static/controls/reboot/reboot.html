@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/colors.css" rel="stylesheet">
+    <link href="/controls/reboot/reboot.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/controls/reboot/reboot.js"></script>
+    <title>Reboot</title>
+</head>
+<body>
+<div class="grid-container">
+    <div class="back">
+        <button type="button" value="Go back!" onclick="history.back()"><</button>
+    </div>
+    <div class="sub-grid-container">
+
+        <div class="group2">
+            <button id="lightSwitch" class="btn" type="submit" onclick="rebootDevice('lightSwitch')">LightSwitcch</button>
+            <div class="switch-box">
+                <label class="switch">
+                    <input type="checkbox" id="lightSwitchMonitoring" onclick="toggleRebootMonitoring('lightSwitch', this.checked)">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <button id="doorman" class="btn" type="submit" onclick="rebootDevice('doorman')">Doorman</button>
+            <div class="switch-box">
+                <label class="switch">
+                    <input type="checkbox" id="doormanMonitoring" onclick="toggleRebootMonitoring('doorman', this.checked)">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+        <div class="group2">
+            <button id="kitchenStrip" class="btn" type="submit" onclick="rebootDevice('kitchenStrip')">KitchenLEDstrip</button>
+            <div class="switch-box">
+                <label class="switch">
+                    <input type="checkbox" id="kitchenStripMonitoring" onclick="toggleRebootMonitoring('kitchenStrip', this.checked)">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <button id="kitchen2" class="btn" type="submit" onclick="rebootDevice('kitchen2')">kitchen2</button>
+            <div class="switch-box">
+                <label class="switch">
+                    <input type="checkbox" id="kitchen2Monitoring" onclick="toggleRebootMonitoring('kitchen2', this.checked)">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+        <div class="group2">
+            <button id="bathroomStrip" class="btn" type="submit" onclick="rebootDevice('bathroomStrip')">BathroomLEDstrip</button>
+            <div class="switch-box">
+                <label class="switch">
+                    <input type="checkbox" id="bathroomStripMonitoring" onclick="toggleRebootMonitoring('bathroomStrip', this.checked)">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <button id="bathroomFan" class="btn" type="submit" onclick="rebootDevice('bathroomFan')">BathroomFan</button>
+            <div class="switch-box">
+                <label class="switch">
+                    <input type="checkbox" id="bathroomFanMonitoring" onclick="toggleRebootMonitoring('bathroomFan', this.checked)">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+        <div class="group2">
+            <button id="herbPot" class="btn" type="submit" onclick="rebootDevice('herbPot')">HerbPot</button>
+            <div class="switch-box">
+                <label class="switch">
+                    <input type="checkbox" id="herbPotMonitoring" onclick="toggleRebootMonitoring('herbPot', this.checked)">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <button id="lightDimmer" class="btn" type="submit" onclick="rebootDevice(this.id, true)">lightDimmer</button>
+            <div class="switch-box">
+                <label class="switch">
+                    <input type="checkbox" id="lightDimmerMonitoring" onclick="toggleRebootMonitoring('lightDimmer', this.checked)">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+</html>
