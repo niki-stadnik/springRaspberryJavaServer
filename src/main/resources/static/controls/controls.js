@@ -88,6 +88,12 @@ function showPotData(message){
     document.getElementById("temp2").textContent = message.temp2;
     document.getElementById("moisture1").textContent = message.moisture1;
     document.getElementById("moisture2").textContent = message.moisture2;
+    const startInput = document.getElementById('startHerbPotLight');
+    if (!startInput.value) document.getElementById('startHerbPotLight').value = message.herbLightStartTime;
+    const endInput = document.getElementById('endHerbPotLight');
+    if (!endInput.value) document.getElementById('endHerbPotLight').value = message.herbLightEndTime;
+    if(message.herbLight) document.getElementById("herbLight").style.backgroundColor = '#009933';
+    else document.getElementById("herbLight").style.backgroundColor = '#cacaca57';
 }
 
 function showDoorlock(message){
@@ -96,4 +102,16 @@ function showDoorlock(message){
 
 function water(){
     stompClient.send("/app/client/herbPot", {}, JSON.stringify({'command': 3}));
+}
+
+function herbLight(){
+    stompClient.send("/app/client/herbPot", {}, JSON.stringify({'command': 4}));
+}
+
+function readTimes() {
+    const start = document.getElementById("startHerbPotLight").value;
+    const end = document.getElementById("endHerbPotLight").value;
+    stompClient.send("/app/client/herbPot", {}, JSON.stringify({'command': 5, 'herbLightStartTime': start, 'herbLightEndTime': end}));
+    console.log(start); // e.g. "22:00"
+    console.log(end);   // e.g. "02:00"
 }

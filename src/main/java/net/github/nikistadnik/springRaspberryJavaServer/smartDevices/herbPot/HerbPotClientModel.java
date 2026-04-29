@@ -15,5 +15,6 @@ import lombok.experimental.Accessors;
 public class HerbPotClientModel {
 
     private int water;
+    private boolean herbLight;
 
 }

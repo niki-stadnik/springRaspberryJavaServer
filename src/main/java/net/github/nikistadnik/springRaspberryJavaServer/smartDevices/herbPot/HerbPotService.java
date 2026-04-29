@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.Arrays;
 
 @Service
@@ -17,7 +18,11 @@ public class HerbPotService extends SmartDevice<HerbPotModel, HerbPotFromClientM
     private static float temp2 = 0;
     private static int moisture1Percent = 0;
     private static int moisture2Percent = 0;
-    private static boolean watered = false;
+    private static boolean herbLight = false;
+    private static boolean herbLightNew = false;
+
+    private static LocalTime herbLightStartTime = LocalTime.of(9, 0);
+    private static LocalTime herbLightEndTime = LocalTime.of(0, 0);
 
 
     @Override
@@ -43,7 +48,7 @@ public class HerbPotService extends SmartDevice<HerbPotModel, HerbPotFromClientM
 
     @Scheduled(fixedRate = 1000)
     private synchronized void potUpdate() {
-        messaging.convertAndSend("/topic/client/" + deviceName, new HerbPotModel(temp1, temp2, moisture1Percent, moisture2Percent, watered));
+        messaging.convertAndSend("/topic/client/" + deviceName, new HerbPotModel(temp1, temp2, moisture1Percent, moisture2Percent, herbLight, herbLightStartTime, herbLightEndTime));
         //log.info(data);
     }
 
@@ -65,6 +70,33 @@ public class HerbPotService extends SmartDevice<HerbPotModel, HerbPotFromClientM
         }
     }
 
+    @Scheduled(initialDelay = 10000, fixedRate = 600000)    //600 000 ms = 10min
+    private void herbLightControl(){
+        herbLightNew = isActive(herbLightStartTime, herbLightEndTime);
+        if (herbLight != herbLightNew) {
+            messaging.convertAndSend("/topic/" + deviceName, new HerbPotClientModel(0, herbLightNew));
+        }
+    }
+
+    public boolean isActive(LocalTime start, LocalTime end) {
+        LocalTime now = LocalTime.now();
+        if (start.isBefore(end)) {
+            return now.isAfter(start) && now.isBefore(end);
+        }
+        return now.isAfter(start) || now.isBefore(end);
+    }
+/*
+    public boolean isActive(LocalTime start, LocalTime end) {
+        LocalTime now = LocalTime.now();
+
+        if (!start.isAfter(end)) {
+            return !now.isBefore(start) && !now.isAfter(end);
+        }
+
+        return !now.isBefore(start) || !now.isAfter(end);
+    }
+
+ */
 
     @Override
     protected void handleDeviceData(HerbPotModel data) {
@@ -81,7 +113,7 @@ public class HerbPotService extends SmartDevice<HerbPotModel, HerbPotFromClientM
         float h2 = (float) ((2500 - moisture2) / 19.4);
         moisture1Percent = (int) h1;
         moisture2Percent = (int) h2;
-        watered = data.watered();
+        herbLight = data.herbLight();
         temp1 = data.temp1();
         temp2 = data.temp2();
         log.info(String.valueOf(data));
@@ -98,9 +130,16 @@ public class HerbPotService extends SmartDevice<HerbPotModel, HerbPotFromClientM
                 break;
             case 2: rebootDev(pairName); break;
             case 3: water = 3000; break;
+            case 4:
+                herbLightNew = !herbLight;
+                break;
+            case 5:
+                herbLightStartTime = data.herbLightStartTime();
+                herbLightEndTime = data.herbLightEndTime();
+                break;
         }
-        if (command != 1) {
-            messaging.convertAndSend("/topic/" + deviceName, new HerbPotClientModel(water));
+        if (command != 1 && command != 2) {
+            messaging.convertAndSend("/topic/" + deviceName, new HerbPotClientModel(water, herbLightNew));
         }
         log.info(String.valueOf(data));
     }

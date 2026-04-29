@@ -70,6 +70,7 @@ body {
   font-size: 23px;
   text-align: left;
   border-radius: 51px;
+  align-items: center;
 }
 .val {
   display: inline-block;
@@ -83,4 +84,19 @@ body {
 .btn:focus {
     border: none;
     outline: none;
+}
+
+input[type="time"] {
+    background-color: var(--comp); /* Matches components like .name and .group */
+    color: white; /* Matches text color in components */
+    height: 36px; /* Matches height of .name and .group */
+    padding: 8px 12px; /* Similar padding to .group */
+    font-size: 23px; /* Matches font size of .group */
+    text-align: left; /* Matches text alignment of .group */
+    border-radius: 36px; /* Matches border-radius of components */
+    border: none; /* Remove default input border */
+    /* You might need to adjust appearance for cross-browser consistency */
+    -webkit-appearance: none; /* For WebKit browsers */
+    -moz-appearance: none; /* For Mozilla browsers */
+    appearance: none;
 }

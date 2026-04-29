@@ -11,6 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 @Slf4j
@@ -26,6 +27,9 @@ public abstract class SmartDevice<T, U> implements DeviceService {
     protected DiscordServiceBE discordServiceBE;
     @Autowired
     protected Environment env;
+    @Autowired
+    protected ObjectMapper objectMapper;
+
 
     protected boolean active = false;
     protected boolean state = false;
@@ -86,7 +90,6 @@ public abstract class SmartDevice<T, U> implements DeviceService {
     public void handle(byte[] payload) {
         active = true;
         state = true;
-        final ObjectMapper objectMapper = new ObjectMapper();
         try {
             T data = objectMapper.readValue(payload, deviceModelType);
             handleDeviceData(data);
@@ -99,14 +102,14 @@ public abstract class SmartDevice<T, U> implements DeviceService {
 
     @Override
     public void handleCommand(byte[] payload) {
-        final ObjectMapper objectMapper = new ObjectMapper();
+        //String json = new String(payload, StandardCharsets.UTF_8);
+        //log.info("map: {}", json);
         try {
             U data = objectMapper.readValue(payload, clientModelType);
             handleClientData(data);
         } catch (IOException e) {
             throw new RuntimeException("Invalid JSON payload", e);
         }
-        //log.info("map: {}", String.valueOf(map));
     }
     protected abstract void handleClientData(U data);
 

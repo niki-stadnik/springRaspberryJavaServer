@@ -122,8 +122,25 @@
             </form>
         </div>
         <div class="group2">
-            <div class="tag">Water</div>
-            <button id="water" class="btn" type="submit" onclick="water()" >now</button>
+            <div class="tag">Controls</div>
+            <button id="water" class="btn" type="submit" onclick="water()" >Water</button>
+            <button id="herbLight" class="btn" type="submit" onclick="herbLight()" >Light</button>
+        </div>
+        <div class="group2">
+            <form class="form-inline">
+                <span class="text">Light Timer</span>
+            </form>
+            <div>
+            <label for="startHerbPotLight">Start time:</label>
+            <input type="time" id="startHerbPotLight" name="start" required>
+            </div>
+            <div>
+            <label for="endHerbPotLight">End time:</label>
+            <input type="time" id="endHerbPotLight" name="end" required>
+            </div>
+            <div>
+            <button class="btn" onclick="readTimes()">Submit</button>
+            </div>
         </div>
 
 

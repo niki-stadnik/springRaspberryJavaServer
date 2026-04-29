@@ -81,3 +81,5 @@ public class RebootDevice {
 
 
 //todo send reboot monitoring status to db repository, so that it is remembered after power out
+//todo store variables on db
+//todo store change of settings like auto mode on/off on db
