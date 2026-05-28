@@ -27,7 +27,9 @@ public abstract class LEDstrip extends SmartDevice<LEDstripModel, LEDstripClient
 
     private void stripControl(){
         if (newDuty != duty){
-            messaging.convertAndSend("/topic/" + deviceName, new LEDstripCommamdModel(duty, newDuty, time));
+            messaging.convertAndSend("/topic/" + deviceName, new LEDstripCommamdModel(300, newDuty, time));
+            //300 is a value, that tells the controller to take the actual duty, instead of the one given for start
+            //time is the delay between steps: from 255 to 0 = 255 steps, with 10ms delay = 2.55s
             log.info("led strip change:" + duty + "->" + newDuty);
         }
     }
@@ -40,11 +42,11 @@ public abstract class LEDstrip extends SmartDevice<LEDstripModel, LEDstripClient
             boolean state = event.isState();
             if (state){
                 newDuty = 255;
-                time = 10;
+                time = 4;
                 stripControl();
             }else{
                 newDuty = 0;
-                time = 10;
+                time = 2;
                 stripControl();
             }
         }
@@ -67,6 +69,7 @@ public abstract class LEDstrip extends SmartDevice<LEDstripModel, LEDstripClient
 
     @Override
     protected void handleDeviceData(LEDstripModel data) {
+        if(data.duty() == 256) data.duty(255);
         messaging.convertAndSend("/topic/client/" + deviceName, data);
         duty = data.duty();
         if (duty != newDuty && (duty - newDuty > 2 || newDuty - duty > 2)){

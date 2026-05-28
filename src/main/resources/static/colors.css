@@ -1,4 +1,22 @@
 :root {
-  --bg: #202d1f;
+  /*old  */
   --comp: #4f574d57;
+
+  --bg: #000000;
+  --surface: #0c1210;
+  --panel: #101a12;
+  --border: rgb(1 235 57 / 0.14);
+  --border2: rgba(60, 180, 90, 0.30);
+  --accent: #3dcc6e;
+  --accent2: #25d4a0;
+  --accent3: rgb(242 224 74 / 0.73);
+  --text: #c8f0d4;
+  --text2: rgba(160, 220, 180, 0.48);
+  --rain: #3dcc6e;
+  --snow: #a8e8c0;
+  --btn-bg: #0c1610;
+  --btn-hover: #142018;
+  --btn-border: rgba(60, 180, 90, 0.22);
+
+  --warmaccent: #c8f060;
 }

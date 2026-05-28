@@ -1,0 +1,180 @@
+<!-- pages/climate.html -->
+<style>
+  .klimat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.75rem;
+  }
+  .kl-card {
+    background: var(--surface, #0d1117);
+    border: 1px solid var(--border, #1e2530);
+    border-radius: 10px;
+    padding: 1.1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .kl-room {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted, #555);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .kl-temp {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text, #c9d1d9);
+    line-height: 1;
+  }
+  .kl-temp span { font-size: 1rem; opacity: 0.5; }
+  .kl-set {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent, #00d4ff);
+  }
+  .kl-mode {
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 0.3rem;
+  }
+  .kl-mode-btn {
+    flex: 1;
+    padding: 0.25rem 0;
+    background: transparent;
+    border: 1px solid var(--border, #1e2530);
+    border-radius: 4px;
+    color: var(--muted, #555);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.05em;
+  }
+  .kl-mode-btn.active,
+  .kl-mode-btn:hover {
+    border-color: var(--accent, #00d4ff);
+    color: var(--accent, #00d4ff);
+    background: rgba(0,212,255,0.05);
+  }
+
+  .kl-setpoint {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.3rem;
+  }
+  .kl-sp-btn {
+    width: 24px; height: 24px;
+    background: var(--border, #1e2530);
+    border: none;
+    border-radius: 4px;
+    color: var(--text, #c9d1d9);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+    line-height: 1;
+  }
+  .kl-sp-btn:hover { background: var(--accent, #00d4ff); color: #000; }
+  .kl-sp-val {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text, #c9d1d9);
+    min-width: 40px;
+    text-align: center;
+  }
+
+  .klimat-section-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted, #555);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 1rem 0 0.5rem;
+  }
+  .klimat-section-title:first-child { margin-top: 0; }
+</style>
+
+<div class="klimat-section-title">// Температура</div>
+
+<div class="klimat-grid">
+
+  <div class="kl-card">
+    <div class="kl-room">Хол</div>
+    <div class="kl-temp">22<span>°C</span></div>
+    <div class="kl-set">Зад: <span class="kl-sp-display">21°C</span></div>
+    <div class="kl-setpoint">
+      <button class="kl-sp-btn" data-dir="-1">−</button>
+      <div class="kl-sp-val">21°C</div>
+      <button class="kl-sp-btn" data-dir="1">+</button>
+    </div>
+    <div class="kl-mode">
+      <button class="kl-mode-btn active">❄ Студ</button>
+      <button class="kl-mode-btn">🔥 Топл</button>
+      <button class="kl-mode-btn">⏸ Спри</button>
+    </div>
+  </div>
+
+  <div class="kl-card">
+    <div class="kl-room">Спалня</div>
+    <div class="kl-temp">19<span>°C</span></div>
+    <div class="kl-set">Зад: <span class="kl-sp-display">20°C</span></div>
+    <div class="kl-setpoint">
+      <button class="kl-sp-btn" data-dir="-1">−</button>
+      <div class="kl-sp-val">20°C</div>
+      <button class="kl-sp-btn" data-dir="1">+</button>
+    </div>
+    <div class="kl-mode">
+      <button class="kl-mode-btn">❄ Студ</button>
+      <button class="kl-mode-btn active">🔥 Топл</button>
+      <button class="kl-mode-btn">⏸ Спри</button>
+    </div>
+  </div>
+
+  <div class="kl-card">
+    <div class="kl-room">Кухня</div>
+    <div class="kl-temp">23<span>°C</span></div>
+    <div class="kl-set">Зад: <span class="kl-sp-display">22°C</span></div>
+    <div class="kl-setpoint">
+      <button class="kl-sp-btn" data-dir="-1">−</button>
+      <div class="kl-sp-val">22°C</div>
+      <button class="kl-sp-btn" data-dir="1">+</button>
+    </div>
+    <div class="kl-mode">
+      <button class="kl-mode-btn active">❄ Студ</button>
+      <button class="kl-mode-btn">🔥 Топл</button>
+      <button class="kl-mode-btn">⏸ Спри</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Setpoint +/- buttons
+  document.querySelectorAll('.kl-setpoint').forEach(sp => {
+    const val = sp.querySelector('.kl-sp-val');
+    const display = sp.closest('.kl-card').querySelector('.kl-sp-display');
+    let temp = parseInt(val.textContent);
+
+    sp.querySelectorAll('.kl-sp-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        temp = Math.max(16, Math.min(30, temp + parseInt(btn.dataset.dir)));
+        val.textContent = temp + '°C';
+        if (display) display.textContent = temp + '°C';
+        // TODO: fetch('/api/climate/setpoint', ...)
+      });
+    });
+  });
+
+  // Mode buttons
+  document.querySelectorAll('.kl-mode').forEach(modes => {
+    modes.querySelectorAll('.kl-mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        modes.querySelectorAll('.kl-mode-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  });
+</script>

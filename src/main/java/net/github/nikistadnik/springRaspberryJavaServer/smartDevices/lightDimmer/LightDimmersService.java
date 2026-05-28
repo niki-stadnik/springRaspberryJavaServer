@@ -25,7 +25,7 @@ public class LightDimmersService extends SmartDevice<LightDimmerModel, LightDimm
 
     @Override
     protected Class provideClientModel() {
-        return null;
+        return LightDimmerModel.class;
     }
 
     @Override

@@ -1,0 +1,121 @@
+<!-- pages/home.html — the original top-row: weather sidebar + camera -->
+<div class="top-row">
+
+    <!-- ── WEATHER SIDEBAR ── -->
+    <div class="weather-sidebar">
+
+        <div class="wx-header">
+            <div class="wx-clock" id="wxClock">--:--:--</div>
+            <div class="wx-date" id="wxDate">
+                <span class="wx-date-day">Monday</span>
+                <span class="wx-date-rest">25 May</span>
+            </div>
+        </div>
+
+        <div class="wx-today">
+            <div class="wx-stats-inline">
+
+                <div class="wx-icon" id="wxIcon">🌡️</div>
+                <div class="wx-stat-inline">
+                    <div class="wx-temps">
+                        <div class="wx-max" id="wxMax">&mdash;<span>°C</span></div>
+                        <div class="wx-min" id="wxMin">Low &mdash;°</div>
+                        <div class="wx-cond" id="wxCond">Loading&hellip;</div>
+                    </div>
+                </div>
+
+                <div class="wx-divider"></div>
+
+                <div class="wx-stat-inline">
+                    <div class="ws-label">
+                        <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             style="vertical-align:middle;margin-right:4px;opacity:0.6">
+                            <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/>
+                        </svg>
+                        Wind
+                    </div>
+                    <div class="ws-val" id="wsWind">&mdash;<span class="u">km/h</span></div>
+                </div>
+
+                <div class="wx-divider"></div>
+
+                <div class="wx-stat-inline">
+                    <div class="ws-label">
+                        <svg height="20" width="20" viewBox="0 0 76.977 76.977" fill="currentColor"
+                             style="vertical-align:middle;margin-right:4px;opacity:0.6">
+                            <g>
+                                <path d="M38.489,76.977c-15.54,0-28.183-12.643-28.183-28.182c0-14.53,23.185-44.307,25.828-47.654C36.703,0.421,37.571,0,38.488,0c0.917,0,1.785,0.42,2.354,1.141c2.644,3.348,25.828,33.124,25.828,47.654C66.671,64.334,54.029,76.977,38.489,76.977z M38.489,7.917c-7.847,10.409-22.183,31.389-22.183,40.878c0,12.231,9.951,22.182,22.183,22.182s22.183-9.95,22.183-22.182C60.671,39.306,46.335,18.326,38.489,7.917z"/>
+                                <path d="M38.489,64.981c-1.657,0-3-1.343-3-3s1.343-3,3-3c5.616,0,10.186-4.567,10.186-10.183c0-1.657,1.343-3,3-3c1.656,0,3,1.343,3,3C54.674,57.721,47.413,64.981,38.489,64.981z"/>
+                            </g>
+                        </svg>
+                        Precip
+                    </div>
+                    <div class="ws-val" id="wsPre">&mdash;<span class="u">%&nbsp;&nbsp;&nbsp;</span></div>
+                    <div class="ws-val" id="wsTotal">&mdash;<span class="u">mm</span></div>
+                </div>
+
+                <div class="space"></div>
+
+            </div>
+        </div>
+
+        <!-- precipitation bar -->
+        <div class="wx-precip">
+            <div class="wp-header">
+                <div class="wp-title">Precipitation</div>
+                <div class="wp-tags">
+                    <span class="wp-tag"><span class="dot r"></span><span id="pctR">0%</span> rain</span>
+                    <span class="wp-tag"><span class="dot s"></span><span id="pctS">0%</span> shower</span>
+                    <span class="wp-tag"><span class="dot n"></span><span id="pctN">0%</span> snow</span>
+                </div>
+            </div>
+            <div class="bar-track">
+                <div class="bar-seg" id="barR" style="background:var(--rain);width:0%"></div>
+                <div class="bar-seg" id="barS" style="background:var(--accent2);width:0%"></div>
+                <div class="bar-seg" id="barN" style="background:var(--snow);width:0%"></div>
+            </div>
+            <div class="prob-row">
+                <div class="prob-lbl">Probability</div>
+                <div class="prob-wrap">
+                    <div class="prob-fill" id="probFill" style="width:0%"></div>
+                </div>
+                <div class="prob-num" id="probNum">0%</div>
+            </div>
+        </div>
+
+        <!-- hourly rows -->
+        <div class="wx-hourly" id="hourlyRows"></div>
+
+        <div class="wx-error" id="wxError"></div>
+
+        <div class="wx-meta">
+            <div class="wx-status"><span class="sdot"></span><span id="wxStatus">Connecting&hellip;</span></div>
+            <div>Updated <span id="wxFetched">&mdash;</span></div>
+            <div>Next <span id="wxNext">15:00</span></div>
+        </div>
+
+    </div><!-- /weather-sidebar -->
+
+    <!-- ── CAMERA ── -->
+    <div class="camera-panel" id="cameraPanel">
+        <img class="camera-image" src="/camera.frame" alt="Live Camera Stream">
+        <div class="cam-placeholder" id="camPlaceholder">
+            <div class="cam-placeholder-icon">📷</div>
+            <div class="cam-placeholder-text">Camera feed</div>
+            <div class="cam-placeholder-url">No stream from camera!</div>
+        </div>
+    </div>
+    <!-- overlay OUTSIDE camera-panel, at the end of your real <body> -->
+    <div class="overlay" id="overlay">
+        <img id="fullImg" src="/camera.frame" alt="Live Camera Stream">
+        <div class="hint">Pinch to zoom &nbsp;·&nbsp; Tap to close</div>
+    </div>
+
+</div><!-- /top-row -->
+
+<script>
+    // Re-init weather + clock when this page loads
+    // home.js already runs on boot; this fires it again if navigating back
+    this.dispatchEvent && this.dispatchEvent(new CustomEvent('wx-reinit', {bubbles: true}));
+</script>

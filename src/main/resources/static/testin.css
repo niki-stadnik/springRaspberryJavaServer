@@ -1,0 +1,266 @@
+/* Основно нулиране и шрифтове */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #080c10;
+    color: #e2e8f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Основен контейнер */
+.dashboard-container {
+    width: 100%;
+    max-width: 1200px;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 20px;
+}
+
+/* Стил на картите */
+.card {
+    background: linear-gradient(145deg, #111823, #0b1017);
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 20px;
+}
+
+/* Колони */
+.left-column, .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Часовник с кръг */
+.clock-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 30px;
+}
+
+.progress-ring {
+    border: 4px solid #1e293b;
+    border-top: 4px solid #10b981; /* Зелен акцент */
+    border-radius: 50%;
+    width: 160px;
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.progress-ring .day { color: #64748b; font-size: 0.9rem; }
+.progress-ring h2 { font-size: 2.2rem; margin: 5px 0; font-weight: 600; }
+.progress-ring .date { color: #64748b; font-size: 0.8rem; }
+
+/* Времето в момента */
+.weather-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.weather-icon { font-size: 2.5rem; color: #cbd5e1; }
+.weather-main h1 { font-size: 3rem; font-weight: 300; }
+.weather-extremes { text-align: right; color: #64748b; font-size: 0.85rem; }
+
+.weather-details {
+    display: flex;
+    justify-content: space-between;
+    color: #94a3b8;
+    font-size: 0.9rem;
+    border-top: 1px solid #1e293b;
+    padding-top: 12px;
+}
+
+/* Прогноза */
+.forecast-card h3 { font-size: 0.95rem; color: #64748b; margin-bottom: 15px; }
+.forecast-hours { display: flex; justify-content: space-between; }
+.hour-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+.hour-item i { color: #f59e0b; }
+
+/* Стрийм от камера */
+.camera-stream-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 280px;
+}
+
+.camera-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.live-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background-color: #10b981;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.camera-select {
+    background: none;
+    border: none;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.stream-placeholder {
+    background-color: #0c111a;
+    border-radius: 10px;
+    flex-grow: 1;
+    position: relative;
+    background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://unsplash.com'); /* Примерно фоново изображение за нощна камера */
+    background-size: cover;
+    background-position: center;
+}
+
+.timestamp {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 0.8rem;
+    color: #94a3b8;
+}
+
+.expand-icon {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    color: #94a3b8;
+    cursor: pointer;
+}
+
+/* Статус лента */
+.status-bar-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    font-size: 0.9rem;
+}
+
+.status-icon { color: #10b981; margin-right: 8px; }
+.status-ok { color: #10b981; }
+.arrow-icon { color: #475569; }
+
+/* Долен контролен панел */
+.bottom-controls {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.control-card {
+    background: linear-gradient(145deg, #111823, #0b1017);
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.control-card:hover {
+    transform: translateY(-2px);
+}
+
+.control-card .icon-btn {
+    font-size: 1.5rem;
+    color: #10b981;
+    background-color: rgba(16, 185, 129, 0.1);
+    padding: 12px;
+    border-radius: 12px;
+}
+
+.control-info h3 { font-size: 1rem; font-weight: 500; }
+.control-info p { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
+.control-card .arrow { color: #334155; }
+
+/* Активен зелен статус за бутон */
+.control-card.active-green {
+    border-color: #10b981;
+}
+
+/* Навигация на дъното */
+.bottom-nav {
+    grid-column: span 2;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    background-color: #0b1017;
+    padding: 15px;
+    border-radius: 30px;
+    border: 1px solid #1e293b;
+    margin-top: 10px;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: #64748b;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+.nav-item i { font-size: 1.1rem; }
+
+.nav-item.active {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+}
+
+/* Адаптивност за по-малки екрани (Таблети и Телефони) */
+@media (max-width: 768px) {
+    .dashboard-container {
+        grid-template-columns: 1fr;
+    }
+    .bottom-controls {
+        grid-template-columns: repeat(2, 1fr);
+        grid-column: span 1;
+    }
+    .bottom-nav {
+        grid-column: span 1;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+}

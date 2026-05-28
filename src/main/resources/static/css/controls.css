@@ -1,0 +1,747 @@
+/* ═══════════════════════════════════════════
+     CONTROLS — shared chrome
+     ═══════════════════════════════════════════ */
+.ctrl-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.ctrl-back-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px 10px;
+    flex-shrink: 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-6px);
+    transition: opacity .22s, transform .22s;
+}
+
+.ctrl-back-bar.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.ctrl-back-btn {
+    background: none;
+    border: 1px solid rgba(0, 255, 200, .25);
+    border-radius: 6px;
+    color: rgba(0, 255, 200, .75);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .65rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    padding: 6px 14px 6px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background .18s, border-color .18s, color .18s;
+}
+
+.ctrl-back-btn:hover {
+    background: rgba(0, 255, 200, .08);
+    border-color: rgba(0, 255, 200, .5);
+    color: var(--accent, #00ffc8);
+}
+
+.ctrl-back-btn svg {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+}
+
+.ctrl-panel-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(180, 220, 210, .6);
+}
+
+.ctrl-body {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+/* ── Grid ── */
+.ctrl-grid {
+    display: grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap: 14px;
+    padding: 10px 18px 18px;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+    position: absolute;
+    inset: 0;
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity .22s, transform .22s;
+}
+
+.ctrl-grid.hidden {
+    opacity: 0;
+    transform: scale(0.96);
+    pointer-events: none;
+}
+
+.ctrl-tile {
+    background: rgba(0, 255, 200, .03);
+    border: 1px solid rgba(0, 255, 200, .1);
+    border-radius: 12px;
+    padding: 20px 14px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+    transition: background .22s, border-color .22s, box-shadow .22s, transform .15s;
+}
+
+.ctrl-tile::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 40%, rgba(0, 255, 200, .08) 0%, transparent 65%);
+    opacity: 0;
+    transition: opacity .25s;
+}
+
+.ctrl-tile:hover {
+    background: rgba(0, 255, 200, .06);
+    border-color: rgba(0, 255, 200, .28);
+    box-shadow: 0 0 20px rgba(0, 255, 200, .08);
+    transform: translateY(-2px);
+}
+
+.ctrl-tile:hover::before {
+    opacity: 1;
+}
+
+.ctrl-tile:active {
+    transform: scale(.97);
+}
+
+.ctrl-tile-icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.ctrl-tile-icon svg {
+    width: 36px;
+    height: 36px;
+    fill: currentColor;
+    color: rgba(0, 255, 200, .55);
+    transition: color .2s, filter .2s;
+}
+
+.ctrl-tile:hover .ctrl-tile-icon svg {
+    color: var(--accent, #00ffc8);
+    filter: drop-shadow(0 0 6px rgba(0, 255, 200, .6));
+}
+
+.ctrl-tile-dot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent, #00ffc8);
+    box-shadow: 0 0 6px var(--accent, #00ffc8);
+    display: none;
+}
+
+.ctrl-tile[data-status="active"] .ctrl-tile-dot {
+    display: block;
+}
+
+.ctrl-tile-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .62rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(180, 220, 210, .6);
+    text-align: center;
+    transition: color .2s;
+}
+
+.ctrl-tile:hover .ctrl-tile-label {
+    color: rgba(0, 255, 200, .85);
+}
+
+.ctrl-tile-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .52rem;
+    letter-spacing: .08em;
+    color: rgba(180, 220, 210, .3);
+    text-align: center;
+}
+
+/* ── Panels ── */
+.ctrl-panel {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    padding: 4px 18px 18px;
+    box-sizing: border-box;
+    opacity: 0;
+    transform: translateX(22px);
+    pointer-events: none;
+    transition: opacity .22s, transform .22s;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 255, 200, .2) transparent;
+}
+
+.ctrl-panel.visible {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+/* ═══════════════════════════════════════════
+   SHARED PRIMITIVES
+   ═══════════════════════════════════════════ */
+.cp-section {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .58rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: rgba(0, 255, 200, .4);
+    margin: 16px 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(0, 255, 200, .08);
+}
+
+/* toggle switch */
+.cp-sw {
+    width: 38px;
+    height: 20px;
+    background: rgba(0, 255, 200, .08);
+    border: 1px solid rgba(0, 255, 200, .2);
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background .22s, border-color .22s;
+    margin-left: 5px;
+}
+
+.cp-sw::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(180, 220, 210, .4);
+    transition: transform .22s cubic-bezier(.4, 0, .2, 1), background .22s, box-shadow .22s;
+}
+
+.cp-sw.on {
+    background: rgba(0, 255, 200, .2);
+    border-color: rgba(0, 255, 200, .55);
+}
+
+.cp-sw.on::after {
+    transform: translateX(18px);
+    background: var(--accent, #00ffc8);
+    box-shadow: 0 0 6px rgba(0, 255, 200, .8);
+}
+
+/* toggle row */
+.cp-toggle-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 14px;
+    background: rgba(0, 255, 200, .03);
+    border: 1px solid rgba(0, 255, 200, .08);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: border-color .2s;
+}
+
+.cp-toggle-row:hover {
+    border-color: rgba(0, 255, 200, .2);
+}
+
+.cp-toggle-label {
+    font-family: 'Share Tech Mono', monospace;
+    width: 100%;
+    font-size: .62rem;
+    letter-spacing: .1em;
+    color: rgba(180, 220, 210, .65);
+}
+
+.cp-toggle-sub {
+    font-size: .5rem;
+    color: rgba(180, 220, 210, .3);
+    margin-top: 2px;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+/* buttons */
+.cp-btn {
+    background: none;
+    border: 1px solid rgba(0, 255, 200, .25);
+    border-radius: 7px;
+    color: rgba(0, 255, 200, .7);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .62rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background .18s, border-color .18s, color .18s;
+    width: 100%;
+    margin-bottom: 8px;
+}
+.cp-btn.small {
+    width: 70px;
+    padding: 8px 8px;
+    margin-right: 10px;
+}
+
+.cp-btn:hover {
+    background: rgba(0, 255, 200, .1);
+    border-color: rgba(0, 255, 200, .5);
+    color: var(--accent, #00ffc8);
+}
+
+.cp-btn:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+}
+
+.cp-btn.primary {
+    border-color: rgba(0, 255, 200, .5);
+    background: rgba(0, 255, 200, .08);
+    color: var(--accent, #00ffc8);
+}
+
+.cp-btn.primary:hover {
+    background: rgba(0, 255, 200, .16);
+}
+
+.cp-btn.danger {
+    border-color: rgba(255, 80, 80, .3);
+    color: rgba(255, 120, 120, .7);
+}
+
+.cp-btn.danger:hover {
+    background: rgba(255, 80, 80, .08);
+    border-color: rgba(255, 80, 80, .6);
+    color: rgba(255, 140, 140, 1);
+}
+
+/* info row */
+.cp-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 14px;
+    background: rgba(0, 255, 200, .02);
+    border: 1px solid rgba(0, 255, 200, .07);
+    border-radius: 7px;
+    margin-bottom: 6px;
+}
+
+.cp-info-key {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .58rem;
+    letter-spacing: .1em;
+    color: rgba(180, 220, 210, .4);
+}
+
+.cp-info-val {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .62rem;
+    color: rgba(180, 220, 210, .75);
+}
+
+/* badge */
+.cp-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .52rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.cp-badge.green {
+    background: rgba(0, 255, 200, .12);
+    color: var(--accent, #00ffc8);
+}
+
+.cp-badge.red {
+    background: rgba(255, 80, 80, .12);
+    color: rgba(255, 120, 120, .9);
+}
+
+.cp-badge.yellow {
+    background: rgba(255, 200, 0, .12);
+    color: rgba(255, 210, 60, .9);
+}
+
+/* input fields */
+.cp-input-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.cp-input-lbl {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .6rem;
+    letter-spacing: .1em;
+    color: rgba(180, 220, 210, .5);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.cp-input-unit {
+    color: rgba(0, 255, 200, .4);
+    font-size: .55rem;
+}
+
+.cp-input {
+    background: rgba(0, 0, 0, .3);
+    border: 1px solid rgba(0, 255, 200, .2);
+    border-radius: 6px;
+    color: rgba(0, 255, 200, .9);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .72rem;
+    padding: 5px 10px;
+    width: 90px;
+    text-align: center;
+    outline: none;
+    transition: border-color .18s;
+}
+
+.cp-input:focus {
+    border-color: rgba(0, 255, 200, .55);
+}
+
+.cp-input[type="time"] {
+    width: 110px;
+}
+
+/* ── dual sensor cards ── */
+.cp-dual-sensors {
+    display: grid;
+    grid-template-columns:1fr 1fr;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+.cp-sensor-card {
+    background: rgba(0, 255, 200, .03);
+    border: 1px solid rgba(0, 255, 200, .1);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.cp-sensor-loc {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .56rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(0, 255, 200, .4);
+    margin-bottom: 2px;
+}
+
+.cp-sensor-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cp-sensor-icon {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.cp-sensor-val {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: rgba(180, 220, 210, .85);
+}
+
+/* ── fan mode buttons ── */
+.cp-fan-btns {
+    display: grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.cp-fan-btn {
+    background: rgba(0, 255, 200, .03);
+    border: 1px solid rgba(0, 255, 200, .15);
+    border-radius: 8px;
+    color: rgba(180, 220, 210, .5);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .62rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 10px 0;
+    cursor: pointer;
+    transition: all .18s;
+    text-align: center;
+}
+
+.cp-fan-btn:hover {
+    border-color: rgba(0, 255, 200, .35);
+    color: rgba(0, 255, 200, .8);
+    background: rgba(0, 255, 200, .06);
+}
+
+.cp-fan-btn.active {
+    background: rgba(0, 255, 200, .12);
+    border-color: rgba(0, 255, 200, .5);
+    color: var(--accent, #00ffc8);
+    box-shadow: 0 0 12px rgba(0, 255, 200, .1);
+}
+
+.cp-fan-auto-cfg {
+    background: rgba(0, 255, 200, .02);
+    border: 1px solid rgba(0, 255, 200, .08);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-top: 4px;
+}
+
+/* ── connection dot ── */
+.cp-conn-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.cp-conn-dot.online {
+    background: var(--accent, #00ffc8);
+    box-shadow: 0 0 5px var(--accent, #00ffc8);
+}
+
+.cp-conn-dot.offline {
+    background: rgba(255, 80, 80, .7);
+    box-shadow: 0 0 5px rgba(255, 80, 80, .5);
+}
+
+/* ── camera panel ── */
+.cp-cam {
+    background: rgba(0, 0, 0, .3);
+    border: 1px solid rgba(0, 255, 200, .12);
+    border-radius: 8px;
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 255, 200, .2);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .6rem;
+    letter-spacing: .12em;
+    margin-bottom: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.cp-cam::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0, 255, 200, .015) 3px, rgba(0, 255, 200, .015) 4px);
+}
+
+.cp-cam-rec {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ff4040;
+    box-shadow: 0 0 6px #ff4040;
+    animation: blink 1.2s infinite;
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1
+    }
+    50% {
+        opacity: .2
+    }
+}
+
+.cp-cam-indicators {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.cp-cam-ind {
+    flex: 1;
+    background: rgba(0, 255, 200, .04);
+    border: 1px solid rgba(0, 255, 200, .1);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+}
+
+.cp-cam-ind-val {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--accent, #00ffc8);
+    display: block;
+}
+
+.cp-cam-ind-lbl {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .5rem;
+    letter-spacing: .12em;
+    color: rgba(180, 220, 210, .4);
+    text-transform: uppercase;
+}
+
+.cp-cam-actions {
+    display: grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.cp-cam-action-btn {
+    flex: 1;
+    background: rgba(0, 255, 200, .03);
+    border: 1px solid rgba(0, 255, 200, .15);
+    border-radius: 8px;
+    color: rgba(180, 220, 210, .5);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .58rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 10px 6px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    transition: all .18s;
+}
+
+.cp-cam-action-btn svg {
+    stroke: currentColor;
+}
+
+.cp-cam-action-btn:hover {
+    background: rgba(0, 255, 200, .08);
+    border-color: rgba(0, 255, 200, .35);
+    color: rgba(0, 255, 200, .8);
+}
+
+.cp-cam-action-btn.active {
+    background: rgba(0, 255, 200, .12);
+    border-color: rgba(0, 255, 200, .5);
+    color: var(--accent, #00ffc8);
+}
+
+/* ── herb control card ── */
+.cp-herb-control-card {
+    background: rgba(0, 255, 200, .02);
+    border: 1px solid rgba(0, 255, 200, .1);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 4px;
+}
+
+.cp-hc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.cp-hc-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* ── door lock ── */
+.cp-lock-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 24px 0 20px;
+    margin-bottom: 8px;
+}
+
+.cp-lock-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color .4s, filter .4s;
+}
+
+.cp-lock-icon svg {
+    width: 60px;
+    height: 60px;
+}
+
+.cp-lock-state {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    letter-spacing: .2em;
+    transition: color .4s;
+}
+
+.cp-lock-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .56rem;
+    letter-spacing: .1em;
+    color: rgba(180, 220, 210, .35);
+}
+
+.cp-lock-btns {
+    display: grid;
+    grid-template-columns:1fr 1fr;
+    gap: 10px;
+}
+
+.cp-lock-btns .cp-btn {
+    margin: 0;
+}

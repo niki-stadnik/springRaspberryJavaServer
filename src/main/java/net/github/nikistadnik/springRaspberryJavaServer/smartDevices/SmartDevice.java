@@ -102,6 +102,9 @@ public abstract class SmartDevice<T, U> implements DeviceService {
 
     @Override
     public void handleCommand(byte[] payload) {
+        if (clientModelType == null) {
+            throw new IllegalStateException("clientModelType is not initialized for device: " + deviceName);
+        }
         //String json = new String(payload, StandardCharsets.UTF_8);
         //log.info("map: {}", json);
         try {

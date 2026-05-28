@@ -1,0 +1,223 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+}
+
+@media (orientation: landscape) {
+    html, body {
+        overflow: hidden;
+    }
+}
+
+/* grid bg */
+body {
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(60, 180, 90, 0.025) 39px, rgba(60, 180, 90, 0.025) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(60, 180, 90, 0.025) 39px, rgba(60, 180, 90, 0.025) 40px);
+}
+
+/* ═══════════════════════════════
+   LANDSCAPE LAYOUT (tablet/desktop)
+═══════════════════════════════ */
+.hud {
+    display: flex;
+    flex-direction: column;
+    grid-template-rows: 1fr auto;
+    height: 100vh;
+    padding: 14px 16px;
+    gap: 12px;
+    box-sizing: border-box;
+}
+
+.page-area {
+    flex: 1; /* takes all space above the nav */
+    position: relative;
+    overflow: hidden;
+}
+
+/* ── Loader ── */
+.page-loader {
+    display: none;
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.page-loader.show {
+    display: flex;
+}
+
+.pl-spin {
+    width: 28px;
+    height: 28px;
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    border-top-color: var(--accent, #00d4ff);
+    border-radius: 50%;
+    animation: pl-spin 0.7s linear infinite;
+}
+
+@keyframes pl-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ── Views ── */
+.page-view {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.page-view.active {
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.page-view.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.page-error {
+    color: #f66;
+    font-size: 0.85rem;
+    padding: 2rem;
+    text-align: center;
+}
+
+
+/* ── NAV BUTTONS ── */
+.nav-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.nav-btn {
+    background: var(--btn-bg);
+    border: 0.5px solid var(--btn-border);
+    border-radius: 12px;
+    padding: 13px 10px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--text);
+    cursor: pointer;
+    text-transform: uppercase;
+    text-align: center;
+    transition: background 0.18s, border-color 0.18s, color 0.18s;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+}
+
+.nav-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border2), transparent);
+    opacity: 0;
+    transition: opacity 0.18s;
+}
+
+.nav-btn:hover {
+    background: var(--btn-hover);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.nav-btn:hover::before {
+    opacity: 1;
+}
+
+.nav-btn.active {
+    transform: scale(0.98);
+    color: var(--accent, #00d4ff);
+    background: var(--btn-hover);
+}
+
+/* ── LOADING ── */
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+}
+
+.spin {
+    width: 34px;
+    height: 34px;
+    border: 1.5px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.load-txt {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text2);
+}
+
+/* ═══════════════════════════════
+   PORTRAIT / PHONE OVERRIDES
+═══════════════════════════════ */
+@media (orientation: portrait) {
+    body {
+        overflow-y: auto;
+        overflow-x: hidden;
+        height: auto;
+    }
+
+    .hud {
+        grid-template-rows: auto auto auto;
+        height: auto;
+        min-height: 100vh;
+        padding: 12px;
+        gap: 10px;
+    }
+
+    /* nav: 2x2 grid on narrow screens */
+    .nav-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .nav-btn {
+        padding: 16px 10px;
+        font-size: 12px;
+    }
+}

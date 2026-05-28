@@ -57,6 +57,7 @@ public class BathroomFanService extends SmartDevice<BathroomFanModel, BathroomFa
         deviceRegistry.bathroomFanState().bathHum1(data.getBathHum1());
         deviceRegistry.bathroomFanState().bathHum2(data.getBathHum2());
         deviceRegistry.bathroomFanState().bathFan(data.isBathFan());
+        deviceRegistry.bathroomFanState().bathFan2(data.isBathFan2());
         double button = data.getButton();
         if (button != 0) {
             button /= 1000;
@@ -118,7 +119,8 @@ public class BathroomFanService extends SmartDevice<BathroomFanModel, BathroomFa
                 deviceRegistry.bathroomFanState().bathTemp2(),
                 deviceRegistry.bathroomFanState().bathHum1(),
                 deviceRegistry.bathroomFanState().bathHum2(),
-                deviceRegistry.bathroomFanState().bathFan()));
+                deviceRegistry.bathroomFanState().bathFan(),
+                deviceRegistry.bathroomFanState().bathFan2()));
     }
 
     void buttonCheck() throws InterruptedException {
@@ -179,7 +181,7 @@ public class BathroomFanService extends SmartDevice<BathroomFanModel, BathroomFa
         if (flag) {
             flag = false;
             disregard = true;
-            messaging.convertAndSend("/topic/bathroomFan", "{\"data\":" + state + "}");
+            messaging.convertAndSend("/topic/bathroomFan", "{\"fan1\":" + state + "}");
             log.info("change state: {}", state);
         }
     }

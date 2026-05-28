@@ -1,0 +1,54 @@
+<!-- lights.html — injected by spa-router into #pageArea -->
+
+
+<div class="lights-wrap">
+
+  <!-- ── Nested sub-nav ── -->
+  <nav class="lights-subnav" id="lightsSubnav">
+    <button class="ltab active" data-ltab="toggles">Лампи</button>
+    <button class="ltab"        data-ltab="dimming">Димиране</button>
+    <button class="ltab"        data-ltab="scenes">Сцени</button>
+  </nav>
+
+  <div class="lights-content">
+
+    <!-- ════════════════════════════════
+         SUB-PAGE 1 : TOGGLES
+         ════════════════════════════════ -->
+    <div class="lsub active" id="lsub-toggles">
+
+      <div class="lamp-master">
+        <span class="master-label">Всички лампи</span>
+        <div class="master-btns">
+          <button class="master-btn" id="allOn" onclick="switchLightON()">ON</button>
+          <button class="master-btn" id="allOff" onclick="switchLightOFF()">OFF</button>
+        </div>
+      </div>
+
+      <div class="lamp-grid" id="lampGrid">
+        <!-- Cards injected by JS -->
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════
+         SUB-PAGE 2 : SCENES
+         ════════════════════════════════ -->
+    <div class="lsub" id="lsub-scenes">
+      <div class="scenes-grid" id="scenesGrid">
+        <!-- Cards injected by JS -->
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════
+         SUB-PAGE 3 : DIMMING
+         ════════════════════════════════ -->
+    <div class="lsub" id="lsub-dimming">
+      <div class="dim-list" id="dimList">
+        <!-- Rows injected by JS -->
+      </div>
+    </div>
+
+  </div><!-- /lights-content -->
+</div><!-- /lights-wrap -->
+
+<script src="/js/lights.js"></script>

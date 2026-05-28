@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Home Dashboard Fixed</title>
+    <!-- Външни икони (ако редакторът ги разрешава) -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+
+    <style>
+        /* Основно нулиране */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #080c10;
+            color: #e2e8f0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Сигурен контейнер, който винаги се събира на екрана */
+        .dashboard-container {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Горна основна секция (Лява + Дясна част) */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Стил за всички панели */
+        .card {
+            background: linear-gradient(145deg, #111823, #0b1017);
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .left-column, .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Кръгъл часовник */
+        .clock-card {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .progress-ring {
+            border: 4px solid #1e293b;
+            border-top: 4px solid #10b981;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .progress-ring h2 { font-size: 1.6rem; }
+        .progress-ring p { color: #64748b; font-size: 0.75rem; }
+
+        /* Времето в момента */
+        .weather-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .weather-main h1 { font-size: 2.2rem; }
+        .weather-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #1e293b;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        /* Малка часова прогноза */
+        .forecast-hours {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.8rem;
+        }
+        .hour-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Камера (Нов дизайн БЕЗ външно изображение, за да зареди гарантирано) */
+        .camera-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 220px;
+        }
+        .camera-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+        .live-dot {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .video-container {
+            flex-grow: 1;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), #151d2a;
+            border-radius: 8px;
+            position: relative;
+            border: 1px dashed #334155;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .video-container::before {
+            content: "ЗЕЛЕНА СВЕТЛИНА / LINK СТРИЙМ";
+            color: #475569;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+        .video-timestamp {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        /* Системен статус */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+        .status-green { color: #10b981; }
+
+        /* СЕКЦИЯ С БУТОНИТЕ - ГАРАНТИРАНО СЕ СЪБИРА СЕГА */
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .buttons-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .btn-card {
+            background: linear-gradient(145deg, #111823, #0b1017);
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .btn-card.active {
+            border-color: #10b981;
+            background: #11221a;
+        }
+        .btn-icon-box {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            width: 35px;
+            text-align: center;
+        }
+        .btn-text h3 { font-size: 0.9rem; font-weight: 500; }
+        .btn-text p { font-size: 0.75rem; color: #64748b; }
+
+        /* Меню на дъното */
+        .footer-nav {
+            display: flex;
+            justify-content: space-around;
+            background-color: #0b1017;
+            border: 1px solid #1e293b;
+            padding: 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        .nav-link {
+            color: #64748b;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
+        .nav-link.active {
+            color: #10b981;
+            background-color: rgba(16, 185, 129, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+
+    <!-- ОСНОВЕН ГОРЕН ЛЕЙАУТ -->
+    <div class="main-layout">
+
+        <!-- ЛЯВО: ЧАС И ВРЕМЕ -->
+        <div class="left-column">
+            <div class="card clock-card">
+                <div class="progress-ring">
+                    <p>Неделя</p>
+                    <h2>07:48</h2>
+                    <p>25 Май 2026</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="weather-main">
+                    <div>
+                        <h1>16°</h1>
+                        <p>Облачно</p>
+                    </div>
+                    <div style="text-align: right; color: #64748b; font-size: 0.8rem;">
+                        <p>Макс. 20°</p>
+                        <p>Мин. 11°</p>
+                    </div>
+                </div>
+                <div class="weather-details">
+                    <span>💧 62% Влажност</span>
+                    <span>💨 12 km/h Вятър</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <p style="font-size: 0.8rem; color: #64748b;">Прогноза за днес</p>
+                <div class="forecast-hours">
+                    <div class="hour-item"><span>09:00</span><span>☁️</span><span>16°</span></div>
+                    <div class="hour-item"><span>12:00</span><span>☀️</span><span>18°</span></div>
+                    <div class="hour-item"><span>15:00</span><span>🌤️</span><span>20°</span></div>
+                    <div class="hour-item"><span>18:00</span><span>🌧️</span><span>19°</span></div>
+                    <div class="hour-item"><span>21:00</span><span>🌙</span><span>15°</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ДЯСНО: КАМЕРА И СТАТУС -->
+        <div class="right-column">
+            <div class="card camera-card">
+                <div class="camera-header">
+                    <span class="live-dot">● LIVE</span>
+                    <span>Камера 1 ▾</span>
+                </div>
+                <div class="video-container">
+                    <div class="video-timestamp">25.05.2026 07:48:32</div>
+                </div>
+            </div>
+
+            <div class="card status-bar">
+                <span>🛡️ Система: <span class="status-green">Всичко е нормално</span></span>
+                <span>❯</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ДОЛНИ БУТОНИ -->
+    <div class="buttons-grid">
+        <div class="btn-card active">
+            <div class="btn-icon-box">💡</div>
+            <div class="btn-text">
+                <h3>Лампи</h3>
+                <p>3 активни</p>
+            </div>
+        </div>
+
+        <div class="btn-card">
+            <div class="btn-icon-box">🌡️</div>
+            <div class="btn-text">
+                <h3>Климат</h3>
+                <p>22°C • Авто</p>
+            </div>
+        </div>
+
+        <div class="btn-card">
+            <div class="btn-icon-box">🎛️</div>
+            <div class="btn-text">
+                <h3>Контроли</h3>
+                <p>6 у-ва</p>
+            </div>
+        </div>
+
+        <div class="btn-card">
+            <div class="btn-icon-box">📷</div>
+            <div class="btn-text">
+                <h3>Камери</h3>
+                <p>2 онлайн</p>
+            </div>

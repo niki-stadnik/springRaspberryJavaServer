@@ -19,6 +19,7 @@ function connect() {
     });
 }
 
+//saves browser memory
 function showImage(image) {
     try {
         const base64 = image.image; // the base64 JPEG string from your message

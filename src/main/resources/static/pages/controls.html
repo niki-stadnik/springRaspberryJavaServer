@@ -1,0 +1,165 @@
+<!-- controls.html — injected by spa-router into #pageArea -->
+
+<!-- ════════════════ HTML ════════════════ -->
+<div class="ctrl-wrap" id="ctrlWrap">
+
+  <div class="ctrl-back-bar" id="ctrlBackBar">
+    <button class="ctrl-back-btn" id="ctrlBackBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Назад
+    </button>
+    <span class="ctrl-panel-title" id="ctrlPanelTitle"></span>
+  </div>
+
+  <div class="ctrl-body">
+    <div class="ctrl-grid" id="ctrlGrid"></div>
+
+    <!-- ① BATHROOM -->
+    <div class="ctrl-panel" id="cpanel-bathroom">
+      <div class="cp-section">Сензори</div>
+      <div class="cp-dual-sensors">
+        <div class="cp-sensor-card">
+          <div class="cp-sensor-loc">Щрангове</div>
+          <div class="cp-sensor-row"><span class="cp-sensor-icon">🌡</span><span class="cp-sensor-val" id="bathTemp1">24.2°C</span></div>
+          <div class="cp-sensor-row"><span class="cp-sensor-icon">💧</span><span class="cp-sensor-val" id="bathHum1">71%</span></div>
+        </div>
+        <div class="cp-sensor-card">
+          <div class="cp-sensor-loc">Стайна</div>
+          <div class="cp-sensor-row"><span class="cp-sensor-icon">🌡</span><span class="cp-sensor-val" id="bathTemp2">26.8°C</span></div>
+          <div class="cp-sensor-row"><span class="cp-sensor-icon">💧</span><span class="cp-sensor-val" id="bathHum2">88%</span></div>
+        </div>
+      </div>
+
+      <div class="cp-section">Вентилатор</div>
+      <div class="cp-fan-btns">
+        <button class="cp-fan-btn" data-fan="off" id="sendBFOff" onclick="sendBFOff()">Изкл.</button>
+        <button class="cp-fan-btn active" data-fan="auto" id="sendBFAuto" onclick="sendBFAuto()">Авто</button>
+        <button class="cp-fan-btn" data-fan="on" id="sendBFOn" onclick="sendBFOn()">Вкл.</button>
+      </div>
+      <div class="cp-fan-auto-cfg" id="bth-auto-cfg">
+        <div class="cp-input-row">
+          <label class="cp-input-lbl">Мин. влажност <span class="cp-input-unit">%</span></label>
+          <input class="cp-input" type="number" min="0" max="100" value="60" id="bth-hum-min">
+        </div>
+        <div class="cp-input-row">
+          <label class="cp-input-lbl">Макс. влажност <span class="cp-input-unit">%</span></label>
+          <input class="cp-input" type="number" min="0" max="100" value="80" id="bth-hum-max">
+        </div>
+      </div>
+
+      <div class="cp-section">Вентилатор Щрангове</div>
+      <div class="cp-fan-btns">
+        <button class="cp-fan-btn" data-fan="off" id="sendBFOff2" onclick="sendBFOff()">Изкл.</button>
+        <button class="cp-fan-btn active" data-fan="auto" id="sendBFAuto2" onclick="sendBFAuto()">Авто</button>
+        <button class="cp-fan-btn" data-fan="on" id="sendBFOn2" onclick="sendBFOn()">Вкл.</button>
+      </div>
+      <div class="cp-fan-auto-cfg" id="bth-auto-cfg2">
+        <div class="cp-input-row">
+          <label class="cp-input-lbl">Мин. влажност <span class="cp-input-unit">%</span></label>
+          <input class="cp-input" type="number" min="0" max="100" value="60" id="bth-hum-min2">
+        </div>
+        <div class="cp-input-row">
+          <label class="cp-input-lbl">Макс. влажност <span class="cp-input-unit">%</span></label>
+          <input class="cp-input" type="number" min="0" max="100" value="80" id="bth-hum-max2">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ② DEVICES -->
+    <div class="ctrl-panel" id="cpanel-devices">
+      <div class="cp-section">Свързани устройства</div>
+      <div id="devList"></div>
+    </div>
+
+    <!-- ③ CAMERAS -->
+    <div class="ctrl-panel" id="cpanel-cameras">
+      <div id="camList"></div>
+    </div>
+
+    <!-- ④ HERB POT -->
+    <div class="ctrl-panel" id="cpanel-herbpot">
+      <div class="cp-section">Саксии</div>
+      <div class="cp-dual-sensors">
+        <div class="cp-sensor-card">
+          <div class="cp-sensor-loc">🌿 Босилек</div>
+          <div class="cp-sensor-row"><span class="cp-sensor-icon">🌡</span><span class="cp-sensor-val" id="temp1">21.4°C</span></div>
+          <div class="cp-sensor-row"><span class="cp-sensor-icon">💧</span><span class="cp-sensor-val" id="moisture1">76%</span></div>
+        </div>
+        <div class="cp-sensor-card">
+          <div class="cp-sensor-loc">🌿 Мента</div>
+          <div class="cp-sensor-row"><span class="cp-sensor-icon">🌡</span><span class="cp-sensor-val" id="temp2">21.1°C</span></div>
+          <div class="cp-sensor-row"><span class="cp-sensor-icon">💧</span><span class="cp-sensor-val" id="moisture2">82%</span></div>
+        </div>
+      </div>
+
+      <div class="cp-section">Осветление</div>
+      <div class="cp-herb-control-card">
+        <div class="cp-hc-header">
+          <div>
+            <div class="cp-toggle-label">Grow лампа</div>
+            <div class="cp-toggle-sub" id="light-status-txt">Изключена</div>
+          </div>
+          <div class="cp-sw" data-sw id="light-sw"></div>
+        </div>
+        <div class="cp-hc-fields">
+          <div class="cp-input-row">
+            <label class="cp-input-lbl">Начало</label>
+            <input class="cp-input" type="time" id="light-start">
+          </div>
+          <div class="cp-input-row">
+            <label class="cp-input-lbl">Край</label>
+            <input class="cp-input" type="time" id="light-end">
+          </div>
+          <button class="cp-btn primary" id="light-submit" onclick="readTimes()">Запази</button>
+        </div>
+      </div>
+
+      <div class="cp-section">Поливане</div>
+      <div class="cp-herb-control-card">
+        <div class="cp-hc-header">
+          <div>
+            <div class="cp-toggle-label">Авто-поливане</div>
+            <div class="cp-toggle-sub" id="water-status-txt">Активно</div>
+          </div>
+          <div class="cp-sw on" data-sw id="water-sw"></div>
+        </div>
+        <div class="cp-hc-fields">
+          <div class="cp-input-row">
+            <label class="cp-input-lbl">Начало</label>
+            <input class="cp-input" type="time" value="07:30" id="water-start">
+          </div>
+          <div class="cp-input-row">
+            <label class="cp-input-lbl">Продълж. <span class="cp-input-unit">сек</span></label>
+            <input class="cp-input" type="number" min="5" max="120" value="30" id="water-dur">
+          </div>
+          <button class="cp-btn primary" id="water-submit">Запази</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑤ DOOR LOCK -->
+    <div class="ctrl-panel" id="cpanel-doorlock">
+      <div class="cp-section">Позиция</div>
+      <div class="cp-lock-indicator">
+        <div class="cp-lock-icon" id="lockIcon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            <circle cx="12" cy="16" r="1.5" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <div class="cp-lock-state" id="lockState">ЗАКЛЮЧЕНА</div>
+        <div class="cp-lock-state" id="position">value</div>
+        <div class="cp-lock-sub" id="lockSub">Последна промяна: преди 2 часа</div>
+      </div>
+      <div class="cp-lock-btns">
+        <button class="cp-btn danger" id="unlockBtn" onclick="sendunlock()">🔓 Отключи</button>
+        <button class="cp-btn primary" id="lockBtn" disabled onclick="sendlock()">🔒 Заключи</button>
+      </div>
+    </div>
+
+  </div><!-- /ctrl-body -->
+</div><!-- /ctrl-wrap -->
+
+<script src="/js/controls.js"></script>

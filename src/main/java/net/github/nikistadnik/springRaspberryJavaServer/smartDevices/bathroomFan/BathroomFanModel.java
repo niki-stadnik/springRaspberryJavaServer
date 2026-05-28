@@ -15,6 +15,7 @@ public class BathroomFanModel {
     private Double bathHum1 = null;
     private Double bathHum2 = null;
     private boolean bathFan = false;
+    private boolean bathFan2 = false;
     private int button;
 
 }

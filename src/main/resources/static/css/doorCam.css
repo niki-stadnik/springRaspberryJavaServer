@@ -1,0 +1,40 @@
+.overlay {
+    display: none;   /* hidden by default */
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+}
+
+.overlay.active {
+    display: flex;
+}
+
+.overlay img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    cursor: zoom-out;
+    transform-origin: center;
+    user-select: none;
+    will-change: transform;
+    pointer-events: none;
+}
+
+.hint {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.camera-image {
+    cursor: zoom-in;
+}

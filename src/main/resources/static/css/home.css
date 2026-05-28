@@ -1,0 +1,524 @@
+/* ═══════════════════════════════
+   LANDSCAPE LAYOUT (tablet/desktop)
+═══════════════════════════════ */
+.top-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    min-height: 0;
+    height: 100%;
+}
+
+/* ── WEATHER SIDEBAR ── */
+.weather-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.wx-header {
+    flex-shrink: 0;
+    border-bottom: 0.5px solid var(--border2);
+    padding-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+.wx-clock {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 50px;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: 0.04em;
+}
+.wx-date {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.03em;
+    line-height: 1;
+    margin-top: 3px;
+    text-align: right;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+.wx-date-day {
+    white-space: nowrap;
+}
+
+.wx-date-rest {
+    white-space: nowrap;
+}
+
+.sdot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent2);
+    margin-right: 4px;
+    vertical-align: middle;
+    animation: pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1
+    }
+    50% {
+        opacity: 0.25
+    }
+}
+
+/* today hero */
+.wx-today {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    position: relative;
+    overflow: hidden;
+    justify-content: space-between;
+}
+
+.wx-today::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border2), transparent);
+}
+
+.wx-icon {
+    font-size: 38px;
+    line-height: 1;
+    flex-shrink: 0;
+    align-self: center;
+}
+
+.wx-temps {
+}
+
+.wx-max {
+    font-size: 43px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text);
+    letter-spacing: -0.02em;
+}
+
+.wx-max span {
+    font-size: 23px;
+    font-weight: 300;
+    color: var(--text2);
+}
+
+.wx-min {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 18px;
+    color: var(--text2);
+    margin-top: 2px;
+    letter-spacing: 0.04em;
+}
+
+.wx-cond {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text2);
+    margin-top: 2px;
+    letter-spacing: 0.05em;
+}
+
+.wx-divider {
+    width: 0.5px;
+    background: var(--border2);
+    align-self: stretch;
+    flex-shrink: 0;
+    margin: 0 8px;
+}
+.wx-stats-inline {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: flex-start;
+}
+.wx-stat-inline {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: center;
+}
+.wx-stat-inline:first-of-type {
+    flex: 1;
+    align-self: center;
+}
+
+
+
+/* wind + precip stats row */
+.wx-stat {
+    background: var(--panel);
+    border: 0.5px solid var(--border);
+    border-radius: 3px;
+    padding: 6px 10px;
+}
+
+.ws-label {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text2);
+    align-items: center;
+}
+
+.ws-val {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.15;
+    align-items: center;
+}
+
+.ws-val .u {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text2);
+    margin-left: 1px;
+}
+
+/* precip bar panel */
+.wx-precip {
+    flex-shrink: 0;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 8px 12px;
+}
+
+.wp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.wp-title {
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text2);
+}
+
+.wp-tags {
+    display: flex;
+    gap: 8px;
+}
+
+.wp-tag {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 12px;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--text2);
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.dot.r {
+    background: var(--rain);
+}
+
+.dot.s {
+    background: var(--accent2);
+}
+
+.dot.n {
+    background: var(--snow);
+}
+
+.bar-track {
+    height: 4px;
+    background: var(--panel);
+    border-radius: 2px;
+    overflow: hidden;
+    display: flex;
+}
+
+.bar-seg {
+    height: 100%;
+    border-radius: 2px;
+}
+
+.prob-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.prob-lbl {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text2);
+    width: 70px;
+    flex-shrink: 0;
+}
+
+.prob-wrap {
+    flex: 1;
+    height: 3px;
+    background: var(--panel);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.prob-fill {
+    height: 100%;
+    background: var(--rain);
+    border-radius: 2px;
+}
+
+.prob-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    width: 28px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+/* hourly cards */
+.wx-hourly {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hour-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 5px 10px;
+    display: grid;
+    grid-template-columns: 38px 22px 44px 1fr 1fr 1fr;
+    align-items: center;
+    gap: 6px;
+}
+
+.hc-time {
+    font-size: 16px;
+    letter-spacing: 0.12em;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.hc-icon {
+    font-size: 20px;
+    line-height: 1;
+    text-align: center;
+}
+
+.hc-temp {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.hc-temp span {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--text2);
+}
+
+.hc-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.hc-k {
+    font-size: 12px;
+    color: var(--text2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.hc-v {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    color: var(--text);
+}
+
+.hc-v.wet {
+    color: var(--rain);
+}
+
+/* meta */
+.wx-meta {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text2);
+    border-top: 0.5px solid var(--border);
+    padding-top: 5px;
+    margin-top: auto;
+}
+.wx-status {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--text2);
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+.wx-meta span {
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--text2);
+    opacity: 0.6;
+}
+
+/* error */
+.wx-error {
+    flex-shrink: 0;
+    background: rgba(220, 60, 40, 0.1);
+    border: 0.5px solid rgba(220, 60, 40, 0.3);
+    border-radius: 3px;
+    padding: 5px 10px;
+    font-size: 10px;
+    color: #e05040;
+    letter-spacing: 0.08em;
+    display: none;
+}
+
+/* ── CAMERA ── */
+.camera-panel {
+    background: var(--surface);
+    height: 100%; /* Hard lock to the height of the top-row */
+    max-width: 100%; /* Prevent it from pushing past the screen edge */
+    border: 0.5px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    padding: 10px;
+}
+
+.camera-image {
+    cursor: zoom-in;
+    width: auto;
+    height: 100%;
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+    z-index: 2;
+    border-radius: 10px;
+}
+
+.camera-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border2), transparent);
+    z-index: 4;
+}
+
+.cam-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--text2);
+    text-align: center;
+}
+
+.cam-placeholder-icon {
+    font-size: 40px;
+    opacity: 0.25;
+}
+
+.cam-placeholder-text {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.45;
+}
+
+.cam-placeholder-url {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    opacity: 0.45;
+    border: 0.5px solid var(--border);
+    border-radius: 3px;
+    padding: 4px 10px;
+}
+
+
+/* ═══════════════════════════════
+   PORTRAIT / PHONE OVERRIDES
+═══════════════════════════════ */
+@media (orientation: portrait) {
+
+    .top-row {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+
+        display: flex;
+        flex-direction: column;
+        height: auto;
+    }
+
+
+    /* weather takes full width */
+    .weather-sidebar {
+        overflow: visible;
+        position: relative;
+        z-index: 5;
+        order: 1;
+    }
+
+    /* camera below weather, fixed aspect ratio */
+    .camera-panel {
+        width: 100%;
+        aspect-ratio: 5 / 4;
+        min-height: 0;
+    }
+
+
+    /* hourly cards: compact horizontal scroll isn't needed — they stack fine */
+    .hour-card {
+        grid-template-columns: 38px 22px 44px 1fr 1fr 1fr;
+    }
+}
