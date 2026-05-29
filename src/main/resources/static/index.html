@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart Home HUD</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0a0e1a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Home HUD">
+  <link rel="apple-touch-icon" href="/icons/icon-512.png">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
   <link rel="stylesheet" href="colors.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="css/home.css">
@@ -279,6 +287,11 @@
 
 <script src="spa-router.js"></script>
 <script src="/js/doorCam.js"></script>
-<script src="home.js"></script>
+<script src="js/home.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js');
+  }
+</script>
 </body>
 </html>

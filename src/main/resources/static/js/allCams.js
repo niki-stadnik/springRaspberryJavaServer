@@ -1,16 +1,16 @@
-function initCameraViewer() {
-    // Remove existing overlay and recreate it on documentElement
-    let overlay = document.getElementById('overlay');
-    if (overlay) overlay.remove();
+function initConfigCameraViewers() {
 
+    let overlay = document.getElementById('overlay');
+    if (overlay) {
+        overlay.remove(); // remove it from its current trapped position
+    }
     overlay = document.createElement('div');
     overlay.id = 'overlay';
     overlay.style.cssText = 'display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9999; align-items:center; justify-content:center;';
-    overlay.innerHTML = '<img id="fullImg" style="max-width:100%; max-height:100%; object-fit:contain;"><div style="position:absolute;bottom:24px;left:0;right:0;text-align:center;font-family:monospace;font-size:.7rem;color:rgba(255,255,255,.3);letter-spacing:.1em;">Pinch to zoom &nbsp;·&nbsp; Tap to close</div>';
+    overlay.innerHTML = '<img id="fullImg" style="max-width:100%; max-height:100%; object-fit:contain;">';
     document.documentElement.appendChild(overlay);
 
     const fullImg = document.getElementById('fullImg');
-    const cameraImg = document.getElementById('homeScreenCam');
 
     let scale = 1, startDist = 0, startScale = 1;
     let translateX = 0, translateY = 0;
@@ -22,9 +22,7 @@ function initCameraViewer() {
     }
 
     function resetTransform() {
-        scale = 1;
-        translateX = 0;
-        translateY = 0;
+        scale = 1; translateX = 0; translateY = 0;
         fullImg.style.transition = 'transform .2s';
         applyTransform();
         setTimeout(() => fullImg.style.transition = '', 200);
@@ -59,22 +57,25 @@ function initCameraViewer() {
         if (e.touches.length < 2 && scale < 1.05) resetTransform();
     }, { passive: true });
 
-    if (cameraImg) {
-        cameraImg.addEventListener('click', () => {
-            fullImg.src = cameraImg.src;
-            overlay.style.display = 'flex';
-        });
-    }
+    document.getElementById('camList').addEventListener('click', e => {
+        const img = e.target.closest('.camera-image');
+        if (!img) return;
+        fullImg.src = img.src;
+        overlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    });
 
     overlay.addEventListener('click', () => {
         overlay.style.display = 'none';
         resetTransform();
+        document.body.style.overflow = '';
     });
 
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape' && overlay.style.display === 'flex') {
             overlay.style.display = 'none';
             resetTransform();
+            document.body.style.overflow = '';
         }
     });
 }

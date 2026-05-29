@@ -9,5 +9,5 @@ ENTRYPOINT ["java", "-jar", "/homebrain.jar"]
 
 #mvn package
 #click the run icon here, Edit 'Dockerfile'... , change image tag to next number
-#docker tag homebrain:12.00 nikistadnik/homebrain:latest
+#docker tag homebrain:12.02 nikistadnik/homebrain:latest
 #docker push nikistadnik/homebrain:latest

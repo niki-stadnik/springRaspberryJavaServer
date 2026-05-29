@@ -13,7 +13,7 @@ function showLights(message) {
         const status = message[key];
         const stringId = `l${numericId}`;
         const card = document.querySelector(`.lamp-card[data-id="${stringId}"]`);
-        if (card && !flag[numericId]) {
+        if (card && !flag[numericId] && numericId < 7) {
             card.classList.toggle('on', status);
         }
     }

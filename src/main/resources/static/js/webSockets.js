@@ -1,8 +1,22 @@
 // ------ communication logic
 var stompClient = null;
 
+let socketConnectionFlag = false;
+
 window.onload = function() {
+    var reloading = sessionStorage.getItem("reloading");
     connect();
+    if (reloading) {
+        sessionStorage.removeItem("reloading");
+    }
+    setTimeout(() => {
+        socketConnectionFlag = true;
+    }, "1000");
+}
+
+function reloadP() {
+    sessionStorage.setItem("reloading", "true");
+    document.location.reload();
 }
 
 

@@ -162,17 +162,11 @@ async function fetchWeather() {
 }
 
 /* ── CAMERA ── */
-function initCamera() {
-    if (!MJPEG_URL) return;
-    const placeholder = document.getElementById("camPlaceholder");
-    if (placeholder) placeholder.remove();
-    const panel = document.getElementById("cameraPanel");
-    if (!panel) return;
-    // avoid adding twice if navigating back
-    if (panel.querySelector('img.cam-frame')) return;
-    const img = document.createElement("img");
-    img.className = "cam-frame"; img.alt = "Camera feed"; img.src = MJPEG_URL;
-    panel.appendChild(img);
+function restartCamera() {
+    const oldCam = document.getElementById('homeScreenCam');
+    if (!oldCam) return;
+    const newCam = oldCam.cloneNode(true);
+    oldCam.replaceWith(newCam);
 }
 
 /* ── INIT HOME PAGE ── */
@@ -182,7 +176,6 @@ function initHome() {
     clearInterval(countdownTimer);
     clearInterval(weatherTimer);
 
-    //initCamera();
     startClock();
     startCountdown();
     initCameraViewer();
@@ -203,4 +196,20 @@ document.addEventListener('pageinit', e => {
 // Also fires when navigating BACK to home (view already exists, pageinit won't fire again)
 document.addEventListener('pageshow', e => {
     if (e.detail?.page === 'home') initHome();
+    handlePageShow();
 });
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") handlePageShow();
+});
+
+function handlePageShow() {
+    console.log("stompClient:", stompClient, socketConnectionFlag);
+    if(stompClient && socketConnectionFlag) {
+        console.log("App resumed. Checking server connection...");
+        if (!stompClient || !stompClient.connected) {
+            console.log("STOMP is not connected. Reconnecting...");
+            connect();
+            restartCamera();
+        } else console.log("Server is alive! Restarting camera feed...");
+    }
+}

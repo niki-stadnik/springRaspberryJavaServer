@@ -5,7 +5,7 @@
     <div class="weather-sidebar">
 
         <div class="wx-header">
-            <div class="wx-clock" id="wxClock">--:--:--</div>
+            <div class="wx-clock" id="wxClock" onclick="reloadP()">--:--:--</div>
             <div class="wx-date" id="wxDate">
                 <span class="wx-date-day">Monday</span>
                 <span class="wx-date-rest">25 May</span>
@@ -99,17 +99,12 @@
 
     <!-- ── CAMERA ── -->
     <div class="camera-panel" id="cameraPanel">
-        <img class="camera-image" src="/camera.frame" alt="Live Camera Stream">
+        <img class="camera-image" src="/camera.frame" alt="Live Camera Stream" id="homeScreenCam">
         <div class="cam-placeholder" id="camPlaceholder">
             <div class="cam-placeholder-icon">📷</div>
             <div class="cam-placeholder-text">Camera feed</div>
             <div class="cam-placeholder-url">No stream from camera!</div>
         </div>
-    </div>
-    <!-- overlay OUTSIDE camera-panel, at the end of your real <body> -->
-    <div class="overlay" id="overlay">
-        <img id="fullImg" src="/camera.frame" alt="Live Camera Stream">
-        <div class="hint">Pinch to zoom &nbsp;·&nbsp; Tap to close</div>
     </div>
 
 </div><!-- /top-row -->
