@@ -128,6 +128,8 @@ body {
     position: relative;
     overflow: hidden;
     user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
 }
 
 .nav-btn::before {
@@ -142,20 +144,19 @@ body {
     transition: opacity 0.18s;
 }
 
-.nav-btn:hover {
-    background: var(--btn-hover);
-    border-color: var(--accent);
-    color: var(--accent);
-}
-
-.nav-btn:hover::before {
-    opacity: 1;
+.nav-btn:hover,
+.nav-btn:focus,
+.nav-btn:focus-visible,
+.nav-btn:focus-within {
+    outline: none;
+    /* intentionally no border/color change here */
 }
 
 .nav-btn.active {
     transform: scale(0.98);
     color: var(--accent, #00d4ff);
     background: var(--btn-hover);
+    border-color: var(--accent);
 }
 
 /* ── LOADING ── */

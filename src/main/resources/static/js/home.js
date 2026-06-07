@@ -107,10 +107,10 @@ function render(data) {
     TARGET_HRS.forEach(hr => {
         const idx = h.time.findIndex(t => new Date(t).getHours() === hr);
         if (idx === -1) return;
-        const temp   = h.temperature_2m[idx];
-        const precip = h.precipitation[idx];
-        const wind   = h.wind_speed_10m[idx];
-        const pp     = h.precipitation_probability[idx] || 0;
+        const temp   = Math.max(h.temperature_2m[idx-1] ?? 0, h.temperature_2m[idx] ?? 0, h.temperature_2m[idx+1] ?? 0);
+        const precip = Math.max(h.precipitation[idx-1] || 0, h.precipitation[idx] || 0, h.precipitation[idx+1] || 0);
+        const wind   = Math.max(h.wind_speed_10m[idx-1] || 0, h.wind_speed_10m[idx] || 0, h.wind_speed_10m[idx+1] || 0);
+        const pp     = Math.max(h.precipitation_probability[idx-1] || 0, h.precipitation_probability[idx] || 0, h.precipitation_probability[idx+1] || 0);
         const [, hicon] = wmo(h.weather_code[idx]);
         const card = document.createElement("div");
         card.className = "hour-card";

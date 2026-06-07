@@ -143,15 +143,26 @@
             grid.classList.add('hidden');
             backBar.classList.add('visible');
             requestAnimationFrame(() => $('#cpanel-' + tile.id).classList.add('visible'));
+            // Push a history entry so back gesture is interceptable
+            history.pushState({ page: 'controls', panel: tile.id }, '', '#controls');
         }
 
-        backBtn.addEventListener('click', () => {
-            if (!current) return;
+        function closePanel() {
+            if (!current) return false;
             $('#cpanel-' + current).classList.remove('visible');
             grid.classList.remove('hidden');
             backBar.classList.remove('visible');
             current = null;
+            return true;
+        }
+
+        backBtn.addEventListener('click', () => {
+            closePanel();
+            // Push state back so the router's history buffer stays consistent
+            history.pushState({ page: 'controls' }, '', '#controls');
         });
+        // Expose to the router so it can delegate back presses
+        window.__controlsHandleBack = () => closePanel();
 
         /* ── Generic toggle switches ── */
         $$('[data-sw]').forEach(sw => sw.addEventListener('click', () => sw.classList.toggle('on')));
