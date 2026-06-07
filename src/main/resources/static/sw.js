@@ -1,4 +1,4 @@
-const CACHE = 'hud-v1';
+const CACHE = 'hud-v4';
 
 const PRECACHE = [
   '/',
@@ -24,20 +24,22 @@ const PRECACHE = [
   '/pages/console.html',
   '/icons/icon-512.png',
   '/icons/icon-192.png',
+  '/screenshots/desktop.png',
+  '/screenshots/mobile.png',
   '/manifest.json',
 ];
 
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(PRECACHE)).then(() => self.skipWaiting())
+      caches.open(CACHE).then(c => c.addAll(PRECACHE)).then(() => self.skipWaiting())
   );
 });
 
 self.addEventListener('activate', e => {
   e.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
-      .then(() => self.clients.claim())
+      caches.keys()
+          .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+          .then(() => self.clients.claim())
   );
 });
 
@@ -48,17 +50,20 @@ self.addEventListener('fetch', e => {
   // Never intercept WebSocket upgrades or API calls
   if (request.headers.get('upgrade') === 'websocket') return;
   if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/ws')) return;
+  if (url.pathname.startsWith('/stomp-endpoint')) return;
 
   // webjars and external resources: network with cache fallback
   if (url.pathname.startsWith('/webjars/') || url.origin !== self.location.origin) {
     e.respondWith(
-      fetch(request)
-        .then(res => {
-          const clone = res.clone();
-          caches.open(CACHE).then(c => c.put(request, clone));
-          return res;
-        })
-        .catch(() => caches.match(request))
+        fetch(request)
+            .then(res => {
+              if (res.ok && res.type !== 'opaque') {
+                const clone = res.clone();
+                caches.open(CACHE).then(c => c.put(request, clone));
+              }
+              return res;
+            })
+            .catch(() => caches.match(request))
     );
     return;
   }
@@ -66,20 +71,28 @@ self.addEventListener('fetch', e => {
   // SPA navigation: network-first, fallback to cached index
   if (request.mode === 'navigate') {
     e.respondWith(
-      fetch(request)
-        .catch(() => caches.match('/'))
+        fetch(request)
+            .catch(() => caches.match('/'))
     );
     return;
   }
 
   // Static assets: cache-first, update in background
   e.respondWith(
-    caches.match(request).then(cached => {
-      const network = fetch(request).then(res => {
-        caches.open(CACHE).then(c => c.put(request, res.clone()));
-        return res;
-      });
-      return cached || network;
-    })
+      caches.match(request).then(cached => {
+        const networkFetch = fetch(request).then(res => {
+          try {
+            if (res.ok && res.type !== 'opaque' && request.method === 'GET') {
+              const clone = res.clone();
+              caches.open(CACHE).then(c => c.put(request, clone));
+            }
+          } catch (e) {
+            // ignore clone errors
+          }
+          return res;
+        }).catch(() => cached);
+
+        return cached || networkFetch;
+      })
   );
 });

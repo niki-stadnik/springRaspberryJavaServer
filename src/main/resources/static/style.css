@@ -7,17 +7,13 @@
 
 html, body {
     width: 100%;
-    height: 100%;
+    height: 100dvh;
+    overflow: hidden;
     background: var(--bg);
     color: var(--text);
     font-family: 'Rajdhani', sans-serif;
 }
 
-@media (orientation: landscape) {
-    html, body {
-        overflow: hidden;
-    }
-}
 
 /* grid bg */
 body {
@@ -32,7 +28,7 @@ body {
     display: flex;
     flex-direction: column;
     grid-template-rows: 1fr auto;
-    height: 100vh;
+    height: 100dvh;
     padding: 14px 16px;
     gap: 12px;
     box-sizing: border-box;
@@ -199,15 +195,11 @@ body {
 ═══════════════════════════════ */
 @media (orientation: portrait) {
     body {
-        overflow-y: auto;
-        overflow-x: hidden;
-        height: auto;
+        overflow: hidden;
     }
 
     .hud {
-        grid-template-rows: auto auto auto;
-        height: auto;
-        min-height: 100vh;
+        height: 100dvh;
         padding: 12px;
         gap: 10px;
     }

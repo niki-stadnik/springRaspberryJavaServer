@@ -3,7 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#000000">
   <title>Smart Home HUD</title>
+  <script>
+    window.addEventListener('load', () => {
+      document.documentElement.style.height = window.innerHeight + 'px';
+      document.querySelector('.hud').style.height = window.innerHeight + 'px';
+    });
+
+    window.addEventListener('resize', () => {
+      document.documentElement.style.height = window.innerHeight + 'px';
+      document.querySelector('.hud').style.height = window.innerHeight + 'px';
+    });
+  </script>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#0a0e1a">
   <meta name="mobile-web-app-capable" content="yes">
@@ -28,6 +40,8 @@
   <script src="/js/webSockets.js"></script>
   <script src="/js/lightsComs.js"></script>
   <script src="/js/controlsComs.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 </head>
 <body>
 
