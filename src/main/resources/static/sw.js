@@ -15,8 +15,6 @@ const PRECACHE = [
   '/js/lightsComs.js',
   '/js/lights.js',
   '/js/controlsComs.js',
-  '/js/doorCam.js',
-  '/js/allCams.js',
   '/js/controls.js',
   '/js/console.js',
   '/pages/home.html',

@@ -166,7 +166,26 @@ function restartCamera() {
     const oldCam = document.getElementById('homeScreenCam');
     if (!oldCam) return;
     const newCam = oldCam.cloneNode(true);
+    // Re-attach the click listener on the fresh element
+    newCam.addEventListener('click', () => window.openCameraOverlay(newCam.src));
     oldCam.replaceWith(newCam);
+}
+
+/* ── CAMERA VIEWER (home screen) ──
+   No overlay is created here. The overlay lives in spa-router.js and is
+   initialised once at app boot via initOverlay(). This function only wires
+   the click trigger on the home-screen camera image.
+── */
+function initCameraViewer() {
+    const cameraImg = document.getElementById('homeScreenCam');
+    if (cameraImg) {
+        // Remove any previously attached listener by replacing with a clone,
+        // then attach a fresh one. This prevents duplicate listeners when
+        // initHome() is called multiple times (e.g. navigating back to home).
+        const fresh = cameraImg.cloneNode(true);
+        cameraImg.replaceWith(fresh);
+        fresh.addEventListener('click', () => window.openCameraOverlay(fresh.src));
+    }
 }
 
 /* ── INIT HOME PAGE ── */

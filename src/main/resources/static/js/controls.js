@@ -104,6 +104,27 @@
     },];
 
     /* ══════════════════════════════════════════════════
+   CAMERA VIEWER (cameras panel)
+   No overlay is created here. The overlay lives in
+   spa-router.js and is initialised once at app boot.
+   This function only wires the delegated click
+   trigger on the #camList container.
+
+   Called once from boot() below — it is NOT called
+   on every panel open, so there is no risk of
+   duplicate listeners accumulating over time.
+══════════════════════════════════════════════════ */
+    function initConfigCameraViewers(root) {
+        const camList = root.querySelector('#camList');
+        if (!camList) return;
+
+        camList.addEventListener('click', e => {
+            const img = e.target.closest('.camera-image');
+            if (img) window.openCameraOverlay(img.src);
+        });
+    }
+
+    /* ══════════════════════════════════════════════════
        INIT
     ══════════════════════════════════════════════════ */
     function initControls(root) {
@@ -337,7 +358,7 @@
         const root = spaRoot || document;
         if (root.querySelector('#ctrlGrid')) {
             initControls(root);
-            initConfigCameraViewers();
+            initConfigCameraViewers(root);
         }
         getDeviceStatuses();
     }
