@@ -257,6 +257,7 @@
 
          */
 
+
         // ── SCENES ──
         const sg = $('#scenesGrid');
         SCENES.forEach(sc => {
@@ -340,6 +341,39 @@
                 root.querySelector('#lsub-' + tab.dataset.ltab).classList.add('active');
             });
         });
+
+        
+        // ── SWIPE NAVIGATION ──
+        const subContainer = root.querySelector('.lsub.active').parentElement;
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        subContainer.addEventListener('touchstart', e => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        subContainer.addEventListener('touchend', e => {
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            const dy = e.changedTouches[0].clientY - touchStartY;
+
+            // Ignore if mostly vertical (scrolling)
+            if (Math.abs(dy) > Math.abs(dx)) return;
+            // Ignore short swipes
+            if (Math.abs(dx) < 50) return;
+
+            const tabs = [...root.querySelectorAll('.ltab')];
+            const activeTab = root.querySelector('.ltab.active');
+            const currentIndex = tabs.indexOf(activeTab);
+
+            const nextIndex = dx < 0
+                ? Math.min(currentIndex + 1, tabs.length - 1)  // swipe left → next
+                : Math.max(currentIndex - 1, 0);               // swipe right → prev
+
+            if (nextIndex !== currentIndex) {
+                tabs[nextIndex].click(); // reuse your existing tab click logic
+            }
+        }, { passive: true });
     }
 
     // Bootstrap — works in both SPA (script re-executed after DOM inject)
