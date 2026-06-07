@@ -795,3 +795,82 @@
 .cp-lock-btns .cp-btn {
     margin: 0;
 }
+
+
+
+/* ── app links panel ── */
+.cp-applink-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cp-applink-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: rgba(0, 255, 200, .03);
+    border: 1px solid rgba(0, 255, 200, .08);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background .18s, border-color .18s;
+    cursor: pointer;
+}
+
+.cp-applink-row:hover {
+    background: rgba(0, 255, 200, .07);
+    border-color: rgba(0, 255, 200, .25);
+}
+
+.cp-applink-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.cp-applink-icon--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 255, 200, .1);
+    color: rgba(0, 255, 200, .5);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .8rem;
+}
+
+.cp-applink-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.cp-applink-name {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .65rem;
+    letter-spacing: .1em;
+    color: rgba(180, 220, 210, .75);
+    text-transform: uppercase;
+}
+
+.cp-applink-desc {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .52rem;
+    letter-spacing: .08em;
+    color: rgba(180, 220, 210, .3);
+    margin-top: 2px;
+}
+
+.cp-applink-arrow {
+    width: 14px;
+    height: 14px;
+    color: rgba(0, 255, 200, .3);
+    flex-shrink: 0;
+    transition: color .18s, transform .18s;
+}
+
+.cp-applink-row:hover .cp-applink-arrow {
+    color: rgba(0, 255, 200, .7);
+    transform: translateX(2px);
+}
