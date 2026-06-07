@@ -161,15 +161,6 @@ async function fetchWeather() {
     }
 }
 
-/* ── CAMERA ── */
-function restartCamera() {
-    const oldCam = document.getElementById('homeScreenCam');
-    if (!oldCam) return;
-    const newCam = oldCam.cloneNode(true);
-    // Re-attach the click listener on the fresh element
-    newCam.addEventListener('click', () => window.openCameraOverlay(newCam.src));
-    oldCam.replaceWith(newCam);
-}
 
 /* ── CAMERA VIEWER (home screen) ──
    No overlay is created here. The overlay lives in spa-router.js and is
@@ -229,6 +220,7 @@ function handlePageShow() {
             console.log("STOMP is not connected. Reconnecting...");
             connect();
             restartCamera();
+            restartControlsCamera();
         } else console.log("Server is alive! Restarting camera feed...");
     }
 }
