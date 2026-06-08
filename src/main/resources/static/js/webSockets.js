@@ -59,7 +59,7 @@ function connect() {
             }
         });
         stompClient.subscribe('/topic/client/bathroomFan', function(message) {
-            const card = document.getElementById("sendBFAuto");
+            const card = document.getElementById("sendBFAuto1");
             if (card) {
                 showBFan(JSON.parse(message.body));
             } else {

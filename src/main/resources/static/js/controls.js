@@ -227,6 +227,19 @@
         /* ════════════════
            BATHROOM
         ════════════════ */
+
+        document.getElementById('bth-hum-min').addEventListener('input', function(e) {
+            updateFanTriggers(e.target.value, 'minHum1');
+        });
+        document.getElementById('bth-hum-max').addEventListener('input', function(e) {
+            updateFanTriggers(e.target.value, 'maxHum1');
+        });
+        document.getElementById('bth-hum-min2').addEventListener('input', function(e) {
+            updateFanTriggers(e.target.value, 'minHum2');
+        });
+        document.getElementById('bth-hum-max2').addEventListener('input', function(e) {
+            updateFanTriggers(e.target.value, 'maxHum2');
+        });
         /*
                 const fanBtns = $$('.cp-fan-btn');
                 const autoCfg = $('#bth-auto-cfg');

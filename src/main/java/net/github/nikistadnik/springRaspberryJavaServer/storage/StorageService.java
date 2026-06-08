@@ -64,7 +64,7 @@ public class StorageService {
                 .bathTemp2(deviceRegistry.bathroomFanState().bathTemp2())
                 .bathHum1(deviceRegistry.bathroomFanState().bathHum1())
                 .bathHum2(deviceRegistry.bathroomFanState().bathHum2())
-                .bathFan(deviceRegistry.bathroomFanState().bathFan())
+                .bathFan(deviceRegistry.bathroomFanState().bathFan1())
                 .light0(deviceRegistry.lightSwitchState().light()[0].get())
                 .light1(deviceRegistry.lightSwitchState().light()[1].get())
                 .light2(deviceRegistry.lightSwitchState().light()[2].get())

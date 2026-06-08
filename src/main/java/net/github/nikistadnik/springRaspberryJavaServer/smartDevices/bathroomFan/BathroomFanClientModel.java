@@ -13,7 +13,16 @@ import lombok.experimental.Accessors;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class BathroomFanClientModel {
 
-    private boolean bathFanCommand = false;
-    private boolean auto = true;
+    private int[] modeFan = {0, 0};
+    /*
+    0=no action
+    1=fan off
+    2=fan on
+    3=fan auto
+     */
+    private int minHum1 = 0;
+    private int maxHum1 = 0;
+    private int minHum2 = 0;
+    private int maxHum2 = 0;
 
 }

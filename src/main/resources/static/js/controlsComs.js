@@ -1,39 +1,47 @@
 //BathroomFan
 
 function showBFan(message) {
-    if (message.bathFan){
-        document.getElementById("sendBFOn").classList.add('active');
-        document.getElementById("sendBFOff").classList.remove('active');
+    if (message.bathFan1){
+        document.getElementById("sendBFOn1").classList.add('active');
+        document.getElementById("sendBFOff1").classList.remove('active');
     }else{
-        document.getElementById("sendBFOff").classList.add('active');
-        document.getElementById("sendBFOn").classList.remove('active');
+        document.getElementById("sendBFOff1").classList.add('active');
+        document.getElementById("sendBFOn1").classList.remove('active');
+    }
+    if (message.bathFan2){
+        document.getElementById("sendBFOn2").classList.add('active');
+        document.getElementById("sendBFOff2").classList.remove('active');
+    }else{
+        document.getElementById("sendBFOff2").classList.add('active');
+        document.getElementById("sendBFOn2").classList.remove('active');
     }
     document.getElementById("bathTemp1").textContent = message.bathTemp1;
     document.getElementById("bathTemp2").textContent = message.bathTemp2;
     document.getElementById("bathHum1").textContent = message.bathHum1;
     document.getElementById("bathHum2").textContent = message.bathHum2;
-    if(message.auto) document.getElementById("sendBFAuto").classList.add('active');
-    else document.getElementById("sendBFAuto").classList.remove('active');
+    if(message.auto1) document.getElementById("sendBFAuto1").classList.add('active');
+    else document.getElementById("sendBFAuto1").classList.remove('active');
+    if(message.auto2) document.getElementById("sendBFAuto2").classList.add('active');
+    else document.getElementById("sendBFAuto2").classList.remove('active');
+    const el1 = document.getElementById("bth-hum-min");
+    if (el1.value != message.minHum1) el1.value = message.minHum1;
+    const el2 = document.getElementById("bth-hum-max");
+    if (el2.value != message.maxHum1) el2.value = message.maxHum1;
+    const el3 = document.getElementById("bth-hum-min2");
+    if (el3.value != message.minHum2) el3.value = message.minHum2;
+    const el4 = document.getElementById("bth-hum-max2");
+    if (el4.value != message.maxHum2) el4.value = message.maxHum2;
 }
 
-
-function sendBFOn() {
-    document.getElementById("sendBFOn").classList.add('active');
-    document.getElementById("sendBFOff").classList.remove('active');
-    document.getElementById("sendBFAuto").classList.remove('active');
-    stompClient.send("/app/client/bathroomFan", {}, JSON.stringify({'bathFanCommand': true,'auto': false}));
+function sendBF(fan, mode) {
+    let data = [0, 0];
+    data[fan] = mode;
+    const payload = {modeFan: data};
+    stompClient.send("/app/client/bathroomFan", {}, JSON.stringify(payload));
 }
-function sendBFOff() {
-    document.getElementById("sendBFOff").classList.add('active');
-    document.getElementById("sendBFOn").classList.remove('active');
-    document.getElementById("sendBFAuto").classList.remove('active');
-    stompClient.send("/app/client/bathroomFan", {}, JSON.stringify({'bathFanCommand': false,'auto': false}));
-}
-function sendBFAuto() {
-    document.getElementById("sendBFAuto").classList.add('active');
-    document.getElementById("sendBFOn").classList.remove('active');
-    document.getElementById("sendBFOff").classList.remove('active');
-    stompClient.send("/app/client/bathroomFan", {}, JSON.stringify({'bathFanCommand': false,'auto': true}));
+function updateFanTriggers(value, variable){
+    const payload = { [variable]: value };
+    stompClient.send("/app/client/bathroomFan", {}, JSON.stringify(payload));
 }
 
 

@@ -32,35 +32,35 @@
 
       <div class="cp-section">Вентилатор</div>
       <div class="cp-fan-btns">
-        <button class="cp-fan-btn" data-fan="off" id="sendBFOff" onclick="sendBFOff()">Изкл.</button>
-        <button class="cp-fan-btn active" data-fan="auto" id="sendBFAuto" onclick="sendBFAuto()">Авто</button>
-        <button class="cp-fan-btn" data-fan="on" id="sendBFOn" onclick="sendBFOn()">Вкл.</button>
+        <button class="cp-fan-btn" data-fan="off" id="sendBFOff1" onclick="sendBF(0, 1)">Изкл.</button>
+        <button class="cp-fan-btn active" data-fan="auto" id="sendBFAuto1" onclick="sendBF(0, 3)">Авто</button>
+        <button class="cp-fan-btn" data-fan="on" id="sendBFOn1" onclick="sendBF(0, 2)">Вкл.</button>
       </div>
       <div class="cp-fan-auto-cfg" id="bth-auto-cfg">
         <div class="cp-input-row">
           <label class="cp-input-lbl">Мин. влажност <span class="cp-input-unit">%</span></label>
-          <input class="cp-input" type="number" min="0" max="100" value="60" id="bth-hum-min">
+          <input class="cp-input" type="number" min="0" max="100" value="0" id="bth-hum-min">
         </div>
         <div class="cp-input-row">
           <label class="cp-input-lbl">Макс. влажност <span class="cp-input-unit">%</span></label>
-          <input class="cp-input" type="number" min="0" max="100" value="80" id="bth-hum-max">
+          <input class="cp-input" type="number" min="0" max="100" value="0" id="bth-hum-max">
         </div>
       </div>
 
       <div class="cp-section">Вентилатор Щрангове</div>
       <div class="cp-fan-btns">
-        <button class="cp-fan-btn" data-fan="off" id="sendBFOff2" onclick="sendBFOff()">Изкл.</button>
-        <button class="cp-fan-btn active" data-fan="auto" id="sendBFAuto2" onclick="sendBFAuto()">Авто</button>
-        <button class="cp-fan-btn" data-fan="on" id="sendBFOn2" onclick="sendBFOn()">Вкл.</button>
+        <button class="cp-fan-btn" data-fan="off" id="sendBFOff2" onclick="sendBF(1, 1)">Изкл.</button>
+        <button class="cp-fan-btn active" data-fan="auto" id="sendBFAuto2" onclick="sendBF(1, 3)">Авто</button>
+        <button class="cp-fan-btn" data-fan="on" id="sendBFOn2" onclick="sendBF(1, 2)">Вкл.</button>
       </div>
       <div class="cp-fan-auto-cfg" id="bth-auto-cfg2">
         <div class="cp-input-row">
           <label class="cp-input-lbl">Мин. влажност <span class="cp-input-unit">%</span></label>
-          <input class="cp-input" type="number" min="0" max="100" value="60" id="bth-hum-min2">
+          <input class="cp-input" type="number" min="0" max="100" value="0" id="bth-hum-min2">
         </div>
         <div class="cp-input-row">
           <label class="cp-input-lbl">Макс. влажност <span class="cp-input-unit">%</span></label>
-          <input class="cp-input" type="number" min="0" max="100" value="80" id="bth-hum-max2">
+          <input class="cp-input" type="number" min="0" max="100" value="0" id="bth-hum-max2">
         </div>
 
       </div>
