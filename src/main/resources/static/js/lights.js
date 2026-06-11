@@ -347,19 +347,22 @@
         const subContainer = root.querySelector('.lsub.active').parentElement;
         let touchStartX = 0;
         let touchStartY = 0;
+        let touchStartedOnSlider = false;
 
         subContainer.addEventListener('touchstart', e => {
+            touchStartedOnSlider = e.target.closest('input[type="range"]') !== null;
             touchStartX = e.touches[0].clientX;
             touchStartY = e.touches[0].clientY;
         }, { passive: true });
 
         subContainer.addEventListener('touchend', e => {
+            // Don't steal the gesture if it started on a slider
+            if (touchStartedOnSlider) return;
+
             const dx = e.changedTouches[0].clientX - touchStartX;
             const dy = e.changedTouches[0].clientY - touchStartY;
 
-            // Ignore if mostly vertical (scrolling)
             if (Math.abs(dy) > Math.abs(dx)) return;
-            // Ignore short swipes
             if (Math.abs(dx) < 50) return;
 
             const tabs = [...root.querySelectorAll('.ltab')];
@@ -367,11 +370,11 @@
             const currentIndex = tabs.indexOf(activeTab);
 
             const nextIndex = dx < 0
-                ? Math.min(currentIndex + 1, tabs.length - 1)  // swipe left → next
-                : Math.max(currentIndex - 1, 0);               // swipe right → prev
+                ? Math.min(currentIndex + 1, tabs.length - 1)
+                : Math.max(currentIndex - 1, 0);
 
             if (nextIndex !== currentIndex) {
-                tabs[nextIndex].click(); // reuse your existing tab click logic
+                tabs[nextIndex].click();
             }
         }, { passive: true });
     }

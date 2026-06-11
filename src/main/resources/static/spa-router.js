@@ -216,23 +216,3 @@ function clearStuckHover() {
   t.dispatchEvent(new TouchEvent('touchend', { bubbles: true }));
   document.body.removeChild(t);
 }
-
-
-/* ── CAMERA ── */
-function restartCamera() {
-  const oldCam = document.getElementById('homeScreenCam');
-  if (!oldCam) return;
-  const newCam = oldCam.cloneNode(true);
-  // Re-attach the click listener on the fresh element
-  newCam.addEventListener('click', () => window.openCameraOverlay(newCam.src));
-  oldCam.replaceWith(newCam);
-}
-function restartControlsCamera() {
-  const camList = document.getElementById('camList');
-  if (!camList) return;
-  camList.querySelectorAll('.camera-image').forEach(oldCam => {
-    const newCam = oldCam.cloneNode(true);
-    oldCam.replaceWith(newCam);
-    // click is handled by delegation on #camList so no listener needed here
-  });
-}

@@ -100,6 +100,7 @@
             <div class="cp-toggle-label">Grow лампа</div>
             <div class="cp-toggle-sub" id="light-status-txt">Изключена</div>
           </div>
+          <div id="light-indicator" class="cp-light-indicator cp-light-indicator--off">OFF</div>
           <div class="cp-sw" data-sw id="light-sw"></div>
         </div>
         <div class="cp-hc-fields">
@@ -127,13 +128,17 @@
         <div class="cp-hc-fields">
           <div class="cp-input-row">
             <label class="cp-input-lbl">Начало</label>
-            <input class="cp-input" type="time" value="07:30" id="water-start">
+            <input class="cp-input" type="time" id="water-start">
           </div>
           <div class="cp-input-row">
             <label class="cp-input-lbl">Продълж. <span class="cp-input-unit">сек</span></label>
-            <input class="cp-input" type="number" min="5" max="120" value="30" id="water-dur">
+            <input class="cp-input" type="number" min="5" max="120" id="water-dur">
           </div>
-          <button class="cp-btn primary" id="water-submit">Запази</button>
+          <div class="cp-input-row">
+            <label class="cp-input-lbl">Сигнал при влажност <span class="cp-input-unit">%</span></label>
+            <input class="cp-input" type="number" min="0" max="100" id="moisture-alert-threshold">
+          </div>
+          <button class="cp-btn primary" id="water-submit" onclick="readWaters()">Запази</button>
         </div>
       </div>
     </div>

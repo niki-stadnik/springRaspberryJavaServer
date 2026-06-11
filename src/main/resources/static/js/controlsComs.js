@@ -72,10 +72,19 @@ function showFrameRate(message){
 
 function setLightSwitch(isOn) {
     const lightSw  = document.getElementById('light-sw');
+    const lightIndicator = document.getElementById('light-indicator');
     const lightTxt = document.getElementById('light-status-txt');
-    if (!lightSw || !lightTxt) return;
+    if (!lightSw || !lightTxt || !lightIndicator) return;
     lightSw.classList.toggle('on', isOn);
+}
+function setLightIndicator(isOn) {
+    const lightSw  = document.getElementById('light-sw');
+    const lightIndicator = document.getElementById('light-indicator');
+    const lightTxt = document.getElementById('light-status-txt');
+    if (!lightSw || !lightTxt || !lightIndicator) return;
     lightTxt.textContent = isOn ? 'Включена' : 'Изключена';
+    lightIndicator.textContent = isOn ? 'ON' : 'OFF';
+    lightIndicator.className = 'cp-light-indicator ' + (isOn ? 'cp-light-indicator--on' : 'cp-light-indicator--off');
 }
 
 function setWaterSwitch(isOn) {
@@ -95,8 +104,15 @@ function showPotData(message){
     if (!startInput.value) document.getElementById('light-start').value = message.herbLightStartTime;
     const endInput = document.getElementById('light-end');
     if (!endInput.value) document.getElementById('light-end').value = message.herbLightEndTime;
-    setLightSwitch(message.herbLight);
-    //setWaterSwitch(message.waterAuto);
+    setLightSwitch(message.herbLightAuto);
+    setLightIndicator(message.herbLight);
+    setWaterSwitch(message.herbWaterAuto);
+    const waterInput = document.getElementById('water-start');
+    if (!waterInput.value) document.getElementById('water-start').value = message.herbWaterTime;
+    const waterDur = document.getElementById('water-dur');
+    if (!waterDur.value) document.getElementById('water-dur').value = message.waterDuration;
+    const waterAlert = document.getElementById('moisture-alert-threshold');
+    if (!waterAlert.value) document.getElementById('moisture-alert-threshold').value = message.humAlert;
 }
 
 
@@ -114,6 +130,12 @@ function readTimes() {
     stompClient.send("/app/client/herbPot", {}, JSON.stringify({'command': 5, 'herbLightStartTime': start, 'herbLightEndTime': end}));
     console.log(start); // e.g. "22:00"
     console.log(end);   // e.g. "02:00"
+}
+function readWaters() {
+    const start = document.getElementById("water-start").value;
+    const dur = document.getElementById("water-dur").value;
+    const alert = document.getElementById("moisture-alert-threshold").value;
+    stompClient.send("/app/client/herbPot", {}, JSON.stringify({'command': 6, 'herbWaterTime': start, 'waterDuration': dur, 'humAlert': alert}));
 }
 
 

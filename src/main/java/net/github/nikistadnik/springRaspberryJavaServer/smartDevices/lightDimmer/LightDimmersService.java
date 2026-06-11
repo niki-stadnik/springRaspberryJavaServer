@@ -29,6 +29,11 @@ public class LightDimmersService extends SmartDevice<LightDimmerModel, LightDimm
     }
 
     @Override
+    protected void loadVariables() {
+
+    }
+
+    @Override
     protected void handleDeviceData(LightDimmerModel data) {
         messaging.convertAndSend("/topic/dimmersClient", data);
         System.out.println(data);

@@ -45,6 +45,16 @@ public class BathroomFanService extends SmartDevice<BathroomFanModel, BathroomFa
     }
 
     @Override
+    protected void loadVariables() {
+        deviceRegistry.bathroomFanState().minHum1(appVariablesService.getInt("bathroom.fan.1.minHum", 55));
+        deviceRegistry.bathroomFanState().maxHum1(appVariablesService.getInt("bathroom.fan.1.maxHum", 70));
+        deviceRegistry.bathroomFanState().minHum2(appVariablesService.getInt("bathroom.fan.2.minHum", 70));
+        deviceRegistry.bathroomFanState().maxHum2(appVariablesService.getInt("bathroom.fan.2.maxHum", 80));
+        deviceRegistry.bathroomFanState().auto1(appVariablesService.getBoolean("bathroom.fan.1.auto", true));
+        deviceRegistry.bathroomFanState().auto2(appVariablesService.getBoolean("bathroom.fan.2.auto", true));
+    }
+
+    @Override
     protected void handleDeviceData(BathroomFanModel data) {
         deviceRegistry.bathroomFanState().bathTemp1(data.getBathTemp1());
         deviceRegistry.bathroomFanState().bathTemp2(data.getBathTemp2());
@@ -76,17 +86,35 @@ public class BathroomFanService extends SmartDevice<BathroomFanModel, BathroomFa
     @Override
     protected void handleClientData(BathroomFanClientModel data) {
         log.info(data.toString());
-        if (data.maxHum1() != 0) deviceRegistry.bathroomFanState().maxHum1(data.maxHum1());
-        if (data.maxHum2() != 0) deviceRegistry.bathroomFanState().maxHum2(data.maxHum2());
-        if (data.minHum1() != 0) deviceRegistry.bathroomFanState().minHum1(data.minHum1());
-        if (data.minHum2() != 0) deviceRegistry.bathroomFanState().minHum2(data.minHum2());
+        if (data.maxHum1() != 0) {
+            appVariablesService.setInt("bathroom.fan.1.maxHum", data.maxHum1());
+            deviceRegistry.bathroomFanState().maxHum1(data.maxHum1());
+        }
+        if (data.maxHum2() != 0) {
+            appVariablesService.setInt("bathroom.fan.2.maxHum", data.maxHum2());
+            deviceRegistry.bathroomFanState().maxHum2(data.maxHum2());
+        }
+        if (data.minHum1() != 0) {
+            appVariablesService.setInt("bathroom.fan.1.minHum", data.minHum1());
+            deviceRegistry.bathroomFanState().minHum1(data.minHum1());
+        }
+        if (data.minHum2() != 0) {
+            appVariablesService.setInt("bathroom.fan.2.minHum", data.minHum2());
+            deviceRegistry.bathroomFanState().minHum2(data.minHum2());
+        }
         for (int i = 0; i < 2; i++) {
             if (data.modeFan()[i] != 0) { //0 = no action
                 switch (data.modeFan()[i]) {
                     case 1:               //1 = off
                         deviceRegistry.bathroomFanState().requestedFanState()[i] = false;
-                        if (i == 0) deviceRegistry.bathroomFanState().auto1(false);
-                        else deviceRegistry.bathroomFanState().auto2(false);
+                        if (i == 0) {
+                            deviceRegistry.bathroomFanState().auto1(false);
+                            appVariablesService.setBoolean("bathroom.fan.1.auto", false);
+                        }
+                        else {
+                            deviceRegistry.bathroomFanState().auto2(false);
+                            appVariablesService.setBoolean("bathroom.fan.2.auto", false);
+                        }
                         if (!commandFlag) {
                             commandFlag = true;
                             equalizer();
@@ -94,16 +122,28 @@ public class BathroomFanService extends SmartDevice<BathroomFanModel, BathroomFa
                         break;
                     case 2:             //2 = on
                         deviceRegistry.bathroomFanState().requestedFanState()[i] = true;
-                        if (i == 0) deviceRegistry.bathroomFanState().auto1(false);
-                        else deviceRegistry.bathroomFanState().auto2(false);
+                        if (i == 0) {
+                            deviceRegistry.bathroomFanState().auto1(false);
+                            appVariablesService.setBoolean("bathroom.fan.1.auto", false);
+                        }
+                        else {
+                            deviceRegistry.bathroomFanState().auto2(false);
+                            appVariablesService.setBoolean("bathroom.fan.2.auto", false);
+                        }
                         if (!commandFlag) {
                             commandFlag = true;
                             equalizer();
                         }
                         break;
                     case 3:             //3 = auto
-                        if (i == 0) deviceRegistry.bathroomFanState().auto1(true);
-                        else deviceRegistry.bathroomFanState().auto2(true);
+                        if (i == 0) {
+                            deviceRegistry.bathroomFanState().auto1(true);
+                            appVariablesService.setBoolean("bathroom.fan.1.auto", true);
+                        }
+                        else {
+                            deviceRegistry.bathroomFanState().auto2(true);
+                            appVariablesService.setBoolean("bathroom.fan.2.auto", true);
+                        }
                         break;
                 }
             }
@@ -134,6 +174,7 @@ public class BathroomFanService extends SmartDevice<BathroomFanModel, BathroomFa
                 if (deviceRegistry.bathroomFanState().auto1()) {
                     log.info("button auto off, fan off");
                     deviceRegistry.bathroomFanState().auto1(false);
+                    appVariablesService.setBoolean("bathroom.fan.1.auto", false);
                     deviceRegistry.bathroomFanState().requestedFanState()[0] = false;
                     if (!commandFlag) {
                         commandFlag = true;
@@ -142,6 +183,7 @@ public class BathroomFanService extends SmartDevice<BathroomFanModel, BathroomFa
                 } else {
                     log.info("button auto on, fan on");
                     deviceRegistry.bathroomFanState().auto1(true);
+                    appVariablesService.setBoolean("bathroom.fan.1.auto", true);
                     deviceRegistry.bathroomFanState().requestedFanState()[0] = true;
                     if (!commandFlag) {
                         commandFlag = true;
@@ -151,6 +193,7 @@ public class BathroomFanService extends SmartDevice<BathroomFanModel, BathroomFa
             } else {
                 log.info("button auto off, fan on (hold)");
                 deviceRegistry.bathroomFanState().auto1(false);
+                appVariablesService.setBoolean("bathroom.fan.1.auto", false);
                 deviceRegistry.bathroomFanState().requestedFanState()[0] = true;
                 if (!commandFlag) {
                     commandFlag = true;

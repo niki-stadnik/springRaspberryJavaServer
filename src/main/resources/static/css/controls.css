@@ -617,6 +617,9 @@
     right: 0;
     padding: 8px 10px;
     background: linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, transparent 100%);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
     z-index: 2;
 }
 
@@ -673,6 +676,12 @@
     letter-spacing: .12em;
     color: rgba(180, 220, 210, .4);
     text-transform: uppercase;
+}
+
+.cp-cam-ind--overlay {
+    margin-top: 2px;
+    flex-shrink: 0;
+    
 }
 
 .cp-cam-actions {
@@ -745,6 +754,34 @@
     display: flex;
     flex-direction: column;
     gap: 0;
+}
+
+/* ── grow light indicator pill ── */
+.cp-light-indicator {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .58rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid;
+    transition: background .35s, border-color .35s, color .35s, box-shadow .35s;
+    flex-shrink: 0;
+    margin-right: 8px;
+}
+
+.cp-light-indicator--off {
+    background: rgba(180, 220, 210, .04);
+    border-color: rgba(180, 220, 210, .15);
+    color: rgba(180, 220, 210, .3);
+    box-shadow: none;
+}
+
+.cp-light-indicator--on {
+    background: rgba(255, 220, 60, .12);
+    border-color: rgba(255, 220, 60, .5);
+    color: rgba(255, 220, 60, .95);
+    box-shadow: 0 0 10px rgba(255, 220, 60, .2), inset 0 0 6px rgba(255, 220, 60, .08);
 }
 
 /* ── door lock ── */

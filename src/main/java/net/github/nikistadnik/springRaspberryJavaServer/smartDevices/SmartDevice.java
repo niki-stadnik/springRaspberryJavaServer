@@ -1,8 +1,10 @@
 package net.github.nikistadnik.springRaspberryJavaServer.smartDevices;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import net.github.nikistadnik.springRaspberryJavaServer.discord.DiscordServiceBE;
+import net.github.nikistadnik.springRaspberryJavaServer.offlineVariables.AppVariablesService;
 import net.github.nikistadnik.springRaspberryJavaServer.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +31,8 @@ public abstract class SmartDevice<T, U> implements DeviceService {
     protected Environment env;
     @Autowired
     protected ObjectMapper objectMapper;
+    @Autowired
+    protected AppVariablesService appVariablesService;
 
 
     protected boolean active = false;
@@ -55,6 +59,12 @@ public abstract class SmartDevice<T, U> implements DeviceService {
         this.deviceModelType = provideDeviceModel();
         this.clientModelType = provideClientModel();
     }
+
+    @PostConstruct
+    public void init() {
+        loadVariables();
+    }
+    protected abstract void loadVariables();
 
 
     @Value("${discord.channel.id.reboot-log}")

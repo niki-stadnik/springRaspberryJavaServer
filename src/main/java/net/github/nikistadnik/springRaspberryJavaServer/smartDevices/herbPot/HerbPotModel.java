@@ -21,9 +21,4 @@ public class HerbPotModel {
     private int moisture1;
     private int moisture2;
     private boolean herbLight;
-    @JsonFormat(pattern = "HH:mm")
-    private LocalTime herbLightStartTime;
-    @JsonFormat(pattern = "HH:mm")
-    private LocalTime herbLightEndTime;
-
 }

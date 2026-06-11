@@ -14,9 +14,14 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Accessors(fluent = true)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class HerbPotFromClientModel {
+public class HerbPotToClientModel {
 
-    private int command;
+    private float temp1;
+    private float temp2;
+    private int moisture1;
+    private int moisture2;
+    private boolean herbLight;
+    private boolean herbLightAuto;
     @JsonFormat(pattern = "HH:mm")
     private LocalTime herbLightStartTime;
     @JsonFormat(pattern = "HH:mm")
@@ -25,4 +30,6 @@ public class HerbPotFromClientModel {
     private int waterDuration;
     @JsonFormat(pattern = "HH:mm")
     private LocalTime herbWaterTime;
+    private boolean herbWaterAuto;
+
 }

@@ -36,6 +36,11 @@ public class LightSwitchService extends SmartDevice<LightSwitchModel, LightSwitc
     }
 
     @Override
+    protected void loadVariables() {
+
+    }
+
+    @Override
     protected void handleDeviceData(LightSwitchModel data) {
         messaging.convertAndSend("/topic/lightsClient", data);
         boolean[] newLight = new boolean[8];

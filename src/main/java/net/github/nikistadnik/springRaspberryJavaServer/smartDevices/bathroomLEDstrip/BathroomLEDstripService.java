@@ -14,6 +14,11 @@ public class BathroomLEDstripService extends LEDstrip {
         lightToLookFor = 1;
     }
 
+    @Override
+    protected void loadVariables() {
+
+    }
+
 
     @Override
     protected String provideName() {

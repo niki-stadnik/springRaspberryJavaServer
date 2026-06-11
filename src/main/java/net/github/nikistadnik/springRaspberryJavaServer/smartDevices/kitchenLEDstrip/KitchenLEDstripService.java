@@ -21,4 +21,9 @@ public class KitchenLEDstripService extends LEDstrip {
         lightToLookFor = 2;
     }
 
+    @Override
+    protected void loadVariables() {
+
+    }
+
 }

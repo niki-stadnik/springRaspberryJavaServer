@@ -127,6 +127,25 @@ function render(data) {
 
 /* ── FETCH ── */
 async function fetchWeather() {
+    // ── Show cached data immediately, don't wait for the network ──
+    const cached = JSON.parse(localStorage.getItem("wxcache") || "null");
+    if (cached) {
+        render(cached.data);
+        const cacheAge = Math.round((Date.now() - cached.ts) / 60000);
+        const status = document.getElementById("wxStatus");
+        if (status) status.textContent = `Cached · ${cacheAge}min ago`;
+        const fetched = document.getElementById("wxFetched");
+        if (fetched) {
+            const t = new Date(cached.ts);
+            fetched.textContent = `${pad(t.getHours())}:${pad(t.getMinutes())}`;
+        }
+    }
+
+    // ── Always hide the loading overlay right away ──
+    const overlay = document.getElementById("loadingOverlay");
+    if (overlay) overlay.style.display = "none";
+
+    // ── Fetch fresh data in the background ──
     try {
         const res = await fetch(API_URL);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -141,12 +160,10 @@ async function fetchWeather() {
         const status = document.getElementById("wxStatus");
         if (status) status.textContent = "Live · auto-refresh";
         nextAt = Date.now() + REFRESH_MS;
-    } catch(e) {
-        const cached = JSON.parse(localStorage.getItem("wxcache")||"null");
+    } catch (e) {
         const err = document.getElementById("wxError");
         if (cached) {
-            render(cached.data);
-            if (err) err.textContent = `⚠ Cached — ${Math.round((Date.now()-cached.ts)/60000)}min ago (${e.message})`;
+            if (err) err.textContent = `⚠ Cached — ${Math.round((Date.now() - cached.ts) / 60000)}min ago (${e.message})`;
             const status = document.getElementById("wxStatus");
             if (status) status.textContent = "Cached data";
         } else {
@@ -155,9 +172,6 @@ async function fetchWeather() {
             if (status) status.textContent = "Error";
         }
         if (err) err.style.display = "block";
-    } finally {
-        const overlay = document.getElementById("loadingOverlay");
-        if (overlay) overlay.style.display = "none";
     }
 }
 

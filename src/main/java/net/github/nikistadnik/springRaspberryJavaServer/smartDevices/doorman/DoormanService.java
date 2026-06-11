@@ -40,6 +40,11 @@ public class DoormanService extends SmartDevice<DoormanModel, DoormanClientModel
     }
 
     @Override
+    protected void loadVariables() {
+
+    }
+
+    @Override
     protected void handleDeviceData(DoormanModel data) {
         messaging.convertAndSend("/topic/doormanClient", data);
         doorOpen = data.isDoorOpen();

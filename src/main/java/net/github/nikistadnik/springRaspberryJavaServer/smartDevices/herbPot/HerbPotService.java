@@ -20,9 +20,17 @@ public class HerbPotService extends SmartDevice<HerbPotModel, HerbPotFromClientM
     private static int moisture2Percent = 0;
     private static boolean herbLight = false;
     private static boolean herbLightNew = false;
+    private static boolean herbLightAuto = true;
 
     private static LocalTime herbLightStartTime = LocalTime.of(9, 0);
     private static LocalTime herbLightEndTime = LocalTime.of(0, 0);
+
+    private static boolean herbWaterAuto = true;
+    private static LocalTime herbWaterTime = LocalTime.of(8, 0);
+    private static int humAlert = 50;
+    private static int waterDuration = 30;
+
+
 
 
     @Override
@@ -45,36 +53,46 @@ public class HerbPotService extends SmartDevice<HerbPotModel, HerbPotFromClientM
         return HerbPotFromClientModel.class;
     }
 
+    @Override
+    protected void loadVariables() {
+        herbLightStartTime = appVariablesService.getLocalTime("herbpot.light.start", LocalTime.of(9, 0));
+        herbLightEndTime = appVariablesService.getLocalTime("herbpot.light.end", LocalTime.of(0, 0));
+        herbLightAuto = appVariablesService.getBoolean("herbpot.light.auto", true);
+        herbWaterTime = appVariablesService.getLocalTime("herbpot.water.start", LocalTime.of(0, 0));
+        herbWaterAuto = appVariablesService.getBoolean("herbpot.water.auto", true);
+        humAlert = appVariablesService.getInt("herbpot.water.alert", 50);
+        waterDuration = appVariablesService.getInt("herbpot.water.duration", 30);
+    }
+
 
     @Scheduled(fixedRate = 1000)
     private synchronized void potUpdate() {
-        messaging.convertAndSend("/topic/client/" + deviceName, new HerbPotModel(temp1, temp2, moisture1Percent, moisture2Percent, herbLight, herbLightStartTime, herbLightEndTime));
-        //log.info(data);
+        messaging.convertAndSend("/topic/client/" + deviceName, new HerbPotToClientModel(temp1, temp2, moisture1Percent, moisture2Percent, herbLight, herbLightAuto, herbLightStartTime, herbLightEndTime, humAlert, waterDuration, herbWaterTime, herbWaterAuto));
     }
 
     @Value("${discord.channel.id.general}")
     private String discordChannelIdGeneral;
 
     @Scheduled(initialDelay = 10000, fixedRate = 3600000) //3 600 000 ms = 1h
-    private void lowHumAlertToDiscord(){
+    private void lowHumAlertToDiscord() {
         if (Arrays.asList(env.getActiveProfiles()).contains("prod")) {
-            if (moisture1Percent >= 55 || moisture2Percent >= 55) return;
-            if (moisture1Percent < 55){
+            if (moisture1Percent >= humAlert || moisture2Percent >= humAlert) return;
+            if (moisture1Percent < humAlert) {
                 String message = "Water herbs pot 1! Moisture: " + moisture1Percent + "%";
                 discordServiceBE.sendMessage(message, discordChannelIdGeneral);
             }
-            if (moisture2Percent < 55){
+            if (moisture2Percent < humAlert) {
                 String message = "Water herbs pot 2! Moisture: " + moisture2Percent + "%";
                 discordServiceBE.sendMessage(message, discordChannelIdGeneral);
             }
         }
     }
 
-    @Scheduled(initialDelay = 10000, fixedRate = 600000)    //600 000 ms = 10min
-    private void herbLightControl(){
+    private void herbLightControl() {
         herbLightNew = isActive(herbLightStartTime, herbLightEndTime);
         if (herbLight != herbLightNew) {
             messaging.convertAndSend("/topic/" + deviceName, new HerbPotClientModel(0, herbLightNew));
+            log.info("herb light change: " + herbLight + "->" + herbLightNew);
         }
     }
 
@@ -85,18 +103,6 @@ public class HerbPotService extends SmartDevice<HerbPotModel, HerbPotFromClientM
         }
         return now.isAfter(start) || now.isBefore(end);
     }
-/*
-    public boolean isActive(LocalTime start, LocalTime end) {
-        LocalTime now = LocalTime.now();
-
-        if (!start.isAfter(end)) {
-            return !now.isBefore(start) && !now.isAfter(end);
-        }
-
-        return !now.isBefore(start) || !now.isAfter(end);
-    }
-
- */
 
     @Override
     protected void handleDeviceData(HerbPotModel data) {
@@ -116,31 +122,53 @@ public class HerbPotService extends SmartDevice<HerbPotModel, HerbPotFromClientM
         herbLight = data.herbLight();
         temp1 = data.temp1();
         temp2 = data.temp2();
-        log.info(String.valueOf(data));
+        //log.info(String.valueOf(data));
+        if (herbLightAuto) herbLightControl();
+        else messaging.convertAndSend("/topic/" + deviceName, new HerbPotClientModel(0, false));
     }
 
     @Override
     protected void handleClientData(HerbPotFromClientModel data) {
+        log.info(String.valueOf(data));
         int command = data.command();
-        int water = 0;
-        switch (command){
+        switch (command) {
             case 1:
                 selfRebootDev(deviceName);
                 rebootDev(deviceName);
                 break;
-            case 2: rebootDev(pairName); break;
-            case 3: water = 3000; break;
+            case 2:
+                rebootDev(pairName);
+                break;
+            case 3:
+                herbWaterAuto = !herbWaterAuto;
+                appVariablesService.setBoolean("herbpot.water.auto", herbWaterAuto);
+                break;
             case 4:
-                herbLightNew = !herbLight;
+                herbLightAuto = !herbLightAuto;
+                if (herbLight && !herbLightAuto) {
+                    herbLightNew = false;
+                }
+                appVariablesService.setBoolean("herbpot.light.auto", herbLightAuto);
+                messaging.convertAndSend("/topic/" + deviceName, new HerbPotClientModel(0, herbLightNew));
+                log.info("2 herb light change: " + herbLight + "->" + herbLightNew);
                 break;
             case 5:
                 herbLightStartTime = data.herbLightStartTime();
+                appVariablesService.setLocalTime("herbpot.light.start", data.herbLightStartTime());
                 herbLightEndTime = data.herbLightEndTime();
+                appVariablesService.setLocalTime("herbpot.light.end", data.herbLightEndTime());
+                break;
+            case 6:
+                herbWaterTime = data.herbWaterTime();
+                appVariablesService.setLocalTime("herbpot.water.start", data.herbWaterTime());
+                humAlert = data.humAlert();
+                appVariablesService.setInt("herbpot.water.alert", data.humAlert());
+                waterDuration = data.waterDuration();
+                appVariablesService.setInt("herbpot.water.duration", data.waterDuration());
                 break;
         }
-        if (command != 1 && command != 2) {
-            messaging.convertAndSend("/topic/" + deviceName, new HerbPotClientModel(water, herbLightNew));
-        }
-        log.info(String.valueOf(data));
     }
 }
+
+
+//todo watering auto logic

@@ -31,6 +31,11 @@ public class KitchenESP2Service extends SmartDevice<KitchenESP2Model, KitchenESP
     }
 
     @Override
+    protected void loadVariables() {
+
+    }
+
+    @Override
     protected void handleDeviceData(KitchenESP2Model data) {
         log.info(data.toString());
 

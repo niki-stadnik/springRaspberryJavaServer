@@ -3,8 +3,10 @@ package net.github.nikistadnik.springRaspberryJavaServer.smartDevices;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import net.github.nikistadnik.springRaspberryJavaServer.model.SmartDeviceModel;
+import net.github.nikistadnik.springRaspberryJavaServer.offlineVariables.AppVariablesService;
 import net.github.nikistadnik.springRaspberryJavaServer.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -21,8 +23,19 @@ public class RebootDevice {
 
     @Autowired
     protected SimpMessageSendingOperations messaging;
+    @Autowired
+    protected AppVariablesService appVariablesService;
 
     private final Map<String, DeviceService> devices;
+
+    @PostConstruct
+    public void init() {
+        devices.forEach((name, device) -> {
+            boolean monitor = appVariablesService.getBoolean("reboot.auto." + name, true);
+            device.setRebootMonitor(monitor);
+            log.info("loaded reboot monitor for: {} = {}", name, monitor);
+        });
+    }
 
     public RebootDevice(List<DeviceService> deviceServices) {
         devices = deviceServices.stream().collect(Collectors.toMap(DeviceService::getName, s -> s));
@@ -30,6 +43,7 @@ public class RebootDevice {
 
     public void toggleMonitoring(String name, boolean monitor){
         devices.get(name).setRebootMonitor(monitor);
+        appVariablesService.setBoolean("reboot.auto." + name, monitor);
         log.info("reboot monitor for: {} , is now: {}", name, monitor);
     }
 
@@ -78,8 +92,3 @@ public class RebootDevice {
         }
     }
 }
-
-
-//todo send reboot monitoring status to db repository, so that it is remembered after power out
-//todo store variables on db
-//todo store change of settings like auto mode on/off on db

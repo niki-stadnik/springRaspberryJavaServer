@@ -304,8 +304,18 @@
           <span>${cam.location}</span>
           <img class="camera-image" src="${cam.stream}" alt="Live Camera Stream">
           <div class="cp-cam-top">
-    <span class="cp-section">${cam.name}</span>
+  <span class="cp-section">${cam.name}</span>
+  <div style="display:flex; gap:6px; margin-left:auto;">
+  <div class="cp-cam-ind cp-cam-ind--overlay">
+    <span class="cp-cam-ind-val" data-fps-live>–</span>
+    <span class="cp-cam-ind-lbl">FPS</span>
   </div>
+  <div class="cp-cam-ind cp-cam-ind--overlay">
+      <span class="cp-cam-ind-val" data-fpm-live>–</span>
+      <span class="cp-cam-ind-lbl">FPM</span>
+    </div>
+    </div>
+</div>
         <div class="cp-cam-indicators">
     <div class="cp-cam-ind">
       <span class="cp-cam-ind-val" data-fps>${cam.fps}</span>
@@ -329,6 +339,13 @@
             img.addEventListener('load', () => {
                 wrap.querySelector('.cp-cam').style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`;
             });
+
+
+            // REAL FPS COUNTER
+            img.addEventListener('load', () => {
+                wrap.querySelector('.cp-cam').style.aspectRatio = `${img.naturalWidth} / ${img.naturalHeight}`;
+            });
+            startFrameCounter(wrap);
         });
 
         /* ════════════════
