@@ -16,10 +16,10 @@ public class DoorlockController {
 
     @MessageMapping("/doorlock")
     public void getData (DoorlockModel data) throws InterruptedException {
-        Thread.sleep(50);
+        log.info("Doorlock data 1: {}", data);
         service.setData(data);
         service.lockUpdate();
-        log.info("Doorlock data 1: {}", data);
+
     }
 
     @MessageMapping("/clientDoorlock")

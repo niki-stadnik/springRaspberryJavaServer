@@ -2,7 +2,7 @@
 link to weather api
 * https://open-meteo.com/en/docs?latitude=42.6975&longitude=23.3241&timezone=auto&hourly=temperature_2m,precipitation_probability,precipitation,wind_speed_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,snowfall_sum,precipitation_probability_max,precipitation_sum&forecast_days=1*/
 const MJPEG_URL  = "";
-const API_URL    = "https://api.open-meteo.com/v1/forecast?latitude=42.6975&longitude=23.3241&daily=weather_code,temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,snowfall_sum,precipitation_probability_max,precipitation_sum&hourly=temperature_2m,precipitation_probability,precipitation,wind_speed_10m,weather_code&timezone=auto&forecast_days=1";
+const API_URL    = "https://api.open-meteo.com/v1/forecast?latitude=42.6975&longitude=23.3241&daily=weather_code,temperature_2m_max,temperature_2m_min,rain_sum,showers_sum,snowfall_sum,precipitation_probability_max,precipitation_sum&hourly=temperature_2m,precipitation_probability,precipitation,wind_speed_10m,weather_code&current=temperature_2m&timezone=auto&forecast_days=1";
 const REFRESH_MS = 15 * 60 * 1000;
 const TARGET_HRS = [9, 12, 15, 18, 21];
 
@@ -65,14 +65,18 @@ function render(data) {
     const container = document.getElementById("hourlyRows");
     if (!container) return;
 
-    const d = data.daily, h = data.hourly;
+    const d = data.daily, h = data.hourly, c = data.current;
     const [cond, icon] = wmo(d.weather_code[0]);
+
+    console.log("Rendering weather data");
+    console.log(c.temperature_2m);
 
     const set = (id, html, prop='innerHTML') => { const el = document.getElementById(id); if (el) el[prop] = html; };
 
     set("wxIcon",  icon, 'textContent');
-    set("wxMax",   `${fmt(d.temperature_2m_max[0],0)}<span>°C</span>`);
-    set("wxMin",   `Low ${fmt(d.temperature_2m_min[0],0)}°`, 'textContent');
+    set("wxMax",   `${fmt(c.temperature_2m,0)}<span>°C</span>`);
+    set("wxMin",   `${fmt(d.temperature_2m_min[0],0)}°`, 'textContent');
+    set("wxMin2",   `-${fmt(d.temperature_2m_max[0],0)}°`, 'textContent');
     set("wxCond",  cond, 'textContent');
     set("wsPre",   `${fmt(d.precipitation_probability_max[0])}<span class="u">%&nbsp;&nbsp;&nbsp;</span>`);
     set("wsTotal", `${fmt(d.precipitation_sum[0])}<span class="u">mm</span>`);

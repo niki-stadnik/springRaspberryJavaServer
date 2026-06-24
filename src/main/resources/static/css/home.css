@@ -120,6 +120,11 @@
     color: var(--text2);
 }
 
+.wx-min-wrap {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
 .wx-min {
     font-family: 'Share Tech Mono', monospace;
     font-size: 18px;

@@ -11,5 +11,14 @@ import lombok.NoArgsConstructor;
 public class DoorlockClientModel {
 
     private int move;
+    private int acc;
+    private int minSpeed;
+    private int maxSpeed;
+    private int i11;
+    private int i12;
+    private int i21;
+    private int i22;
+    private int i31;
+    private int i32;
 
 }

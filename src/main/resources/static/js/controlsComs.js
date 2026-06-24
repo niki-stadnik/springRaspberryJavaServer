@@ -45,17 +45,67 @@ function updateFanTriggers(value, variable){
 }
 
 
-//Door lock
-
+/* ════════════════
+           DOOR LOCK
+        ════════════════ */
+function getParams() {
+    return {
+        acc: Number(document.getElementById('param-acc').value),
+        minSpeed: Number(document.getElementById('param-minSpeed').value),
+        maxSpeed: Number(document.getElementById('param-maxSpeed').value),
+        i11: Number(document.getElementById('param-i11').value),
+        i12: Number(document.getElementById('param-i12').value),
+        i21: Number(document.getElementById('param-i21').value),
+        i22: Number(document.getElementById('param-i22').value),
+        i31: Number(document.getElementById('param-i31').value),
+        i32: Number(document.getElementById('param-i32').value)
+    };
+}
+function getParamsU() {
+    return {
+        acc: Number(document.getElementById('param-acc').value),
+        minSpeed: Number(document.getElementById('param-minSpeed').value),
+        maxSpeed: Number(document.getElementById('param-maxSpeed').value),
+        i11: Number(document.getElementById('param-u11').value),
+        i12: Number(document.getElementById('param-u12').value),
+        i21: Number(document.getElementById('param-u21').value),
+        i22: Number(document.getElementById('param-u22').value),
+        i31: Number(document.getElementById('param-u31').value),
+        i32: Number(document.getElementById('param-u32').value)
+    };
+}
 function sendlock() {
-    stompClient.send("/app/clientDoorlock", {}, JSON.stringify({'move': 2162}));
+    stompClient.send("/app/clientDoorlock", {}, JSON.stringify({'move': 2162, ...getParamsU()}));
 }
 function sendunlock() {
-    stompClient.send("/app/clientDoorlock", {}, JSON.stringify({'move': 11762}));
+    stompClient.send("/app/clientDoorlock", {}, JSON.stringify({'move': 11762, ...getParams()}));
 }
 
 function showDoorlock(message){
     document.getElementById("position").textContent = message.position;
+    const lockIcon = document.getElementById("lockIcon")
+    const lockState = document.getElementById("lockState")
+    const lockSub = document.getElementById("lockSub")
+    const unlockBtn = document.getElementById("unlockBtn")
+    const lockBtn = document.getElementById("lockBtn")
+    if (message.position > 11000){      //unlocked
+        lockIcon.style.color = 'rgba(255,130,80,0.85)';
+        lockIcon.style.filter = 'drop-shadow(0 0 12px rgba(255,100,60,0.5))';
+        lockState.textContent = 'ОТКЛЮЧЕНА';
+        lockState.style.color = 'rgba(255,150,80,0.95)';
+        lockSub.textContent = 'Последна промяна: точно сега';
+        //lockBtn.disabled = false;
+        //unlockBtn.disabled = true;
+    }else if(message.position < 2300){  //locked
+        lockIcon.style.color = 'rgba(0,255,200,0.75)';
+        lockIcon.style.filter = 'drop-shadow(0 0 12px rgba(0,255,200,0.5))';
+        lockState.textContent = 'ЗАКЛЮЧЕНА';
+        lockState.style.color = 'rgba(0,255,200,0.85)';
+        lockSub.textContent = 'Последна промяна: точно сега';
+        //lockBtn.disabled = true;
+        //unlockBtn.disabled = false;
+    }
+
 }
 
 

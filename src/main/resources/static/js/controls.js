@@ -389,31 +389,6 @@
         const unlockBtn = $('#unlockBtn');
         const lockBtn = $('#lockBtn');
 
-        function setLock(locked) {
-            if (locked) {
-                lockIcon.style.color = 'rgba(0,255,200,0.75)';
-                lockIcon.style.filter = 'drop-shadow(0 0 12px rgba(0,255,200,0.5))';
-                lockState.textContent = 'ЗАКЛЮЧЕНА';
-                lockState.style.color = 'rgba(0,255,200,0.85)';
-                lockSub.textContent = 'Последна промяна: точно сега';
-                lockBtn.disabled = true;
-                unlockBtn.disabled = false;
-            } else {
-                lockIcon.style.color = 'rgba(255,130,80,0.85)';
-                lockIcon.style.filter = 'drop-shadow(0 0 12px rgba(255,100,60,0.5))';
-                lockState.textContent = 'ОТКЛЮЧЕНА';
-                lockState.style.color = 'rgba(255,150,80,0.95)';
-                lockSub.textContent = 'Последна промяна: точно сега';
-                lockBtn.disabled = false;
-                unlockBtn.disabled = true;
-            }
-        }
-
-        if (unlockBtn) {
-            unlockBtn.addEventListener('click', () => setLock(false));
-            lockBtn.addEventListener('click', () => setLock(true));
-            setLock(true);
-        }
     }
 
     /* ══════════════════════════════════════════════════

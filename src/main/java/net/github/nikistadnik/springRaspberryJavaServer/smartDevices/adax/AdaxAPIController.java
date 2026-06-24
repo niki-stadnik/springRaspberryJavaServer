@@ -13,13 +13,13 @@ public class AdaxAPIController {
 
     @MessageMapping("/adax")
     public void getData(AdaxAPIModel data) throws InterruptedException {
-        Thread.sleep(50);
+        //Thread.sleep(50);
         adaxAPI.command(data);
     }
 
     @MessageMapping("/adaxInit")
     public void init() throws InterruptedException {
-        Thread.sleep(50);
+        //Thread.sleep(50);
         adaxAPI.updateClient();
     }
 }

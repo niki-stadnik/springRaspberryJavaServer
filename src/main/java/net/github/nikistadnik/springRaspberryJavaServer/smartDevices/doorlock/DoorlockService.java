@@ -13,20 +13,22 @@ public class DoorlockService {
     private final SimpMessageSendingOperations messaging;
 
     private static int position = 0;
+    private static int door = 0;
 
 
     public void command(DoorlockClientModel data) {
-        int move = data.getMove();
-        messaging.convertAndSend("/topic/doorlock", new DoorlockClientModel(move));
+        //int move = data.getMove();
+        //messaging.convertAndSend("/topic/doorlock", new DoorlockClientModel(move));
         //messaging.convertAndSend("/topic/doorlock", data);
     }
 
     public void setData(DoorlockModel data) {
         position = data.getPosition();
+        door = data.getDoor();
     }
 
     @Scheduled(fixedRate = 1000)
     synchronized void lockUpdate() {
-        messaging.convertAndSend("/topic/clientDoorlock", new DoorlockModel(position));
+        messaging.convertAndSend("/topic/clientDoorlock", new DoorlockModel(position, door));
     }
 }

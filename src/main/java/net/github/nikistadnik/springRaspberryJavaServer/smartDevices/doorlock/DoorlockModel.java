@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 public class DoorlockModel {
 
     private int position;
+    private int door;
 
 }

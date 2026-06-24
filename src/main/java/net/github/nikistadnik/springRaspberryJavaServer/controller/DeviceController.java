@@ -17,12 +17,12 @@ public class DeviceController {
     @MessageMapping("/device/{device}")
     public void handleDevice(@DestinationVariable String device, byte[] payload) throws Exception {
         router.routeDevice(device, payload);
-        Thread.sleep(50);
+        //Thread.sleep(50);
     }
 
     @MessageMapping("/client/{device}")
     public void handleClient(@DestinationVariable String device, byte[] payload) throws Exception {
         router.routeClient(device, payload);
-        Thread.sleep(50);
+        //Thread.sleep(50);
     }
 }

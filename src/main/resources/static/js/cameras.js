@@ -29,7 +29,7 @@ function startFrameCounter(wrap) {
     const canvas = document.createElement('canvas');
     canvas.width = 4;
     canvas.height = 4;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     let lastPixel = '';
 
     const poll = setInterval(() => {
