@@ -43,7 +43,7 @@ public class LightSwitchService extends SmartDevice<LightSwitchModel, LightSwitc
     @Override
     protected void handleDeviceData(LightSwitchModel data) {
         messaging.convertAndSend("/topic/lightsClient", data);
-        boolean[] newLight = new boolean[8];
+        boolean[] newLight = new boolean[7];
         //log.info(data.toString());
         newLight[0] = data.isLight0();  //Спалня
         newLight[1] = data.isLight1();  //Баня
@@ -52,9 +52,8 @@ public class LightSwitchService extends SmartDevice<LightSwitchModel, LightSwitc
         newLight[4] = data.isLight4();  //Хол
         newLight[5] = data.isLight5();  //Балкон
         newLight[6] = data.isLight6();  //Коридор
-        newLight[7] = data.isLight7();
         //check for updated state
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 7; i++) {
             //if (light[i] != newLight[i]){
             if (deviceRegistry.lightSwitchState().light()[i].get() != newLight[i]) {
                 //light[i] = newLight[i];
@@ -95,7 +94,7 @@ public class LightSwitchService extends SmartDevice<LightSwitchModel, LightSwitc
                         flag = false;
                         disregard = true;
                         log.info("change state of: {}", Arrays.toString(lightCommand));
-                        messaging.convertAndSend("/topic/lightSwitch", new LightSwitchCommandModel(lightCommand[0], lightCommand[1], lightCommand[2], lightCommand[3], lightCommand[4], lightCommand[5], lightCommand[6], false));
+                        messaging.convertAndSend("/topic/lightSwitch", new LightSwitchCommandModel(lightCommand[0], lightCommand[1], lightCommand[2], lightCommand[3], lightCommand[4], lightCommand[5], lightCommand[6]));
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException e) {

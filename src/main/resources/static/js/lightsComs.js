@@ -64,11 +64,11 @@ function showStripDimmerB(message) {
 //-----Sending-----
 
 function switchLightOFF() {
-    const NUM_LIGHTS = 7; // adjust to your setup
+    const NUM_LIGHTS = 7;
     const switchStateOf = Array(NUM_LIGHTS).fill(true);
     const stateLight = Array(NUM_LIGHTS).fill(false);
     stompClient.send("/app/client/lightSwitch", {}, JSON.stringify({switchStateOf, stateLight}));
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 7; i++) {
         flag[i] = true;
         setTimeout(() => {
             flag[i] = false;
@@ -77,11 +77,11 @@ function switchLightOFF() {
 }
 
 function switchLightON() {
-    const NUM_LIGHTS = 7; // adjust to your setup
+    const NUM_LIGHTS = 7;
     const switchStateOf = Array(NUM_LIGHTS).fill(true);
     const stateLight = Array(NUM_LIGHTS).fill(true);
     stompClient.send("/app/client/lightSwitch", {}, JSON.stringify({switchStateOf, stateLight}));
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 7; i++) {
         flag[i] = true;
         setTimeout(() => {
             flag[i] = false;
@@ -91,7 +91,7 @@ function switchLightON() {
 
 function switchLight(id, state) {
     if (id < 7) {
-        const NUM_LIGHTS = 7; // adjust to your setup
+        const NUM_LIGHTS = 7;
         const switchStateOf = Array(NUM_LIGHTS).fill(false);
         const stateLight = Array(NUM_LIGHTS).fill(false);
         switchStateOf[id] = true;

@@ -16,6 +16,5 @@ public class LightSwitchModel {
     private boolean light4;
     private boolean light5;
     private boolean light6;
-    private boolean light7;
 
 }

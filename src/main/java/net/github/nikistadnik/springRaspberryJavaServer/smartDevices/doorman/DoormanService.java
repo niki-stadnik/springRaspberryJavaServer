@@ -2,6 +2,7 @@ package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.doorman;
 
 import lombok.extern.slf4j.Slf4j;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SmartDevice;
+import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.doorlock.DoorlockService;
 import org.springframework.stereotype.Service;
 
 
@@ -14,8 +15,9 @@ public class DoormanService extends SmartDevice<DoormanModel, DoormanClientModel
     private static boolean doorLock = false;
     private static boolean doorButton = false;
     private static boolean bell = false;
-    private static boolean rfid = false;
+    private static String rfid;
     private static boolean bellFlag = false;
+    private static boolean doorFlag = false;
     private static long start = 0;
 
 
@@ -47,28 +49,39 @@ public class DoormanService extends SmartDevice<DoormanModel, DoormanClientModel
     @Override
     protected void handleDeviceData(DoormanModel data) {
         messaging.convertAndSend("/topic/doormanClient", data);
-        doorOpen = data.isDoorOpen();
-        doorLock = data.isDoorLock();
-        doorButton = data.isDoorButton();
-        bell = data.isBell();
-        rfid = data.isRfid();
-        if (bell) {
-            if (!bellFlag) {
-                bellFlag = true;
-                start = System.currentTimeMillis();
-                double held = 0;
-                log.info("door bell start");
-                eventPublisher.publishEvent(new DoormanDoorBellEvent(this, held));
+        log.info(data.toString());
+        doorButton = data.doorButton();
+        bell = data.bell();
+        if (data.rfid() != null) {
+            rfid = data.rfid();
+            if (rfid.equals("MasterCard")) {
+                System.out.println(data.rfid());
             }
+        }
+        if (doorButton && !doorFlag) {
+            DoorlockService.moveDoorLock();
+            doorFlag = true;
+            start = System.currentTimeMillis();
+            log.info("door button start");
+        } else if (doorFlag) {
+            doorFlag = false;
+            double held = ((double) ((System.currentTimeMillis() - start) / 100)) / 10;
+            log.info("door button end: {}", held);
+        }
+        if (bell && !bellFlag) {
+            bellFlag = true;
+            start = System.currentTimeMillis();
+            double held = 0;
+            log.info("door bell start");
+            eventPublisher.publishEvent(new DoormanDoorBellEvent(this, held));
         } else if (bellFlag) {
             bellFlag = false;
-            double held = ((double)((System.currentTimeMillis() - start) / 100)) / 10;
+            double held = ((double) ((System.currentTimeMillis() - start) / 100)) / 10;
             //accounting for the delayed discharge of the AC current
             held -= 3.5;
             log.info("door bell end: " + held);
             eventPublisher.publishEvent(new DoormanDoorBellEvent(this, held));
         }
-        //log.info(data.toString());
     }
 
     @Override

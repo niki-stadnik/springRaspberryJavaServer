@@ -2,6 +2,7 @@ package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.doorlock;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,12 @@ public class DoorlockService {
     public void setData(DoorlockModel data) {
         position = data.getPosition();
         door = data.getDoor();
+    }
+
+    @Value("${rfid.card}")
+    String rfidCard;
+    public static void moveDoorLock() {
+
     }
 
     @Scheduled(fixedRate = 1000)
