@@ -19,4 +19,5 @@ Designed to run on a cheap Raspberry Pi, but currently running in a docker conta
 ## In Progress capabilities
 * curtains automation
 
+## UI
 <img src="pics/pic1.png" width="400">
