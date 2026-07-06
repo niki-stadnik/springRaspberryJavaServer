@@ -19,5 +19,9 @@ Designed to run on a cheap Raspberry Pi, but currently running in a docker conta
 ## In Progress capabilities
 * curtains automation
 
-## UI
+## User Interface
+* Progressive Web App (PWA) installable on both mobile and desktop
+* Single-page application (SPA)
+* open-meteo and ventusky API integrated
+
 <img src="pics/pic1.png" width="400">
