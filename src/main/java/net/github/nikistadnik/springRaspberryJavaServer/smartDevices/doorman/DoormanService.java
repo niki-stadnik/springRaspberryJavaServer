@@ -3,6 +3,7 @@ package net.github.nikistadnik.springRaspberryJavaServer.smartDevices.doorman;
 import lombok.extern.slf4j.Slf4j;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.SmartDevice;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.doorlock.DoorlockService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
@@ -19,6 +20,10 @@ public class DoormanService extends SmartDevice<DoormanModel, DoormanClientModel
     private static boolean bellFlag = false;
     private static boolean doorFlag = false;
     private static long start = 0;
+    private static long startB = 0;
+
+    @Value("${rfid.card}")
+    String rfidCard;
 
 
     @Override
@@ -54,19 +59,20 @@ public class DoormanService extends SmartDevice<DoormanModel, DoormanClientModel
         bell = data.bell();
         if (data.rfid() != null) {
             rfid = data.rfid();
-            if (rfid.equals("MasterCard")) {
-                System.out.println(data.rfid());
+            if (rfid.equals(rfidCard)) {
+                log.info("door rfid scanned: {}", rfid);
+                eventPublisher.publishEvent(new DoormanDoorRfidEvent(this, rfid));
             }
         }
         if (doorButton && !doorFlag) {
-            DoorlockService.moveDoorLock();
             doorFlag = true;
-            start = System.currentTimeMillis();
+            startB = System.currentTimeMillis();
             log.info("door button start");
         } else if (doorFlag) {
             doorFlag = false;
-            double held = ((double) ((System.currentTimeMillis() - start) / 100)) / 10;
+            long held = System.currentTimeMillis() - startB;
             log.info("door button end: {}", held);
+            eventPublisher.publishEvent(new DoormanDoorButtonEvent(this, held));
         }
         if (bell && !bellFlag) {
             bellFlag = true;

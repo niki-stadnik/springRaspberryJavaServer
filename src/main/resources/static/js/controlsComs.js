@@ -88,6 +88,8 @@ function showDoorlock(message){
     const lockSub = document.getElementById("lockSub")
     const unlockBtn = document.getElementById("unlockBtn")
     const lockBtn = document.getElementById("lockBtn")
+    if (message.door) document.getElementById("openState").textContent = 'ОТВОРЕНА'
+    else document.getElementById("openState").textContent = 'ЗАТВОРЕНА'
     if (message.position > 11000){      //unlocked
         lockIcon.style.color = 'rgba(255,130,80,0.85)';
         lockIcon.style.filter = 'drop-shadow(0 0 12px rgba(255,100,60,0.5))';

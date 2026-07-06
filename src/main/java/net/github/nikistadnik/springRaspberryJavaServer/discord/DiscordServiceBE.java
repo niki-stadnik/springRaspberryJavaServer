@@ -4,12 +4,19 @@ import lombok.extern.slf4j.Slf4j;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.cameras.ContinuousCaptureService;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.cameras.GifCreator;
 import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.doorman.DoormanDoorBellEvent;
+import net.github.nikistadnik.springRaspberryJavaServer.smartDevices.doorman.DoormanDoorButtonEvent;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -18,6 +25,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
 
 @Slf4j
@@ -88,6 +96,57 @@ public class DiscordServiceBE {
             else {
                 imageResource = new ByteArrayResource(ContinuousCaptureService.imageBytes) {
                 //ByteArrayResource imageResource = new ByteArrayResource(DoorCam.imageBytes) {
+                    @Override
+                    public String getFilename() {
+                        return "doorcam.jpg"; // required by Discord
+                    }
+                };
+            }
+
+            // Prepare payload (message text)
+            Map<String, Object> payload = Map.of("content", messageText);
+
+            // Send the request to Discord
+            String response = client.post()
+                    .uri("/channels/{channelId}/messages", channelId)
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    .body(BodyInserters.fromMultipartData("payload_json", payload)
+                            .with("files[0]", imageResource))
+                    .retrieve()
+                    .onStatus(HttpStatusCode::isError, resp ->
+                            resp.bodyToMono(String.class)
+                                    .flatMap(body -> Mono.error(new DiscordApiException(
+                                            Objects.requireNonNull(HttpStatus.resolve(resp.statusCode().value())), body)))
+                    )
+                    .bodyToMono(String.class)
+                    .block();
+
+            log.info("Discord response: {}", response);
+        } catch (WebClientResponseException e) {
+            log.error("Discord API error: {} - {}", e.getStatusCode(), e.getResponseBodyAsString());
+        } catch (DiscordApiException e) {
+            log.info("Discord API error: {}", e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //test log for door button
+    @EventListener
+    @Async
+    public void sendDoorToDiscord(DoormanDoorButtonEvent event) {
+        ByteArrayResource imageResource;
+        String channelId = discordChannelIdDoorbell;
+        String messageText = "Button pressed!";
+        if (event.held() < 1) return;
+        if (event.held() > 0) messageText = "Button pressed for: " + event.held() + " seconds";
+
+        try {
+            //ByteArrayResource imageResource = new ByteArrayResource(ContinuousCaptureService.imageBytes) {
+            if (event.held() > 0) imageResource = GifCreator.createGifResource();
+            else {
+                imageResource = new ByteArrayResource(ContinuousCaptureService.imageBytes) {
+                    //ByteArrayResource imageResource = new ByteArrayResource(DoorCam.imageBytes) {
                     @Override
                     public String getFilename() {
                         return "doorcam.jpg"; // required by Discord
