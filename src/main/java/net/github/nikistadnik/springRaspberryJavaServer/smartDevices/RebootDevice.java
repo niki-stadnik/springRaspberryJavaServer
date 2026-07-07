@@ -41,13 +41,13 @@ public class RebootDevice {
         devices = deviceServices.stream().collect(Collectors.toMap(DeviceService::getName, s -> s));
     }
 
-    public void toggleMonitoring(String name, boolean monitor){
+    public void toggleMonitoring(String name, boolean monitor) {
         devices.get(name).setRebootMonitor(monitor);
         appVariablesService.setBoolean("reboot.auto." + name, monitor);
         log.info("reboot monitor for: {} , is now: {}", name, monitor);
     }
 
-    public void reboot(String name){
+    public void reboot(String name) {
         log.info("rebooting from UI: {}", name);
         devices.get(name).rebootDev(name);
         devices.get(name).selfRebootDev(name);
@@ -65,7 +65,7 @@ public class RebootDevice {
         //log.info(data);
     }
 
-    public JsonNode monitoringStatus(){
+    public JsonNode monitoringStatus() {
         ObjectNode jsonNode = mapper.createObjectNode();
         for (DeviceService device : devices.values()) {
             jsonNode.put(device.getName(), device.getRebootMonitor());
@@ -74,11 +74,11 @@ public class RebootDevice {
     }
 
     @Scheduled(initialDelay = 10000, fixedRate = 30000)    //every 30s
-    protected synchronized void autoReboot(){
+    protected synchronized void autoReboot() {
         for (DeviceService device : devices.values()) {
-            if (device.getRebootMonitor()) {
-                if (!device.getActive()) {
-                    device.setState(false);
+            if (!device.getActive()) {
+                device.setState(false);
+                if (device.getRebootMonitor()) {
                     device.selfRebootDev(device.getName());
                     device.rebootDev(device.getName());
                     try {
@@ -87,8 +87,8 @@ public class RebootDevice {
                         throw new RuntimeException(e);
                     }
                 }
-                device.setActive(false);
             }
+            device.setActive(false);
         }
     }
 }
